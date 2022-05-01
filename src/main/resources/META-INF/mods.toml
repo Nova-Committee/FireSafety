@@ -1,0 +1,10 @@
+modLoader = "javafml"
+loaderVersion = "[40,)"
+license = "AGPL v3"
+[[mods]]
+modId = "firesafety"
+version = "1.0.0"
+displayName = "FireSafety"
+credits = ""
+authors = "Nova Committee"
+description = "Unregulated fire usage, loved ones end up in tears."
