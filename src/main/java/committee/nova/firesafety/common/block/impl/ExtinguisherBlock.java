@@ -3,6 +3,7 @@ package committee.nova.firesafety.common.block.impl;
 import committee.nova.firesafety.common.block.base.AbstractCeilingDeviceBlock;
 import committee.nova.firesafety.common.block.blockEntity.impl.ExtinguisherBlockEntity;
 import committee.nova.firesafety.common.tools.DataReference;
+import committee.nova.firesafety.common.tools.TagKeyReference;
 import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -66,14 +67,18 @@ public class ExtinguisherBlock extends AbstractCeilingDeviceBlock implements Ent
             return super.use(state, world, pos, player, hand, hit);
         final BlockEntity e = world.getBlockEntity(pos);
         if (!(e instanceof final ExtinguisherBlockEntity g)) return InteractionResult.SUCCESS;
-        if (g.getWaterStorage() >= g.getMaxWaterStorage()) return InteractionResult.SUCCESS;
-        final FluidStack needFill = new FluidStack(Fluids.WATER, g.getMaxWaterStorage() - g.getWaterStorage());
+        final int needFill = g.getMaxWaterStorage() - g.getWaterStorage();
+        if (needFill <= 0) return InteractionResult.SUCCESS;
         final FluidStack[] toFill = new FluidStack[1];
+        toFill[0] = FluidStack.EMPTY;
         if (stack.is(Items.WATER_BUCKET)) {
-            toFill[0] = needFill;
+            toFill[0] = new FluidStack(Fluids.WATER, Math.min(1000, needFill));
             player.setItemInHand(hand, Items.BUCKET.getDefaultInstance());
         } else {
-            stack.getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY).ifPresent(f -> toFill[0] = f.drain(needFill, IFluidHandler.FluidAction.EXECUTE));
+            stack.getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY).ifPresent(f -> {
+                if (f.getFluidInTank(0).getFluid().is(TagKeyReference.FIREFIGHTING))
+                    toFill[0] = new FluidStack(Fluids.WATER, f.drain(needFill, IFluidHandler.FluidAction.EXECUTE).getAmount());
+            });
         }
         g.getTank().fill(toFill[0], IFluidHandler.FluidAction.EXECUTE);
         world.playSound(null, pos, SoundEvents.BUCKET_EMPTY, SoundSource.BLOCKS, 1F, 1F);
@@ -103,12 +108,12 @@ public class ExtinguisherBlock extends AbstractCeilingDeviceBlock implements Ent
 
     private void extinguishParticle(Level world, BlockPos pos, Random r) {
         for (final Vec2 t : DataReference.water) {
-            world.addAlwaysVisibleParticle(ParticleTypes.CAMPFIRE_COSY_SMOKE, pos.getX() + 0.5, pos.getY() + 0.7, pos.getZ() + 0.5, t.x, -.2F, t.y);
+            world.addAlwaysVisibleParticle(ParticleTypes.CAMPFIRE_COSY_SMOKE, pos.getX() + 0.5, pos.getY() + 0.7, pos.getZ() + 0.5, t.x + r.nextFloat(0.01F), -.2F, t.y + r.nextFloat(0.01F));
         }
     }
 
     public int getSignal(BlockState state, BlockGetter world, BlockPos pos, Direction direction) {
-        return (state.getValue(ONFIRE) ? 15 : 6) + (state.getValue(WATERED) ? -6 : 0);
+        return (state.getValue(ONFIRE) ? 15 : 9) + (state.getValue(WATERED) ? -6 : 0);
     }
 
 }

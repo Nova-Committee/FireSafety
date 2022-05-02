@@ -1,9 +1,10 @@
 {
-  "itemGroup.firesafety": "Fire Safety",
+  "itemGroup.firesafety": "§4Fire§5Safety§r",
   "block.firesafety.extinguisher": "Extinguisher",
   "block.firesafety.fire_alarm": "Fire Alarm",
-  "msg.firesafety.device.fire_detected": "Fire detected by the device at {0}",
-  "msg.firesafety.device.insufficient_water": "The device at {0} reports its water insufficiency",
-  "msg.firesafety.device.listening.false": "You are no longer listening to the device.",
-  "msg.firesafety.device.listening.true": "You are listening to the device."
+  "msg.firesafety.device.fire_detected": "§cDevice at {0} spotted a fire{1}§r",
+  "msg.firesafety.device.insufficient_water": "§3The device at {0} reports its water insufficiency§r",
+  "msg.firesafety.device.listening.false": "§4You are no longer listening to the device§r",
+  "msg.firesafety.device.listening.true": "§2You are listening to the device now§r",
+  "phrase.firesafety.insufficient_water": "§3[Insufficient Water]§r"
 }

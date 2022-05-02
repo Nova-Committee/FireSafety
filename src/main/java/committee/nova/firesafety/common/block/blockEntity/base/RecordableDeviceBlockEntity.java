@@ -13,6 +13,7 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 
 import javax.annotation.ParametersAreNonnullByDefault;
+import java.text.MessageFormat;
 import java.util.HashMap;
 import java.util.UUID;
 import java.util.function.Function;
@@ -85,5 +86,9 @@ public abstract class RecordableDeviceBlockEntity extends BlockEntity {
                 b.append(u.toString());
             }
         return !b.isEmpty() ? "listeners:" + b + ';' : "No listener.";
+    }
+
+    public String formatBlockPos() {
+        return MessageFormat.format("[{0}, {1}, {2}]", worldPosition.getX(), worldPosition.getY(), worldPosition.getZ());
     }
 }

@@ -28,4 +28,6 @@ public class FireSafety {
         RegistryHandler.init();
         MinecraftForge.EVENT_BUS.register(this);
     }
+    //todo:recipes
+    //todo:fire amount
 }
