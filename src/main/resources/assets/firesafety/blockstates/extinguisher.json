@@ -1,0 +1,16 @@
+{
+  "variants": {
+    "onfire=false,watered=false": {
+      "model": "firesafety:block/devices/extinguisher/e_0_1"
+    },
+    "onfire=false,watered=true": {
+      "model": "firesafety:block/devices/extinguisher/e_0_0"
+    },
+    "onfire=true,watered=false": {
+      "model": "firesafety:block/devices/extinguisher/e_1_1"
+    },
+    "onfire=true,watered=true": {
+      "model": "firesafety:block/devices/extinguisher/e_1_0"
+    }
+  }
+}

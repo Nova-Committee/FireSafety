@@ -1,4 +1,4 @@
-package committee.nova.firesafety.common.util;
+package committee.nova.firesafety.common.tools;
 
 import net.minecraft.Util;
 import net.minecraft.network.chat.Component;

@@ -1,0 +1,10 @@
+{
+  "variants": {
+    "onfire=false": {
+      "model": "firesafety:block/devices/fire_alarm/f_0"
+    },
+    "onfire=true": {
+      "model": "firesafety:block/devices/fire_alarm/f_1"
+    }
+  }
+}

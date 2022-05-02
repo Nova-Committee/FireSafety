@@ -1,0 +1,10 @@
+{
+  "fire_alarm": {
+    "sounds": [
+      {
+        "name": "firesafety:fire_alarm",
+        "stream": true
+      }
+    ]
+  }
+}

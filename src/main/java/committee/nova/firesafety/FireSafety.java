@@ -1,6 +1,6 @@
 package committee.nova.firesafety;
 
-import committee.nova.firesafety.common.util.DataReference;
+import committee.nova.firesafety.common.tools.DataReference;
 import committee.nova.firesafety.common.util.RegistryHandler;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.ItemStack;
@@ -24,8 +24,8 @@ public class FireSafety {
     };
 
     public FireSafety() {
+        DataReference.init();
         RegistryHandler.init();
         MinecraftForge.EVENT_BUS.register(this);
-        DataReference.init();
     }
 }

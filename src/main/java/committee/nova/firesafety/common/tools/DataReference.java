@@ -1,4 +1,4 @@
-package committee.nova.firesafety.common.util;
+package committee.nova.firesafety.common.tools;
 
 import net.minecraft.world.phys.Vec2;
 
@@ -8,9 +8,9 @@ public class DataReference {
     public static final ArrayList<Vec2> water = new ArrayList<>();
 
     public static void init() {
-        for (int x = -10; x <= 10; x++) {
-            for (int z = -10; z <= 10; z++) {
-                water.add(new Vec2(x / 10F, z / 10F));
+        for (float x = -5; x <= 5; x++) {
+            for (float z = -5; z <= 5; z++) {
+                water.add(new Vec2(x / 100F, z / 100F));
             }
         }
     }

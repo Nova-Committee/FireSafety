@@ -1,7 +1,8 @@
 package committee.nova.firesafety.common.block.base;
 
+import committee.nova.firesafety.common.block.api.ISpecialRenderType;
 import committee.nova.firesafety.common.block.blockEntity.base.RecordableDeviceBlockEntity;
-import committee.nova.firesafety.common.util.PlayerHandler;
+import committee.nova.firesafety.common.tools.PlayerHandler;
 import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -10,30 +11,35 @@ import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.level.material.Material;
+import net.minecraft.world.level.storage.loot.LootContext;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
+import java.util.Collections;
+import java.util.List;
 
 @ParametersAreNonnullByDefault
 @MethodsReturnNonnullByDefault
-public abstract class AbstractCeilingDeviceBlock extends Block {
+public abstract class AbstractCeilingDeviceBlock extends Block implements ISpecialRenderType {
     public static final BooleanProperty ONFIRE = BooleanProperty.create("onfire");
 
-    //0 -> no fire, no water; 1 -> no fire, water sufficient, 2 -> fires, no water, 3 -> fires, water sufficient
     public AbstractCeilingDeviceBlock() {
         super(Properties.of(Material.METAL).strength(2F, 1000F).sound(SoundType.METAL).destroyTime(1F).lightLevel(s -> s.getValue(ONFIRE) ? 5 : 0).noOcclusion());
         registerDefaultState(getStateDefinition().any().setValue(ONFIRE, false));
@@ -52,7 +58,13 @@ public abstract class AbstractCeilingDeviceBlock extends Block {
 
     @Override
     public VoxelShape getShape(BlockState state, BlockGetter world, BlockPos pos, CollisionContext ctx) {
-        return Block.box(5, 13, 5, 11, 16, 11);
+        return Block.box(5, 15, 5, 11, 16, 11);
+    }
+
+    @Override
+    public BlockState updateShape(BlockState state1, Direction direction, BlockState state2, LevelAccessor world, BlockPos pos1, BlockPos pos2) {
+        if (state1.canSurvive(world, pos1)) return super.updateShape(state1, direction, state2, world, pos1, pos2);
+        return Blocks.AIR.defaultBlockState();
     }
 
     public boolean canSurvive(BlockState state, LevelReader world, BlockPos pos) {
@@ -73,5 +85,10 @@ public abstract class AbstractCeilingDeviceBlock extends Block {
     public InteractionResult use(BlockState state, Level world, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
         if (!world.isClientSide) tryHandleListener(player, world, pos);
         return InteractionResult.SUCCESS;
+    }
+
+    @Override
+    public List<ItemStack> getDrops(BlockState state, LootContext.Builder ctx) {
+        return Collections.singletonList(new ItemStack(this));
     }
 }

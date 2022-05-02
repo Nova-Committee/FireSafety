@@ -1,4 +1,9 @@
 {
+  "itemGroup.firesafety": "安全用火",
+  "block.firesafety.extinguisher": "灭火器",
+  "block.firesafety.fire_alarm": "火灾警报器",
+  "msg.firesafety.device.fire_detected": "位于{0}的设备侦测到火情",
+  "msg.firesafety.device.insufficient_water": "位于{0}的设备报告其供水不足。",
   "msg.firesafety.device.listening.false": "不再监听此设备。",
   "msg.firesafety.device.listening.true": "正在监听此设备。"
 }

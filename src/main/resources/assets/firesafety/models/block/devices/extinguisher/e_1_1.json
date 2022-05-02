@@ -1,0 +1,7 @@
+{
+  "parent": "firesafety:block/devices/extinguisher/parent",
+  "textures": {
+    "1": "firesafety:block/device/bulbs/red_bulb",
+    "2": "firesafety:block/device/bulbs/blue_bulb"
+  }
+}

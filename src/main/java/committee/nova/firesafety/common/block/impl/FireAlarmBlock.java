@@ -2,6 +2,7 @@ package committee.nova.firesafety.common.block.impl;
 
 import committee.nova.firesafety.common.block.base.AbstractCeilingDeviceBlock;
 import committee.nova.firesafety.common.block.blockEntity.impl.FireAlarmBlockEntity;
+import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.EntityBlock;
@@ -13,6 +14,7 @@ import org.jetbrains.annotations.Nullable;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 
+@MethodsReturnNonnullByDefault
 @ParametersAreNonnullByDefault
 public class FireAlarmBlock extends AbstractCeilingDeviceBlock implements EntityBlock {
 
@@ -27,7 +29,7 @@ public class FireAlarmBlock extends AbstractCeilingDeviceBlock implements Entity
     public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level world, BlockState state, BlockEntityType<T> type) {
         if (world.isClientSide()) return null;
         return (l, p, s, t) -> {
-            if (t instanceof FireAlarmBlockEntity alarm) alarm.tickServer(s);
+            if (t instanceof FireAlarmBlockEntity alarm) alarm.tickServer();
         };
     }
 }
