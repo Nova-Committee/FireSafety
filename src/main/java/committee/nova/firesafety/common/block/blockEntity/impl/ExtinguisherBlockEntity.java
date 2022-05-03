@@ -98,10 +98,6 @@ public class ExtinguisherBlockEntity extends FireAlarmBlockEntity {
         }
     }
 
-    private void extinguish() {
-        extinguish(50);
-    }
-
     @Override
     @Nonnull
     public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> capability, @Nullable Direction facing) {
