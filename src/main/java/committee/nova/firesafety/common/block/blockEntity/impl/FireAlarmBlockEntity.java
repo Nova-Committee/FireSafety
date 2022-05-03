@@ -45,11 +45,11 @@ public class FireAlarmBlockEntity extends RecordableDeviceBlockEntity {
         }
         level.setBlockAndUpdate(worldPosition, state.setValue(ONFIRE, true));
         fireStartedTick++;
-        if (level.getDayTime() % 100 != 0) return true;
+        if (level.getDayTime() % 100 != 25) return level.getDayTime() % 50 == 0;
         toListeningPlayers(level, player -> PlayerHandler.displayClientMessage(player, new TranslatableComponent("msg.firesafety.device.fire_detected",
                 formatBlockPos(), c, (state.hasProperty(WATERED) && !state.getValue(WATERED)) ? new TranslatableComponent("phrase.firesafety.insufficient_water").getString() : "")));
         toListeningPlayers(level, player -> PlayerHandler.playSoundForThisPlayer(player, SoundInit.getSound(0), 1F, 1F));
-        return true;
+        return false;
     }
 
     private int fireSourceCount() {

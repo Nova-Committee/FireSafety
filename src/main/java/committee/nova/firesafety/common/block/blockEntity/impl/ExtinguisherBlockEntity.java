@@ -53,7 +53,8 @@ public class ExtinguisherBlockEntity extends FireAlarmBlockEntity {
         if (!needExtinguish) {
             return true;
         }
-        if (fireStartedTick >= 60) tryExtinguish();
+        if (fireStartedTick <= 25) return true;
+        tryExtinguish();
         return true;
     }
 
@@ -71,34 +72,34 @@ public class ExtinguisherBlockEntity extends FireAlarmBlockEntity {
 
     private void tryExtinguish() {
         assert level != null;
-        if (level.getDayTime() % 50 != 0) return;
-        if (tank.getFluidAmount() > 50) {
-            tank.drain(50, IFluidHandler.FluidAction.EXECUTE);
-            extinguish();
-            return;
-        }
-        tank.drain(50, IFluidHandler.FluidAction.EXECUTE);
+        final int remain = tank.getFluidAmount();
+        extinguish(tank.drain(50, IFluidHandler.FluidAction.EXECUTE).getAmount());
+        if (remain > 50) return;
         toListeningPlayers(level, player -> PlayerHandler.playSoundForThisPlayer(player, SoundEvents.BUCKET_FILL, 1F, 1F));
         toListeningPlayers(level, player -> PlayerHandler.notifyServerPlayer(player, new TranslatableComponent("msg.firesafety.device.insufficient_water", formatBlockPos())));
     }
 
-    private void extinguish() {
+    private void extinguish(int amount) {
         assert level != null;
         final Iterable<BlockPos> posList = BlockPos.betweenClosed(worldPosition.offset(3, 0, 3), worldPosition.offset(-3, -10, -3));
         final Random r = level.random;
         for (final BlockPos p : posList) {
-            if (level.getBlockState(p).is(Blocks.FIRE) && r.nextInt(51) > 8) {
+            if (level.getBlockState(p).is(Blocks.FIRE) && r.nextInt(amount * 2 + 1) > 100 - 40) {
                 level.setBlockAndUpdate(p, Blocks.AIR.defaultBlockState());
                 level.playSound(null, p, SoundEvents.GENERIC_EXTINGUISH_FIRE, SoundSource.BLOCKS, 1F, 1F);
             }
         }
         final List<LivingEntity> entityList = level.getEntitiesOfClass(LivingEntity.class, new AABB(worldPosition.offset(3, 0, 3), worldPosition.offset(-3, -10, -3)), l -> (l.isOnFire() || l.getType().is(BURNING)) && !l.getType().is(IGNORED));
         for (final LivingEntity e : entityList) {
+            if (r.nextInt(amount * 2 + 1) <= 100 - 40) continue;
             e.clearFire();
             if (e.getType().is(BURNING)) e.hurt(DamageSource.FREEZE, 5);
             level.playSound(null, e, SoundEvents.GENERIC_EXTINGUISH_FIRE, SoundSource.BLOCKS, 1F, 1F);
         }
+    }
 
+    private void extinguish() {
+        extinguish(50);
     }
 
     @Override
