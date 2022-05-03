@@ -24,7 +24,6 @@ import static committee.nova.firesafety.common.tools.TagKeyReference.IGNORED;
 
 @ParametersAreNonnullByDefault
 public class FireAlarmBlockEntity extends RecordableDeviceBlockEntity {
-
     protected int fireStartedTick = 0;
 
     public FireAlarmBlockEntity(BlockPos pos, BlockState state) {
@@ -38,27 +37,29 @@ public class FireAlarmBlockEntity extends RecordableDeviceBlockEntity {
     public boolean tickServer() {
         if (level == null) return false;
         final BlockState state = level.getBlockState(worldPosition);
-        final long time = level.getDayTime();
-        if (!isOnFireBelow()) {
+        final int c = fireSourceCount();
+        if (c <= 0) {
             level.setBlockAndUpdate(worldPosition, state.setValue(ONFIRE, false));
             fireStartedTick = 0;
             return false;
         }
         level.setBlockAndUpdate(worldPosition, state.setValue(ONFIRE, true));
         fireStartedTick++;
-        if (time % 100 != 0) return true;
+        if (level.getDayTime() % 100 != 0) return true;
         toListeningPlayers(level, player -> PlayerHandler.displayClientMessage(player, new TranslatableComponent("msg.firesafety.device.fire_detected",
-                formatBlockPos(), (state.hasProperty(WATERED) && !state.getValue(WATERED)) ? new TranslatableComponent("phrase.firesafety.insufficient_water").getString() : "")));
+                formatBlockPos(), c, (state.hasProperty(WATERED) && !state.getValue(WATERED)) ? new TranslatableComponent("phrase.firesafety.insufficient_water").getString() : "")));
         toListeningPlayers(level, player -> PlayerHandler.playSoundForThisPlayer(player, SoundInit.getSound(0), 1F, 1F));
         return true;
     }
 
-    private boolean isOnFireBelow() {
-        if (level == null) return false;
+    private int fireSourceCount() {
+        if (level == null) return 0;
+        int fireSources = 0;
         final AABB range = new AABB(worldPosition.offset(3, 0, 3), worldPosition.offset(-3, -10, -3));
         final Stream<BlockState> states = level.getBlockStatesIfLoaded(range).filter(b -> b.is(Blocks.FIRE));
-        if (states.findAny().isPresent()) return true;
+        fireSources += states.count();
         final List<LivingEntity> entityList = level.getEntitiesOfClass(LivingEntity.class, range, l -> (l.isOnFire() || l.getType().is(BURNING)) && !l.getType().is(IGNORED));
-        return !entityList.isEmpty();
+        fireSources += entityList.size();
+        return fireSources;
     }
 }

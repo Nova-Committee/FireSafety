@@ -2,7 +2,7 @@
   "itemGroup.firesafety": "§5安全§4用火§r",
   "block.firesafety.extinguisher": "灭火器",
   "block.firesafety.fire_alarm": "火灾警报器",
-  "msg.firesafety.device.fire_detected": "§c位于{0}的设备侦测到火情{1}§r",
+  "msg.firesafety.device.fire_detected": "§c位于{0}的设备侦测到火情§f（火源数：{1}）{2}§r",
   "msg.firesafety.device.insufficient_water": "§3位于{0}的设备报告其供水不足§r",
   "msg.firesafety.device.listening.false": "§4不再监听此设备§r",
   "msg.firesafety.device.listening.true": "§2正在监听此设备§r",
