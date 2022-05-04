@@ -108,7 +108,7 @@ public class ExtinguisherBlock extends AbstractCeilingDeviceBlock implements Ent
 
     private void extinguishParticle(Level world, BlockPos pos, Random r) {
         for (final Vec2 t : DataReference.water) {
-            world.addAlwaysVisibleParticle(ParticleTypes.CAMPFIRE_COSY_SMOKE, pos.getX() + 0.5, pos.getY() + 0.7, pos.getZ() + 0.5, t.x + r.nextFloat(0.01F), -.2F, t.y + r.nextFloat(0.01F));
+            world.addAlwaysVisibleParticle(ParticleTypes.CAMPFIRE_COSY_SMOKE, pos.getX() + 0.5, pos.getY() + 0.36, pos.getZ() + 0.5, t.x + r.nextFloat(0.01F), -.2F, t.y + r.nextFloat(0.01F));
         }
     }
 

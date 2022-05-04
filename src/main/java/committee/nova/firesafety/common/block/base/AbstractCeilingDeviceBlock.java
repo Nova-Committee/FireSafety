@@ -41,7 +41,7 @@ public abstract class AbstractCeilingDeviceBlock extends Block implements ISpeci
     public static final BooleanProperty ONFIRE = BooleanProperty.create("onfire");
 
     public AbstractCeilingDeviceBlock() {
-        super(Properties.of(Material.METAL).strength(2F, 1000F).sound(SoundType.METAL).destroyTime(1F).lightLevel(s -> s.getValue(ONFIRE) ? 5 : 0).noOcclusion());
+        super(Properties.of(Material.METAL).strength(2F, 1000F).sound(SoundType.METAL).destroyTime(1F).lightLevel(s -> s.getValue(ONFIRE) ? 12 : 6).noOcclusion());
         registerDefaultState(getStateDefinition().any().setValue(ONFIRE, false));
     }
 
