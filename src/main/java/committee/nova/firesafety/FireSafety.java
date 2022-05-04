@@ -1,14 +1,11 @@
 package committee.nova.firesafety;
 
-import committee.nova.firesafety.common.config.Configuration;
 import committee.nova.firesafety.common.tools.DataReference;
 import committee.nova.firesafety.common.util.RegistryHandler;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.config.ModConfig;
 
 import javax.annotation.Nonnull;
 
@@ -27,7 +24,6 @@ public class FireSafety {
     };
 
     public FireSafety() {
-        ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, Configuration.COMMON_CONFIG);
         DataReference.init();
         RegistryHandler.init();
         MinecraftForge.EVENT_BUS.register(this);
