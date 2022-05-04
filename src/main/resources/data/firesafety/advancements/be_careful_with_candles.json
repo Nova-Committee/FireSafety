@@ -1,0 +1,30 @@
+{
+  "display": {
+    "background": "minecraft:textures/block/oak_planks.png",
+    "icon": {
+      "item": "minecraft:white_candle"
+    },
+    "title": {
+      "translate": "advancements.firesafety.be_careful_with_candles.title"
+    },
+    "description": {
+      "translate": "advancements.firesafety.be_careful_with_candles.desc"
+    },
+    "frame": "task",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "criteria": {
+    "gain": {
+      "trigger": "minecraft:placed_block",
+      "conditions": {
+        "item": {
+          "items": [
+            "firesafety:fire_alarm"
+          ]
+        }
+      }
+    }
+  }
+}

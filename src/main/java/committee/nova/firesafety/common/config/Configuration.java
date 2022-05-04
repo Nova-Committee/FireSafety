@@ -19,9 +19,9 @@ public class Configuration {
         fireAlarmMonitoringHeight = builder.comment("The height of the fire alarm monitoring area")
                 .defineInRange("fireAlarmMonitoringHeight", 10, 1, 384);
         blockExtinguishingPossibility = builder.comment("The possibility of extinguishing the flame on a block with each spray of water from a fire extinguisher", "Default is 55%")
-                .defineInRange("blockExtinguishingPossibility", 0.55, 0, 1.0);
+                .defineInRange("blockExtinguishingPossibility", .75, 0, 1.0);
         entityExtinguishingPossibility = builder.comment("The possibility of extinguishing the flame on an entity with each spray of water from a fire extinguisher", "Default is 55%")
-                .defineInRange("entityExtinguishingPossibility", 0.55, 0, 1.0);
+                .defineInRange("entityExtinguishingPossibility", .75, 0, 1.0);
         waterConsumption = builder.comment("The water consumption of each spray from a fire extinguisher", "Default is 50mB")
                 .defineInRange("waterConsumption", 50, 1, 1000);
         freezeDamage = builder.comment("The freeze damage per spray on the \"burning\" tagged entity")

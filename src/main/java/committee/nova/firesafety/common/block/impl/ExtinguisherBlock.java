@@ -8,7 +8,6 @@ import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.particles.ParticleTypes;
-import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -37,6 +36,8 @@ import org.jetbrains.annotations.Nullable;
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.Random;
+
+import static net.minecraft.sounds.SoundEvents.BUCKET_EMPTY;
 
 @MethodsReturnNonnullByDefault
 @ParametersAreNonnullByDefault
@@ -81,7 +82,7 @@ public class ExtinguisherBlock extends AbstractCeilingDeviceBlock implements Ent
             });
         }
         g.getTank().fill(toFill[0], IFluidHandler.FluidAction.EXECUTE);
-        world.playSound(null, pos, SoundEvents.BUCKET_EMPTY, SoundSource.BLOCKS, 1F, 1F);
+        world.playSound(null, pos, BUCKET_EMPTY, SoundSource.BLOCKS, 1F, 1F);
         return InteractionResult.SUCCESS;
     }
 
@@ -108,7 +109,7 @@ public class ExtinguisherBlock extends AbstractCeilingDeviceBlock implements Ent
 
     private void extinguishParticle(Level world, BlockPos pos, Random r) {
         for (final Vec2 t : DataReference.water) {
-            world.addAlwaysVisibleParticle(ParticleTypes.CAMPFIRE_COSY_SMOKE, pos.getX() + 0.5, pos.getY() + 0.36, pos.getZ() + 0.5, t.x + r.nextFloat(0.01F), -.2F, t.y + r.nextFloat(0.01F));
+            world.addAlwaysVisibleParticle(ParticleTypes.CAMPFIRE_COSY_SMOKE, pos.getX() + .5, pos.getY() + .36, pos.getZ() + .5, t.x + r.nextFloat(.01F), -.2F, t.y + r.nextFloat(.01F));
         }
     }
 

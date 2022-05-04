@@ -1,0 +1,30 @@
+{
+  "display": {
+    "background": "minecraft:textures/block/oak_planks.png",
+    "icon": {
+      "item": "minecraft:water_bucket"
+    },
+    "title": {
+      "translate": "advancements.firesafety.to_nip_it_in_the_spark.title"
+    },
+    "description": {
+      "translate": "advancements.firesafety.to_nip_it_in_the_spark.desc"
+    },
+    "frame": "task",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "criteria": {
+    "gain": {
+      "trigger": "minecraft:placed_block",
+      "conditions": {
+        "item": {
+          "items": [
+            "firesafety:extinguisher"
+          ]
+        }
+      }
+    }
+  }
+}

@@ -8,6 +8,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
@@ -35,6 +36,8 @@ import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.Collections;
 import java.util.List;
 
+import static net.minecraft.sounds.SoundEvents.NOTE_BLOCK_IRON_XYLOPHONE;
+
 @ParametersAreNonnullByDefault
 @MethodsReturnNonnullByDefault
 public abstract class AbstractCeilingDeviceBlock extends Block implements ISpecialRenderType {
@@ -53,6 +56,8 @@ public abstract class AbstractCeilingDeviceBlock extends Block implements ISpeci
             return;
         }
         final boolean b = r.handleListener(player);
+        //todo
+        player.playNotifySound(NOTE_BLOCK_IRON_XYLOPHONE, SoundSource.BLOCKS, .5F, b ? 1F : .5F);
         PlayerHandler.notifyServerPlayer(player, new TranslatableComponent("msg.firesafety.device.listening." + b));
     }
 

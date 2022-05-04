@@ -6,7 +6,6 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.TranslatableComponent;
-import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.LivingEntity;
@@ -31,6 +30,8 @@ import static committee.nova.firesafety.common.block.reference.BlockReference.EX
 import static committee.nova.firesafety.common.block.reference.BlockReference.getRegisteredBlockEntityType;
 import static committee.nova.firesafety.common.tools.TagKeyReference.BURNING;
 import static committee.nova.firesafety.common.tools.TagKeyReference.IGNORED;
+import static net.minecraft.sounds.SoundEvents.BUCKET_FILL;
+import static net.minecraft.sounds.SoundEvents.GENERIC_EXTINGUISH_FIRE;
 
 @ParametersAreNonnullByDefault
 public class ExtinguisherBlockEntity extends FireAlarmBlockEntity {
@@ -76,7 +77,7 @@ public class ExtinguisherBlockEntity extends FireAlarmBlockEntity {
         final int consumption = Configuration.waterConsumption.get();
         extinguish(tank.drain(consumption, IFluidHandler.FluidAction.EXECUTE).getAmount());
         if (remain > consumption) return;
-        toListeningPlayers(level, player -> PlayerHandler.playSoundForThisPlayer(player, SoundEvents.BUCKET_FILL, 1F, 1F));
+        toListeningPlayers(level, player -> PlayerHandler.playSoundForThisPlayer(player, BUCKET_FILL, 1F, 1F));
         toListeningPlayers(level, player -> PlayerHandler.notifyServerPlayer(player, new TranslatableComponent("msg.firesafety.device.insufficient_water", formatBlockPos())));
     }
 
@@ -88,7 +89,7 @@ public class ExtinguisherBlockEntity extends FireAlarmBlockEntity {
         for (final BlockPos p : posList) {
             if (level.getBlockState(p).is(Blocks.FIRE) && r.nextInt(a) > 100 - Configuration.blockExtinguishingPossibility.get() * 100) {
                 level.setBlockAndUpdate(p, Blocks.AIR.defaultBlockState());
-                level.playSound(null, p, SoundEvents.GENERIC_EXTINGUISH_FIRE, SoundSource.BLOCKS, 1F, 1F);
+                level.playSound(null, p, GENERIC_EXTINGUISH_FIRE, SoundSource.BLOCKS, 1F, 1F);
             }
         }
         final List<LivingEntity> entityList = level.getEntitiesOfClass(LivingEntity.class, monitoringArea(), l -> (l.isOnFire() || l.getType().is(BURNING)) && !l.getType().is(IGNORED));
@@ -97,7 +98,7 @@ public class ExtinguisherBlockEntity extends FireAlarmBlockEntity {
             if (r.nextInt(a) <= 100 - Configuration.entityExtinguishingPossibility.get() * 100) continue;
             e.clearFire();
             if (e.getType().is(BURNING)) e.hurt(DamageSource.FREEZE, freezeDamage);
-            level.playSound(null, e, SoundEvents.GENERIC_EXTINGUISH_FIRE, SoundSource.BLOCKS, 1F, 1F);
+            level.playSound(null, e, GENERIC_EXTINGUISH_FIRE, SoundSource.BLOCKS, 1F, 1F);
         }
     }
 
