@@ -26,5 +26,6 @@
         }
       }
     }
-  }
+  },
+  "parent": "firesafety:be_careful_with_candles"
 }
