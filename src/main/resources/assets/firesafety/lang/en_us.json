@@ -10,6 +10,7 @@
   "msg.firesafety.device.insufficient_water": "§3Device at {0} reports its water shortage§r",
   "msg.firesafety.device.listening.false": "§4You are no longer listening to the device§r",
   "msg.firesafety.device.listening.true": "§2You are listening to the device now§r",
+  "msg.firesafety.device.current_water_amount": "Current Water Amount: {0} mB",
   "phrase.firesafety.insufficient_water": "§3[Water Shortage]§r",
   "tips.firesafety.listen": "Right-click on the device to change your listening status for it"
 }

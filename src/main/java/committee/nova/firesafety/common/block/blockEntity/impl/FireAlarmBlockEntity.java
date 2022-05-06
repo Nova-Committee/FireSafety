@@ -61,8 +61,8 @@ public class FireAlarmBlockEntity extends RecordableDeviceBlockEntity {
     }
 
     public BlockPos[] monitoringAreaPos() {
-        int w = Configuration.fireAlarmMonitoringWidth.get();
-        int h = Configuration.fireAlarmMonitoringHeight.get();
+        final int w = Configuration.fireAlarmMonitoringWidth.get();
+        final int h = Configuration.fireAlarmMonitoringHeight.get();
         return new BlockPos[]{worldPosition.offset(w, 0, w), worldPosition.offset(-w, -h, -w)};
     }
 

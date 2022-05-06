@@ -3,11 +3,13 @@ package committee.nova.firesafety.common.block.impl;
 import committee.nova.firesafety.common.block.base.AbstractCeilingDeviceBlock;
 import committee.nova.firesafety.common.block.blockEntity.impl.ExtinguisherBlockEntity;
 import committee.nova.firesafety.common.tools.DataReference;
+import committee.nova.firesafety.common.tools.PlayerHandler;
 import committee.nova.firesafety.common.tools.TagKeyReference;
 import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -64,8 +66,10 @@ public class ExtinguisherBlock extends AbstractCeilingDeviceBlock implements Ent
     public InteractionResult use(BlockState state, Level world, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
         final ItemStack stack = player.getItemInHand(hand);
         if (world.isClientSide) return InteractionResult.SUCCESS;
-        if (!stack.is(Items.WATER_BUCKET) && !stack.getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY).isPresent())
+        if (!stack.is(Items.WATER_BUCKET) && !stack.getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY).isPresent()) {
+            reportWaterAmount(player, world, pos);
             return super.use(state, world, pos, player, hand, hit);
+        }
         final BlockEntity e = world.getBlockEntity(pos);
         if (!(e instanceof final ExtinguisherBlockEntity g)) return InteractionResult.SUCCESS;
         final int needFill = g.getMaxWaterStorage() - g.getWaterStorage();
@@ -82,8 +86,15 @@ public class ExtinguisherBlock extends AbstractCeilingDeviceBlock implements Ent
             });
         }
         g.getTank().fill(toFill[0], IFluidHandler.FluidAction.EXECUTE);
+        reportWaterAmount(player, world, pos);
         world.playSound(null, pos, BUCKET_EMPTY, SoundSource.BLOCKS, 1F, 1F);
         return InteractionResult.SUCCESS;
+    }
+
+    private void reportWaterAmount(Player player, Level world, BlockPos pos) {
+        final BlockEntity b = world.getBlockEntity(pos);
+        if (!(b instanceof ExtinguisherBlockEntity e)) return;
+        PlayerHandler.notifyServerPlayer(player, new TranslatableComponent("msg.firesafety.device.current_water_amount", e.getWaterStorage()));
     }
 
     @Nullable

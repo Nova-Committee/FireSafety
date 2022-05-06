@@ -10,6 +10,7 @@
   "msg.firesafety.device.insufficient_water": "§3位于{0}的设备报告其供水不足§r",
   "msg.firesafety.device.listening.false": "§4不再监听此设备§r",
   "msg.firesafety.device.listening.true": "§2正在监听此设备§r",
+  "msg.firesafety.device.current_water_amount": "当前水量：{0} mB",
   "phrase.firesafety.insufficient_water": "§3[供水不足]§r",
   "tips.firesafety.listen": "右击设备以改变您对它的监听状态"
 }
