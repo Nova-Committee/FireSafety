@@ -1,5 +1,6 @@
 package committee.nova.firesafety.common.block.blockEntity.impl;
 
+import committee.nova.firesafety.api.ExtinguishableUtil;
 import committee.nova.firesafety.common.config.Configuration;
 import committee.nova.firesafety.common.tools.PlayerHandler;
 import net.minecraft.core.BlockPos;
@@ -9,7 +10,6 @@ import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.Fluids;
 import net.minecraftforge.common.capabilities.Capability;
@@ -87,8 +87,12 @@ public class ExtinguisherBlockEntity extends FireAlarmBlockEntity {
         final Random r = level.random;
         final int a = (int) (amount * 100F / Configuration.waterConsumption.get()) + 1;
         for (final BlockPos p : posList) {
-            if (level.getBlockState(p).is(Blocks.FIRE) && r.nextInt(a) > 100 - Configuration.blockExtinguishingPossibility.get() * 100) {
-                level.setBlockAndUpdate(p, Blocks.AIR.defaultBlockState());
+            if (r.nextInt(a) > 100 - Configuration.blockExtinguishingPossibility.get() * 100) {
+                final short i = ExtinguishableUtil.getTargetIndex(level.getBlockState(p));
+                if (i == Short.MIN_VALUE) continue;
+                final BlockState s = ExtinguishableUtil.getTarget(i);
+                if (s == null) continue;
+                level.setBlockAndUpdate(p, s);
                 level.playSound(null, p, GENERIC_EXTINGUISH_FIRE, SoundSource.BLOCKS, 1F, 1F);
             }
         }
