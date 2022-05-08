@@ -11,6 +11,7 @@ public class Configuration {
     public static final ForgeConfigSpec.IntValue waterConsumption;
     public static final ForgeConfigSpec.DoubleValue freezeDamage;
     public static final ForgeConfigSpec.IntValue extinguishDelay;
+    public static final ForgeConfigSpec.BooleanValue notifyByChat;
     public static final ForgeConfigSpec COMMON_CONFIG;
 
     static {
@@ -29,6 +30,9 @@ public class Configuration {
                 .defineInRange("freezeDamage", 5.0, 0, 100);
         extinguishDelay = builder.comment("After how many tick the fire started can the extinguisher try to extinguish")
                 .defineInRange("extinguishDelay", 25, 0, 120);
+        notifyByChat = builder.comment("Whether a fire-monitoring device will notify the listening players by chat message or by client message.",
+                        "You need to know that only one client message could be displayed at a time.")
+                .define("notifyByChat", true);
         COMMON_CONFIG = builder.build();
     }
 }

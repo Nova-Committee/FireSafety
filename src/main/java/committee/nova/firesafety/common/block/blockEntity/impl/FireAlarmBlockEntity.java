@@ -2,10 +2,10 @@ package committee.nova.firesafety.common.block.blockEntity.impl;
 
 import committee.nova.firesafety.api.ExtinguishableUtil;
 import committee.nova.firesafety.common.block.blockEntity.base.RecordableDeviceBlockEntity;
-import committee.nova.firesafety.common.config.Configuration;
 import committee.nova.firesafety.common.sound.init.SoundInit;
 import committee.nova.firesafety.common.tools.PlayerHandler;
 import net.minecraft.core.BlockPos;
+import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.Entity;
@@ -19,6 +19,9 @@ import static committee.nova.firesafety.common.block.base.AbstractCeilingDeviceB
 import static committee.nova.firesafety.common.block.impl.ExtinguisherBlock.WATERED;
 import static committee.nova.firesafety.common.block.reference.BlockReference.FIRE_ALARM;
 import static committee.nova.firesafety.common.block.reference.BlockReference.getRegisteredBlockEntityType;
+import static committee.nova.firesafety.common.config.Configuration.*;
+import static committee.nova.firesafety.common.tools.PlayerHandler.displayClientMessage;
+import static committee.nova.firesafety.common.tools.PlayerHandler.notifyServerPlayer;
 
 @ParametersAreNonnullByDefault
 public class FireAlarmBlockEntity extends RecordableDeviceBlockEntity {
@@ -44,8 +47,9 @@ public class FireAlarmBlockEntity extends RecordableDeviceBlockEntity {
         level.setBlockAndUpdate(worldPosition, state.setValue(ONFIRE, true));
         fireStartedTick++;
         if (level.getDayTime() % 100 != 25) return level.getDayTime() % 50 == 0;
-        toListeningPlayers(level, player -> PlayerHandler.displayClientMessage(player, new TranslatableComponent("msg.firesafety.device.fire_detected",
-                formatBlockPos(), c[0], c[1], (state.hasProperty(WATERED) && !state.getValue(WATERED)) ? new TranslatableComponent("phrase.firesafety.insufficient_water").getString() : "")));
+        final Component msg = new TranslatableComponent("msg.firesafety.device.fire_detected",
+                formatBlockPos(), c[0], c[1], (state.hasProperty(WATERED) && !state.getValue(WATERED)) ? new TranslatableComponent("phrase.firesafety.insufficient_water").getString() : "");
+        toListeningPlayers(level, player -> notifyByChat.get() ? notifyServerPlayer(player, msg) : displayClientMessage(player, msg));
         toListeningPlayers(level, player -> PlayerHandler.playSoundForThisPlayer(player, SoundInit.getSound(0), .5F, 1F));
         level.playSound(null, worldPosition, SoundInit.getSound(0), SoundSource.BLOCKS, .8F, 1F);
         return false;
@@ -59,8 +63,8 @@ public class FireAlarmBlockEntity extends RecordableDeviceBlockEntity {
     }
 
     public BlockPos[] monitoringAreaPos() {
-        final int w = Configuration.fireAlarmMonitoringWidth.get();
-        final int h = Configuration.fireAlarmMonitoringHeight.get();
+        final int w = fireAlarmMonitoringWidth.get();
+        final int h = fireAlarmMonitoringHeight.get();
         return new BlockPos[]{worldPosition.offset(w, 0, w), worldPosition.offset(-w, -h, -w)};
     }
 
