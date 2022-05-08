@@ -10,7 +10,6 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 
-import javax.annotation.Nullable;
 import java.util.HashMap;
 import java.util.function.Consumer;
 
@@ -57,9 +56,9 @@ public class ExtinguishableUtil {
         return s[0];
     }
 
-    @Nullable
     public static BlockState getTargetBlockState(short index) {
-        return index == Short.MIN_VALUE ? null : extinguishableBlockList.get(index).targetBlock();
+        if (index == Short.MIN_VALUE) throw new NumberFormatException("Priority value should be greater than -32768");
+        return extinguishableBlockList.get(index).targetBlock();
     }
 
     public static short getTargetEntityIndex(Entity entity) {
@@ -70,8 +69,8 @@ public class ExtinguishableUtil {
         return s[0];
     }
 
-    @Nullable
     public static Consumer<Entity> getTargetEntityAction(short index) {
-        return index == Short.MIN_VALUE ? null : extinguishableEntityList.get(index).entityAction();
+        if (index == Short.MIN_VALUE) throw new NumberFormatException("Priority value should be greater than -32768");
+        return extinguishableEntityList.get(index).entityAction();
     }
 }

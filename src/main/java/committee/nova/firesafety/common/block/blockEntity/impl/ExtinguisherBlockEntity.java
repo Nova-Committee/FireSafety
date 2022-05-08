@@ -1,7 +1,6 @@
 package committee.nova.firesafety.common.block.blockEntity.impl;
 
 import committee.nova.firesafety.api.ExtinguishableUtil;
-import committee.nova.firesafety.common.config.Configuration;
 import committee.nova.firesafety.common.tools.PlayerHandler;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -23,11 +22,11 @@ import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.List;
 import java.util.Random;
-import java.util.function.Consumer;
 
 import static committee.nova.firesafety.common.block.impl.ExtinguisherBlock.WATERED;
 import static committee.nova.firesafety.common.block.reference.BlockReference.EXTINGUISHER;
 import static committee.nova.firesafety.common.block.reference.BlockReference.getRegisteredBlockEntityType;
+import static committee.nova.firesafety.common.config.Configuration.*;
 import static net.minecraft.sounds.SoundEvents.BUCKET_FILL;
 import static net.minecraft.sounds.SoundEvents.GENERIC_EXTINGUISH_FIRE;
 
@@ -50,7 +49,7 @@ public class ExtinguisherBlockEntity extends FireAlarmBlockEntity {
         }
         level.setBlockAndUpdate(worldPosition, state.setValue(WATERED, true));
         if (!needExtinguish) return true;
-        if (fireStartedTick <= 25) return true;
+        if (fireStartedTick <= extinguishDelay.get()) return true;
         tryExtinguish();
         return true;
     }
@@ -70,7 +69,7 @@ public class ExtinguisherBlockEntity extends FireAlarmBlockEntity {
     private void tryExtinguish() {
         assert level != null;
         final int remain = tank.getFluidAmount();
-        final int consumption = Configuration.waterConsumption.get();
+        final int consumption = waterConsumption.get();
         extinguish(tank.drain(consumption, IFluidHandler.FluidAction.EXECUTE).getAmount());
         if (remain > consumption) return;
         toListeningPlayers(level, player -> PlayerHandler.playSoundForThisPlayer(player, BUCKET_FILL, 1F, 1F));
@@ -81,24 +80,20 @@ public class ExtinguisherBlockEntity extends FireAlarmBlockEntity {
         assert level != null;
         final Iterable<BlockPos> posList = BlockPos.betweenClosed(monitoringAreaPos()[0], monitoringAreaPos()[1]);
         final Random r = level.random;
-        final int a = (int) (amount * 100F / Configuration.waterConsumption.get()) + 1;
+        final int a = (int) (amount * 100F / waterConsumption.get()) + 1;
         for (final BlockPos p : posList) {
-            if (r.nextInt(a) < 100 - Configuration.blockExtinguishingPossibility.get() * 100) continue;
+            if (r.nextInt(a) < 100 - blockExtinguishingPossibility.get() * 100) continue;
             final short i = ExtinguishableUtil.getTargetBlockStateIndex(level.getBlockState(p));
             if (i == Short.MIN_VALUE) continue;
-            final BlockState s = ExtinguishableUtil.getTargetBlockState(i);
-            if (s == null) continue;
-            level.setBlockAndUpdate(p, s);
+            level.setBlockAndUpdate(p, ExtinguishableUtil.getTargetBlockState(i));
             level.playSound(null, p, GENERIC_EXTINGUISH_FIRE, SoundSource.BLOCKS, 1F, 1F);
         }
         final List<Entity> entityList = level.getEntitiesOfClass(Entity.class, monitoringArea(), l -> ExtinguishableUtil.getTargetEntityIndex(l) > Short.MIN_VALUE);
         for (final Entity e : entityList) {
-            if (r.nextInt(a) < 100 - Configuration.entityExtinguishingPossibility.get() * 100) continue;
+            if (r.nextInt(a) < 100 - entityExtinguishingPossibility.get() * 100) continue;
             final short i = ExtinguishableUtil.getTargetEntityIndex(e);
             if (i == Short.MIN_VALUE) continue;
-            final Consumer<Entity> c = ExtinguishableUtil.getTargetEntityAction(i);
-            if (c == null) continue;
-            c.accept(e);
+            ExtinguishableUtil.getTargetEntityAction(i).accept(e);
         }
     }
 

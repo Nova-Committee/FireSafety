@@ -10,6 +10,7 @@ public class Configuration {
     public static final ForgeConfigSpec.DoubleValue entityExtinguishingPossibility;
     public static final ForgeConfigSpec.IntValue waterConsumption;
     public static final ForgeConfigSpec.DoubleValue freezeDamage;
+    public static final ForgeConfigSpec.IntValue extinguishDelay;
     public static final ForgeConfigSpec COMMON_CONFIG;
 
     static {
@@ -26,6 +27,8 @@ public class Configuration {
                 .defineInRange("waterConsumption", 50, 1, 1000);
         freezeDamage = builder.comment("The freeze damage per spray on the \"burning\" tagged entity")
                 .defineInRange("freezeDamage", 5.0, 0, 100);
+        extinguishDelay = builder.comment("After how many tick the fire started can the extinguisher try to extinguish")
+                .defineInRange("extinguishDelay", 25, 0, 120);
         COMMON_CONFIG = builder.build();
     }
 }
