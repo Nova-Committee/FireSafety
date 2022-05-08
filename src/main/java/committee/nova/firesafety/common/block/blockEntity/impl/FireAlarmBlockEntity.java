@@ -1,6 +1,6 @@
 package committee.nova.firesafety.common.block.blockEntity.impl;
 
-import committee.nova.firesafety.api.ExtinguishableUtil;
+import committee.nova.firesafety.api.FireSafetyApi;
 import committee.nova.firesafety.common.block.blockEntity.base.RecordableDeviceBlockEntity;
 import committee.nova.firesafety.common.sound.init.SoundInit;
 import committee.nova.firesafety.common.tools.PlayerHandler;
@@ -58,8 +58,8 @@ public class FireAlarmBlockEntity extends RecordableDeviceBlockEntity {
     private int[] fireSourceCount() {
         if (level == null) return new int[]{0, 0};
         final AABB range = monitoringArea();
-        return new int[]{(int) level.getBlockStatesIfLoaded(range).filter(b -> ExtinguishableUtil.getTargetBlockStateIndex(b) > Short.MIN_VALUE).count(),
-                level.getEntitiesOfClass(Entity.class, range, l -> ExtinguishableUtil.getTargetEntityIndex(l) > Short.MIN_VALUE).size()};
+        return new int[]{(int) level.getBlockStatesIfLoaded(range).filter(b -> FireSafetyApi.getTargetBlockStateIndex(b) > Short.MIN_VALUE).count(),
+                level.getEntitiesOfClass(Entity.class, range, l -> FireSafetyApi.getTargetEntityIndex(l) > Short.MIN_VALUE).size()};
     }
 
     public BlockPos[] monitoringAreaPos() {

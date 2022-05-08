@@ -1,6 +1,6 @@
 package committee.nova.firesafety.common.block.blockEntity.impl;
 
-import committee.nova.firesafety.api.ExtinguishableUtil;
+import committee.nova.firesafety.api.FireSafetyApi;
 import committee.nova.firesafety.common.tools.PlayerHandler;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -83,17 +83,17 @@ public class ExtinguisherBlockEntity extends FireAlarmBlockEntity {
         final int a = (int) (amount * 100F / waterConsumption.get()) + 1;
         for (final BlockPos p : posList) {
             if (r.nextInt(a) < 100 - blockExtinguishingPossibility.get() * 100) continue;
-            final short i = ExtinguishableUtil.getTargetBlockStateIndex(level.getBlockState(p));
+            final short i = FireSafetyApi.getTargetBlockStateIndex(level.getBlockState(p));
             if (i == Short.MIN_VALUE) continue;
-            level.setBlockAndUpdate(p, ExtinguishableUtil.getTargetBlockState(i));
+            level.setBlockAndUpdate(p, FireSafetyApi.getTargetBlockState(i));
             level.playSound(null, p, GENERIC_EXTINGUISH_FIRE, SoundSource.BLOCKS, 1F, 1F);
         }
-        final List<Entity> entityList = level.getEntitiesOfClass(Entity.class, monitoringArea(), l -> ExtinguishableUtil.getTargetEntityIndex(l) > Short.MIN_VALUE);
+        final List<Entity> entityList = level.getEntitiesOfClass(Entity.class, monitoringArea(), l -> FireSafetyApi.getTargetEntityIndex(l) > Short.MIN_VALUE);
         for (final Entity e : entityList) {
             if (r.nextInt(a) < 100 - entityExtinguishingPossibility.get() * 100) continue;
-            final short i = ExtinguishableUtil.getTargetEntityIndex(e);
+            final short i = FireSafetyApi.getTargetEntityIndex(e);
             if (i == Short.MIN_VALUE) continue;
-            ExtinguishableUtil.getTargetEntityAction(i).accept(e);
+            FireSafetyApi.getTargetEntityAction(i).accept(e);
         }
     }
 

@@ -1,5 +1,6 @@
 package committee.nova.firesafety.common.block.impl;
 
+import committee.nova.firesafety.api.FireSafetyApi;
 import committee.nova.firesafety.common.block.base.AbstractCeilingDeviceBlock;
 import committee.nova.firesafety.common.block.blockEntity.impl.ExtinguisherBlockEntity;
 import committee.nova.firesafety.common.tools.DataReference;
@@ -76,13 +77,16 @@ public class ExtinguisherBlock extends AbstractCeilingDeviceBlock implements Ent
         if (needFill <= 0) return InteractionResult.SUCCESS;
         final FluidStack[] toFill = new FluidStack[1];
         toFill[0] = FluidStack.EMPTY;
-        if (stack.is(Items.WATER_BUCKET)) {
-            toFill[0] = new FluidStack(Fluids.WATER, Math.min(1000, needFill));
-            player.setItemInHand(hand, Items.BUCKET.getDefaultInstance());
+        final short index = FireSafetyApi.getFireFightingContainerIndex(stack);
+        if (index > Short.MIN_VALUE) {
+            final int shouldFill = Math.min(FireSafetyApi.getFireFightingContainerAmount(index).apply(stack), needFill);
+            toFill[0] = new FluidStack(Fluids.WATER, shouldFill);
+            if (!player.isCreative())
+                player.setItemInHand(hand, FireSafetyApi.getFireFightingContainerUsedResult(index).apply(shouldFill));
         } else {
             stack.getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY).ifPresent(f -> {
                 if (f.getFluidInTank(0).getFluid().is(TagKeyReference.FIREFIGHTING))
-                    toFill[0] = new FluidStack(Fluids.WATER, f.drain(needFill, IFluidHandler.FluidAction.EXECUTE).getAmount());
+                    toFill[0] = new FluidStack(Fluids.WATER, f.drain(needFill, player.isCreative() ? IFluidHandler.FluidAction.SIMULATE : IFluidHandler.FluidAction.EXECUTE).getAmount());
             });
         }
         g.getTank().fill(toFill[0], IFluidHandler.FluidAction.EXECUTE);
