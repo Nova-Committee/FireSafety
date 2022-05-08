@@ -5,12 +5,15 @@ import net.minecraft.world.item.ItemStack;
 
 public interface IFireFightingWaterContainer {
     /**
-     * Returns the current water amount of the itemstack
+     * @param stack The water container stack
+     * @return Returns the current water amount of the itemstack
      **/
     int getWaterAmount(ItemStack stack);
 
     /**
-     * Returns an ItemStack being consumed of water
+     * @param player The player using the itemstack
+     * @param amount The amount of water consumed
+     * @return Returns an ItemStack being consumed of water
      **/
-    ItemStack consume(Player p, int amount);
+    ItemStack consume(Player player, int amount);
 }

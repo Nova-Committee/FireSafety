@@ -14,7 +14,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 
-import javax.annotation.Nonnull;
+import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.HashMap;
 import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
@@ -30,7 +30,7 @@ public class FireSafetyApi {
     private static final HashMap<Short, FireFightingWaterContainerItem> firefightingWaterContainerList = new HashMap<>();
 
     public static void init() {
-        addExtinguishable(Short.MAX_VALUE, new ExtinguishableBlock((w, b) -> b.is(Blocks.FIRE), Blocks.AIR.defaultBlockState()));
+        addExtinguishable(Short.MAX_VALUE, new ExtinguishableBlock((w, b) -> b.is(Blocks.FIRE), (w, b) -> Blocks.AIR.defaultBlockState()));
         addExtinguishable((short) -32767, new ExtinguishableEntity((w, e) -> e.isOnFire() && !e.getType().is(IGNORED), (w, e) -> {
             e.clearFire();
             e.level.playSound(null, e, GENERIC_EXTINGUISH_FIRE, SoundSource.BLOCKS, 1F, 1F);
@@ -98,7 +98,7 @@ public class FireSafetyApi {
         return s[0];
     }
 
-    public static BlockState getTargetBlockState(short index) {
+    public static BiFunction<Level, BlockState, BlockState> getTargetBlockState(short index) {
         if (index == Short.MIN_VALUE) throw new NumberFormatException("Priority value should be greater than -32768");
         return extinguishableBlockList.get(index).targetBlock();
     }
@@ -113,16 +113,35 @@ public class FireSafetyApi {
         return firefightingWaterContainerList.get(index).usedResult();
     }
 
-    record FireFightingWaterContainerItem(BiPredicate<Player, ItemStack> stackCondition,
-                                          BiFunction<Player, ItemStack, Integer> amount,
-                                          Function3<Player, Integer, ItemStack, ItemStack> usedResult) {
+    /**
+     * @param stackCondition What kind of stack should be seen as a firefighting water container
+     * @param amount         The water amount the stack can provide
+     * @param usedResult     What is the corresponding water-consumed stack like
+     **/
+    @ParametersAreNonnullByDefault
+    public record FireFightingWaterContainerItem(
+            BiPredicate<Player, ItemStack> stackCondition,
+            BiFunction<Player, ItemStack, Integer> amount,
+            Function3<Player, Integer, ItemStack, ItemStack> usedResult) {
     }
 
-    record ExtinguishableBlock(@Nonnull BiPredicate<Level, BlockState> blockCondition,
-                               @Nonnull BlockState targetBlock) {
+    /**
+     * @param blockCondition What kind of block state should be seen as extinguishable
+     * @param targetBlock    What is the extinguished block state like
+     **/
+    @ParametersAreNonnullByDefault
+    public record ExtinguishableBlock(
+            BiPredicate<Level, BlockState> blockCondition,
+            BiFunction<Level, BlockState, BlockState> targetBlock) {
     }
 
-    record ExtinguishableEntity(@Nonnull BiPredicate<Level, Entity> entityCondition,
-                                @Nonnull BiConsumer<Level, Entity> entityAction) {
+    /**
+     * @param entityCondition What kind of entity should be seen as extinguishable
+     * @param entityAction    What should the extinguisher do with such entity
+     **/
+    @ParametersAreNonnullByDefault
+    public record ExtinguishableEntity(
+            BiPredicate<Level, Entity> entityCondition,
+            BiConsumer<Level, Entity> entityAction) {
     }
 }
