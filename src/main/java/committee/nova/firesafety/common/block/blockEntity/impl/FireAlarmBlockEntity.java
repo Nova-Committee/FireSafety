@@ -8,7 +8,7 @@ import committee.nova.firesafety.common.tools.PlayerHandler;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.sounds.SoundSource;
-import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
@@ -19,8 +19,6 @@ import static committee.nova.firesafety.common.block.base.AbstractCeilingDeviceB
 import static committee.nova.firesafety.common.block.impl.ExtinguisherBlock.WATERED;
 import static committee.nova.firesafety.common.block.reference.BlockReference.FIRE_ALARM;
 import static committee.nova.firesafety.common.block.reference.BlockReference.getRegisteredBlockEntityType;
-import static committee.nova.firesafety.common.tools.TagKeyReference.BURNING;
-import static committee.nova.firesafety.common.tools.TagKeyReference.IGNORED;
 
 @ParametersAreNonnullByDefault
 public class FireAlarmBlockEntity extends RecordableDeviceBlockEntity {
@@ -56,8 +54,8 @@ public class FireAlarmBlockEntity extends RecordableDeviceBlockEntity {
     private int[] fireSourceCount() {
         if (level == null) return new int[]{0, 0};
         final AABB range = monitoringArea();
-        return new int[]{(int) level.getBlockStatesIfLoaded(range).filter(b -> ExtinguishableUtil.getTargetIndex(b) > Short.MIN_VALUE).count(),
-                level.getEntitiesOfClass(LivingEntity.class, range, l -> (l.isOnFire() || l.getType().is(BURNING)) && !l.getType().is(IGNORED)).size()};
+        return new int[]{(int) level.getBlockStatesIfLoaded(range).filter(b -> ExtinguishableUtil.getTargetBlockStateIndex(b) > Short.MIN_VALUE).count(),
+                level.getEntitiesOfClass(Entity.class, range, l -> ExtinguishableUtil.getTargetEntityIndex(l) > Short.MIN_VALUE).size()};
     }
 
     public BlockPos[] monitoringAreaPos() {
