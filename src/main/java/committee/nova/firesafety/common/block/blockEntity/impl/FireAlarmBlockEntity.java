@@ -49,7 +49,10 @@ public class FireAlarmBlockEntity extends RecordableDeviceBlockEntity {
         if (level.getDayTime() % 100 != 25) return level.getDayTime() % 50 == 0;
         final Component msg = new TranslatableComponent("msg.firesafety.device.fire_detected",
                 formatBlockPos(), c[0], c[1], (state.hasProperty(WATERED) && !state.getValue(WATERED)) ? new TranslatableComponent("phrase.firesafety.insufficient_water").getString() : "");
-        toListeningPlayers(level, player -> notifyByChat.get() ? notifyServerPlayer(player, msg) : displayClientMessage(player, msg));
+        toListeningPlayers(level, player -> {
+            if (notifyByChat.get()) notifyServerPlayer(player, msg);
+            else displayClientMessage(player, msg);
+        });
         toListeningPlayers(level, player -> PlayerHandler.playSoundForThisPlayer(player, SoundInit.getSound(0), .5F, 1F));
         level.playSound(null, worldPosition, SoundInit.getSound(0), SoundSource.BLOCKS, .8F, 1F);
         return false;
@@ -58,8 +61,8 @@ public class FireAlarmBlockEntity extends RecordableDeviceBlockEntity {
     private int[] fireSourceCount() {
         if (level == null) return new int[]{0, 0};
         final AABB range = monitoringArea();
-        return new int[]{(int) level.getBlockStatesIfLoaded(range).filter(b -> FireSafetyApi.getTargetBlockStateIndex(b) > Short.MIN_VALUE).count(),
-                level.getEntitiesOfClass(Entity.class, range, l -> FireSafetyApi.getTargetEntityIndex(l) > Short.MIN_VALUE).size()};
+        return new int[]{(int) level.getBlockStatesIfLoaded(range).filter(b -> FireSafetyApi.getTargetBlockStateIndex(level, b) > Short.MIN_VALUE).count(),
+                level.getEntitiesOfClass(Entity.class, range, l -> FireSafetyApi.getTargetEntityIndex(level, l) > Short.MIN_VALUE).size()};
     }
 
     public BlockPos[] monitoringAreaPos() {

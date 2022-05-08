@@ -83,17 +83,17 @@ public class ExtinguisherBlockEntity extends FireAlarmBlockEntity {
         final int a = (int) (amount * 100F / waterConsumption.get()) + 1;
         for (final BlockPos p : posList) {
             if (r.nextInt(a) < 100 - blockExtinguishingPossibility.get() * 100) continue;
-            final short i = FireSafetyApi.getTargetBlockStateIndex(level.getBlockState(p));
+            final short i = FireSafetyApi.getTargetBlockStateIndex(level, level.getBlockState(p));
             if (i == Short.MIN_VALUE) continue;
             level.setBlockAndUpdate(p, FireSafetyApi.getTargetBlockState(i));
             level.playSound(null, p, GENERIC_EXTINGUISH_FIRE, SoundSource.BLOCKS, 1F, 1F);
         }
-        final List<Entity> entityList = level.getEntitiesOfClass(Entity.class, monitoringArea(), l -> FireSafetyApi.getTargetEntityIndex(l) > Short.MIN_VALUE);
+        final List<Entity> entityList = level.getEntitiesOfClass(Entity.class, monitoringArea(), l -> FireSafetyApi.getTargetEntityIndex(level, l) > Short.MIN_VALUE);
         for (final Entity e : entityList) {
             if (r.nextInt(a) < 100 - entityExtinguishingPossibility.get() * 100) continue;
-            final short i = FireSafetyApi.getTargetEntityIndex(e);
+            final short i = FireSafetyApi.getTargetEntityIndex(level, e);
             if (i == Short.MIN_VALUE) continue;
-            FireSafetyApi.getTargetEntityAction(i).accept(e);
+            FireSafetyApi.getTargetEntityAction(i).accept(level, e);
         }
     }
 

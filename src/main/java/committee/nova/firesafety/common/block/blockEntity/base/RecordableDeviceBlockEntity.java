@@ -16,7 +16,7 @@ import javax.annotation.ParametersAreNonnullByDefault;
 import java.text.MessageFormat;
 import java.util.HashMap;
 import java.util.UUID;
-import java.util.function.Function;
+import java.util.function.Consumer;
 
 @ParametersAreNonnullByDefault
 public abstract class RecordableDeviceBlockEntity extends BlockEntity {
@@ -65,7 +65,7 @@ public abstract class RecordableDeviceBlockEntity extends BlockEntity {
         return false;
     }
 
-    public void toListeningPlayers(Level level, Function<Player, ?> action) {
+    public void toListeningPlayers(Level level, Consumer<Player> action) {
         final MinecraftServer server = level.getServer();
         if (server == null) return;
         final PlayerList list = server.getPlayerList();
@@ -73,7 +73,7 @@ public abstract class RecordableDeviceBlockEntity extends BlockEntity {
             if (!notifies.containsKey(u) || !notifies.get(u)) continue;
             final Player p = list.getPlayer(u);
             if (p == null) continue;
-            action.apply(p);
+            action.accept(p);
         }
     }
 

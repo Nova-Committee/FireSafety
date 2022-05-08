@@ -77,12 +77,12 @@ public class ExtinguisherBlock extends AbstractCeilingDeviceBlock implements Ent
         if (needFill <= 0) return InteractionResult.SUCCESS;
         final FluidStack[] toFill = new FluidStack[1];
         toFill[0] = FluidStack.EMPTY;
-        final short index = FireSafetyApi.getFireFightingContainerIndex(stack);
+        final short index = FireSafetyApi.getFireFightingContainerIndex(player, stack);
         if (index > Short.MIN_VALUE) {
-            final int shouldFill = Math.min(FireSafetyApi.getFireFightingContainerAmount(index).apply(stack), needFill);
+            final int shouldFill = Math.min(FireSafetyApi.getFireFightingContainerAmount(index).apply(player, stack), needFill);
             toFill[0] = new FluidStack(Fluids.WATER, shouldFill);
             if (!player.isCreative())
-                player.setItemInHand(hand, FireSafetyApi.getFireFightingContainerUsedResult(index).apply(shouldFill));
+                player.setItemInHand(hand, FireSafetyApi.getFireFightingContainerUsedResult(index).apply(player, shouldFill, stack));
         } else {
             stack.getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY).ifPresent(f -> {
                 if (f.getFluidInTank(0).getFluid().is(TagKeyReference.FIREFIGHTING))
