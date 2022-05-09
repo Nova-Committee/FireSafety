@@ -40,7 +40,7 @@ public class FireSafetyApi {
         addFireFightingWaterItem((short) 32767, new FireFightingWaterContainerItem((p, s) -> s.is(Items.WATER_BUCKET), (p, i) -> 1000, (p, a, s) -> Items.BUCKET.getDefaultInstance()));
         addFireFightingWaterItem((short) 32766, new FireFightingWaterContainerItem((p, i) -> i.getItem() instanceof IFireFightingWaterContainer,
                 (p, i) -> ((IFireFightingWaterContainer) i.getItem()).getWaterAmount(i),
-                (p, a, s) -> ((IFireFightingWaterContainer) s.getItem()).consume(p, a)));
+                (p, a, s) -> ((IFireFightingWaterContainer) s.getItem()).consume(p, a, s)));
     }
 
     public static short getTargetBlockIndex(Level level, BlockPos pos) {
