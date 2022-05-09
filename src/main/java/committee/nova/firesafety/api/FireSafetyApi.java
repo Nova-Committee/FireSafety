@@ -4,6 +4,7 @@ import com.mojang.datafixers.util.Function3;
 import committee.nova.firesafety.FireSafety;
 import committee.nova.firesafety.api.item.IFireFightingWaterContainer;
 import committee.nova.firesafety.common.config.Configuration;
+import net.minecraft.core.BlockPos;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
@@ -30,7 +31,7 @@ public class FireSafetyApi {
     private static final HashMap<Short, FireFightingWaterContainerItem> firefightingWaterContainerList = new HashMap<>();
 
     public static void init() {
-        addExtinguishable(Short.MAX_VALUE, new ExtinguishableBlock((w, b) -> b.is(Blocks.FIRE), (w, b) -> Blocks.AIR.defaultBlockState()));
+        addExtinguishable(Short.MAX_VALUE, new ExtinguishableBlock((w, p) -> w.getBlockState(p).is(Blocks.FIRE), (w, p) -> Blocks.AIR.defaultBlockState()));
         addExtinguishable((short) -32767, new ExtinguishableEntity((w, e) -> e.isOnFire() && !e.getType().is(IGNORED), (w, e) -> {
             e.clearFire();
             e.level.playSound(null, e, GENERIC_EXTINGUISH_FIRE, SoundSource.BLOCKS, 1F, 1F);
@@ -42,10 +43,10 @@ public class FireSafetyApi {
                 (p, a, s) -> ((IFireFightingWaterContainer) s.getItem()).consume(p, a)));
     }
 
-    public static short getTargetBlockStateIndex(Level level, BlockState state) {
+    public static short getTargetBlockIndex(Level level, BlockPos pos) {
         final short[] s = {Short.MIN_VALUE};
         extinguishableBlockList.forEach((p, e) -> {
-            if (p > s[0] && e.blockCondition().test(level, state)) s[0] = p;
+            if (p > s[0] && e.blockCondition().test(level, pos)) s[0] = p;
         });
         return s[0];
     }
@@ -98,7 +99,7 @@ public class FireSafetyApi {
         return s[0];
     }
 
-    public static BiFunction<Level, BlockState, BlockState> getTargetBlockState(short index) {
+    public static BiFunction<Level, BlockPos, BlockState> getTargetBlockState(short index) {
         if (index == Short.MIN_VALUE) throw new NumberFormatException("Priority value should be greater than -32768");
         return extinguishableBlockList.get(index).targetBlock();
     }
@@ -131,8 +132,8 @@ public class FireSafetyApi {
      **/
     @ParametersAreNonnullByDefault
     public record ExtinguishableBlock(
-            BiPredicate<Level, BlockState> blockCondition,
-            BiFunction<Level, BlockState, BlockState> targetBlock) {
+            BiPredicate<Level, BlockPos> blockCondition,
+            BiFunction<Level, BlockPos, BlockState> targetBlock) {
     }
 
     /**

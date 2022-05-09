@@ -61,8 +61,10 @@ public class FireAlarmBlockEntity extends RecordableDeviceBlockEntity {
     private int[] fireSourceCount() {
         if (level == null) return new int[]{0, 0};
         final AABB range = monitoringArea();
-        return new int[]{(int) level.getBlockStatesIfLoaded(range).filter(b -> FireSafetyApi.getTargetBlockStateIndex(level, b) > Short.MIN_VALUE).count(),
-                level.getEntitiesOfClass(Entity.class, range, l -> FireSafetyApi.getTargetEntityIndex(level, l) > Short.MIN_VALUE).size()};
+        int b = 0;
+        for (final BlockPos p : BlockPos.betweenClosed(monitoringAreaPos()[0], monitoringAreaPos()[1]))
+            if (FireSafetyApi.getTargetBlockIndex(level, p) > Short.MIN_VALUE) b++;
+        return new int[]{b, level.getEntitiesOfClass(Entity.class, range, l -> FireSafetyApi.getTargetEntityIndex(level, l) > Short.MIN_VALUE).size()};
     }
 
     public BlockPos[] monitoringAreaPos() {

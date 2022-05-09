@@ -6,7 +6,7 @@
   "itemGroup.firesafety": "§4Fire§5Safety§r",
   "block.firesafety.extinguisher": "Extinguisher",
   "block.firesafety.fire_alarm": "Fire Alarm",
-  "msg.firesafety.device.fire_detected": "§c§lDevice at §r{0}§c§l spotted fire §f[Block >> {1}, Entity >> {2}] {3}§r",
+  "msg.firesafety.device.fire_detected": "§cDevice at §r{0}§c spotted fire §f[Block >> {1}, Entity >> {2}] {3}§r",
   "msg.firesafety.device.insufficient_water": "§3Device at {0} reports its water shortage§r",
   "msg.firesafety.device.listening.false": "§4You are no longer listening to the device§r",
   "msg.firesafety.device.listening.true": "§2You are listening to the device now§r",
