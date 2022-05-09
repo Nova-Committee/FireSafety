@@ -44,6 +44,7 @@ import static net.minecraft.sounds.SoundEvents.BUCKET_EMPTY;
 
 @MethodsReturnNonnullByDefault
 @ParametersAreNonnullByDefault
+@SuppressWarnings("deprecation")
 public class ExtinguisherBlock extends AbstractCeilingDeviceBlock implements EntityBlock {
     public static final BooleanProperty ONFIRE = BooleanProperty.create("onfire");
     public static final BooleanProperty WATERED = BooleanProperty.create("watered");
@@ -62,7 +63,7 @@ public class ExtinguisherBlock extends AbstractCeilingDeviceBlock implements Ent
     public void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> definition) {
         definition.add(ONFIRE, WATERED);
     }
-
+    
     @Override
     public InteractionResult use(BlockState state, Level world, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
         final ItemStack stack = player.getItemInHand(hand);

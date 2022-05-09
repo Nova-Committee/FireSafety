@@ -40,6 +40,7 @@ import static net.minecraft.sounds.SoundEvents.NOTE_BLOCK_IRON_XYLOPHONE;
 
 @ParametersAreNonnullByDefault
 @MethodsReturnNonnullByDefault
+@SuppressWarnings("deprecation")
 public abstract class AbstractCeilingDeviceBlock extends Block implements ISpecialRenderType {
     public static final BooleanProperty ONFIRE = BooleanProperty.create("onfire");
 
