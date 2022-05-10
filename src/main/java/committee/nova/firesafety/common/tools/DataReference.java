@@ -10,7 +10,7 @@ public class DataReference {
     public static void init() {
         for (float x = -5; x <= 5; x++) {
             for (float z = -5; z <= 5; z++) {
-                water.add(new Vec2(x / 100F, z / 100F));
+                water.add(new Vec2(x / 60F, z / 60F));
             }
         }
     }

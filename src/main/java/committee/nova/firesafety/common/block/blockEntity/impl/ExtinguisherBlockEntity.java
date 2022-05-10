@@ -28,7 +28,7 @@ import static committee.nova.firesafety.common.block.reference.BlockReference.EX
 import static committee.nova.firesafety.common.block.reference.BlockReference.getRegisteredBlockEntityType;
 import static committee.nova.firesafety.common.config.Configuration.*;
 import static net.minecraft.sounds.SoundEvents.BUCKET_FILL;
-import static net.minecraft.sounds.SoundEvents.GENERIC_EXTINGUISH_FIRE;
+import static net.minecraft.sounds.SoundEvents.FIRE_EXTINGUISH;
 
 @ParametersAreNonnullByDefault
 public class ExtinguisherBlockEntity extends FireAlarmBlockEntity {
@@ -86,7 +86,7 @@ public class ExtinguisherBlockEntity extends FireAlarmBlockEntity {
             final short i = FireSafetyApi.getTargetBlockIndex(level, p);
             if (i == Short.MIN_VALUE) continue;
             level.setBlockAndUpdate(p, FireSafetyApi.getTargetBlockState(i).apply(level, p));
-            level.playSound(null, p, GENERIC_EXTINGUISH_FIRE, SoundSource.BLOCKS, 1F, 1F);
+            level.playSound(null, p, FIRE_EXTINGUISH, SoundSource.BLOCKS, 0.7F, 1.6F + (r.nextFloat() - r.nextFloat()) * 0.4F);
         }
         final List<Entity> entityList = level.getEntitiesOfClass(Entity.class, monitoringArea(), l -> FireSafetyApi.getTargetEntityIndex(level, l) > Short.MIN_VALUE);
         for (final Entity e : entityList) {

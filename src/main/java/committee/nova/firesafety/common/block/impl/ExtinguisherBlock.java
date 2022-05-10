@@ -96,12 +96,6 @@ public class ExtinguisherBlock extends AbstractCeilingDeviceBlock implements Ent
         return InteractionResult.SUCCESS;
     }
 
-    private void reportWaterAmount(Player player, Level world, BlockPos pos) {
-        final BlockEntity b = world.getBlockEntity(pos);
-        if (!(b instanceof ExtinguisherBlockEntity e)) return;
-        PlayerHandler.notifyServerPlayer(player, new TranslatableComponent("msg.firesafety.device.current_water_amount", e.getWaterStorage()));
-    }
-
     @Nullable
     @Override
     public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
@@ -133,4 +127,9 @@ public class ExtinguisherBlock extends AbstractCeilingDeviceBlock implements Ent
         return (state.getValue(ONFIRE) ? 15 : 9) + (state.getValue(WATERED) ? -6 : 0);
     }
 
+    private void reportWaterAmount(Player player, Level world, BlockPos pos) {
+        final BlockEntity b = world.getBlockEntity(pos);
+        if (!(b instanceof ExtinguisherBlockEntity e)) return;
+        PlayerHandler.notifyServerPlayer(player, new TranslatableComponent("msg.firesafety.device.current_water_amount", e.getWaterStorage()));
+    }
 }
