@@ -2,6 +2,7 @@ package committee.nova.firesafety.api;
 
 import com.mojang.datafixers.util.Function3;
 import committee.nova.firesafety.api.event.FireSafetyExtensionEvent;
+import committee.nova.firesafety.common.tools.fp.Consumer3;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
@@ -34,26 +35,14 @@ public class FireSafetyApi {
         firefightingWaterContainerList.putAll(event.getFirefightingWaterContainerList());
     }
 
-    /**
-     * @param stackCondition What kind of stack should be seen as a firefighting water container
-     * @param amount         The water amount the stack can provide
-     * @param usedResult     What is the corresponding water-consumed stack like
-     **/
-    @ParametersAreNonnullByDefault
-    public record FireFightingWaterContainerItem(
-            BiPredicate<Player, ItemStack> stackCondition,
-            BiFunction<Player, ItemStack, Integer> amount,
-            Function3<Player, Integer, ItemStack, ItemStack> usedResult) {
+    public static FireFightingWaterContainerItem getFireFightingContainer(short index) {
+        if (index == Short.MIN_VALUE) throw new NumberFormatException("Priority value should be greater than -32768");
+        return firefightingWaterContainerList.get(index);
     }
 
-    /**
-     * @param blockCondition What kind of block state should be seen as extinguishable
-     * @param targetBlock    What is the extinguished block state like
-     **/
-    @ParametersAreNonnullByDefault
-    public record ExtinguishableBlock(
-            BiPredicate<Level, BlockPos> blockCondition,
-            BiFunction<Level, BlockPos, BlockState> targetBlock) {
+    public static ExtinguishableBlock getTargetBlock(short index) {
+        if (index == Short.MIN_VALUE) throw new NumberFormatException("Priority value should be greater than -32768");
+        return extinguishableBlockList.get(index);
     }
 
     /**
@@ -90,24 +79,35 @@ public class FireSafetyApi {
         return s[0];
     }
 
-    public static BiFunction<Player, ItemStack, Integer> getFireFightingContainerAmount(short index) {
+    public static ExtinguishableEntity getTargetEntity(short index) {
         if (index == Short.MIN_VALUE) throw new NumberFormatException("Priority value should be greater than -32768");
-        return firefightingWaterContainerList.get(index).amount();
+        return extinguishableEntityList.get(index);
     }
 
-    public static Function3<Player, Integer, ItemStack, ItemStack> getFireFightingContainerUsedResult(short index) {
-        if (index == Short.MIN_VALUE) throw new NumberFormatException("Priority value should be greater than -32768");
-        return firefightingWaterContainerList.get(index).usedResult();
+    /**
+     * @param stackCondition What kind of stack should be seen as a firefighting water container
+     * @param amount         The water amount the stack can provide
+     * @param usedResult     What is the corresponding water-consumed stack like
+     * @param usedInfluence  What else will happen when the container stack is consumed
+     **/
+    @ParametersAreNonnullByDefault
+    public record FireFightingWaterContainerItem(
+            BiPredicate<Player, ItemStack> stackCondition,
+            BiFunction<Player, ItemStack, Integer> amount,
+            Function3<Player, Integer, ItemStack, ItemStack> usedResult,
+            Consumer3<Player, Integer, ItemStack> usedInfluence) {
     }
 
-    public static BiFunction<Level, BlockPos, BlockState> getTargetBlockState(short index) {
-        if (index == Short.MIN_VALUE) throw new NumberFormatException("Priority value should be greater than -32768");
-        return extinguishableBlockList.get(index).targetBlock();
-    }
-
-    public static BiConsumer<Level, Entity> getTargetEntityAction(short index) {
-        if (index == Short.MIN_VALUE) throw new NumberFormatException("Priority value should be greater than -32768");
-        return extinguishableEntityList.get(index).entityAction();
+    /**
+     * @param blockCondition        What kind of block state should be seen as extinguishable
+     * @param targetBlock           What is the extinguished block state like
+     * @param extinguishedInfluence What else will happen when extinguished
+     **/
+    @ParametersAreNonnullByDefault
+    public record ExtinguishableBlock(
+            BiPredicate<Level, BlockPos> blockCondition,
+            BiFunction<Level, BlockPos, BlockState> targetBlock,
+            BiConsumer<Level, BlockPos> extinguishedInfluence) {
     }
 
 }

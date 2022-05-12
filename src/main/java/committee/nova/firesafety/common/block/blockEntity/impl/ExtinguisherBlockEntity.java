@@ -6,7 +6,6 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.TranslatableComponent;
-import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.Fluids;
@@ -28,7 +27,6 @@ import static committee.nova.firesafety.common.block.reference.BlockReference.EX
 import static committee.nova.firesafety.common.block.reference.BlockReference.getRegisteredBlockEntityType;
 import static committee.nova.firesafety.common.config.Configuration.*;
 import static net.minecraft.sounds.SoundEvents.BUCKET_FILL;
-import static net.minecraft.sounds.SoundEvents.FIRE_EXTINGUISH;
 
 @ParametersAreNonnullByDefault
 public class ExtinguisherBlockEntity extends FireAlarmBlockEntity {
@@ -85,15 +83,17 @@ public class ExtinguisherBlockEntity extends FireAlarmBlockEntity {
             if (r.nextInt(a) < 100 - blockExtinguishingPossibility.get() * 100) continue;
             final short i = FireSafetyApi.getTargetBlockIndex(level, p);
             if (i == Short.MIN_VALUE) continue;
-            level.setBlockAndUpdate(p, FireSafetyApi.getTargetBlockState(i).apply(level, p));
-            level.playSound(null, p, FIRE_EXTINGUISH, SoundSource.BLOCKS, 0.7F, 1.6F + (r.nextFloat() - r.nextFloat()) * 0.4F);
+            final FireSafetyApi.ExtinguishableBlock b = FireSafetyApi.getTargetBlock(i);
+            level.setBlockAndUpdate(p, b.targetBlock().apply(level, p));
+            b.extinguishedInfluence().accept(level, p);
         }
         final List<Entity> entityList = level.getEntitiesOfClass(Entity.class, monitoringArea(), l -> FireSafetyApi.getTargetEntityIndex(level, l) > Short.MIN_VALUE);
         for (final Entity e : entityList) {
             if (r.nextInt(a) < 100 - entityExtinguishingPossibility.get() * 100) continue;
             final short i = FireSafetyApi.getTargetEntityIndex(level, e);
             if (i == Short.MIN_VALUE) continue;
-            FireSafetyApi.getTargetEntityAction(i).accept(level, e);
+            final FireSafetyApi.ExtinguishableEntity t = FireSafetyApi.getTargetEntity(i);
+            t.entityAction().accept(level, e);
         }
     }
 

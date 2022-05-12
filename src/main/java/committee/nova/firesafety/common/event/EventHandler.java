@@ -12,23 +12,32 @@ import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
+import java.util.Random;
+
 import static committee.nova.firesafety.common.tools.TagKeyReference.BURNING;
 import static committee.nova.firesafety.common.tools.TagKeyReference.IGNORED;
+import static net.minecraft.sounds.SoundEvents.FIRE_EXTINGUISH;
 import static net.minecraft.sounds.SoundEvents.GENERIC_EXTINGUISH_FIRE;
 
 @Mod.EventBusSubscriber
 public class EventHandler {
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public static void onExtension(FireSafetyExtensionEvent event) {
-        event.addExtinguishable(Short.MAX_VALUE, new FireSafetyApi.ExtinguishableBlock((w, p) -> w.getBlockState(p).is(Blocks.FIRE), (w, p) -> Blocks.AIR.defaultBlockState()));
+        event.addExtinguishable(Short.MAX_VALUE, new FireSafetyApi.ExtinguishableBlock((w, p) -> w.getBlockState(p).is(Blocks.FIRE), (w, p) -> Blocks.AIR.defaultBlockState(), (w, p) -> {
+            final Random r = w.random;
+            w.playSound(null, p, FIRE_EXTINGUISH, SoundSource.BLOCKS, 0.7F, 1.6F + (r.nextFloat() - r.nextFloat()) * 0.4F);
+        }));
         event.addExtinguishable((short) -32767, new FireSafetyApi.ExtinguishableEntity((w, e) -> e.isOnFire() && !e.getType().is(IGNORED), (w, e) -> {
             e.clearFire();
             e.level.playSound(null, e, GENERIC_EXTINGUISH_FIRE, SoundSource.BLOCKS, 1F, 1F);
         }));
         event.addExtinguishable((short) -32765, new FireSafetyApi.ExtinguishableEntity((w, e) -> e.getType().is(BURNING), (w, e) -> e.hurt(DamageSource.FREEZE, Configuration.freezeDamage.get().floatValue())));
-        event.addFireFightingWaterItem((short) 32767, new FireSafetyApi.FireFightingWaterContainerItem((p, s) -> s.is(Items.WATER_BUCKET), (p, i) -> 1000, (p, a, s) -> Items.BUCKET.getDefaultInstance()));
+        event.addFireFightingWaterItem((short) 32767, new FireSafetyApi.FireFightingWaterContainerItem((p, s) -> s.is(Items.WATER_BUCKET), (p, i) -> 1000, (p, a, s) -> Items.BUCKET.getDefaultInstance(), (p, a, s) -> {
+        }));
         event.addFireFightingWaterItem((short) 32766, new FireSafetyApi.FireFightingWaterContainerItem((p, i) -> i.getItem() instanceof IFireFightingWaterContainer,
                 (p, i) -> ((IFireFightingWaterContainer) i.getItem()).getWaterAmount(i),
-                (p, a, s) -> ((IFireFightingWaterContainer) s.getItem()).consume(p, a, s)));
+                (p, a, s) -> ((IFireFightingWaterContainer) s.getItem()).consume(p, a, s),
+                (p, a, s) -> {
+                }));
     }
 }
