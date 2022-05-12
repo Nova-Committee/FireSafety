@@ -16,7 +16,6 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
@@ -68,7 +67,8 @@ public class ExtinguisherBlock extends AbstractCeilingDeviceBlock implements Ent
     public InteractionResult use(BlockState state, Level world, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
         final ItemStack stack = player.getItemInHand(hand);
         if (world.isClientSide) return InteractionResult.SUCCESS;
-        if (!stack.is(Items.WATER_BUCKET) && !stack.getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY).isPresent()) {
+        final short index = FireSafetyApi.getFireFightingContainerIndex(player, stack);
+        if (!stack.getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY).isPresent() && index == Short.MIN_VALUE) {
             reportWaterAmount(player, world, pos);
             return super.use(state, world, pos, player, hand, hit);
         }
@@ -78,7 +78,6 @@ public class ExtinguisherBlock extends AbstractCeilingDeviceBlock implements Ent
         if (needFill <= 0) return InteractionResult.SUCCESS;
         final FluidStack[] toFill = new FluidStack[1];
         toFill[0] = FluidStack.EMPTY;
-        final short index = FireSafetyApi.getFireFightingContainerIndex(player, stack);
         if (index > Short.MIN_VALUE) {
             final FireSafetyApi.FireFightingWaterContainerItem i = FireSafetyApi.getFireFightingContainer(index);
             final int shouldFill = Math.min(i.amount().apply(player, stack), needFill);
