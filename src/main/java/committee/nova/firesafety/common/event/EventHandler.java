@@ -3,11 +3,16 @@ package committee.nova.firesafety.common.event;
 import committee.nova.firesafety.api.FireSafetyApi;
 import committee.nova.firesafety.api.event.FireSafetyExtensionEvent;
 import committee.nova.firesafety.api.item.IFireFightingWaterContainer;
+import committee.nova.firesafety.common.block.base.AbstractCeilingDeviceBlock;
 import committee.nova.firesafety.common.config.Configuration;
+import net.minecraft.core.BlockPos;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -39,5 +44,17 @@ public class EventHandler {
                 (p, a, s) -> ((IFireFightingWaterContainer) s.getItem()).consume(p, a, s),
                 (p, a, s) -> {
                 }));
+    }
+
+    @SubscribeEvent
+    public static void onRightClick(PlayerInteractEvent.RightClickBlock event) {
+        if (event.isCanceled()) return;
+        if (event.getSide().isClient()) return;
+        final BlockPos p = event.getPos();
+        final Level l = event.getWorld();
+        final BlockState s = l.getBlockState(p);
+        if (!(s.getBlock() instanceof AbstractCeilingDeviceBlock a)) return;
+        a.use(s, l, p, event.getPlayer(), event.getHand(), event.getHitVec());
+        event.setCanceled(true);
     }
 }
