@@ -1,19 +1,17 @@
 package committee.nova.firesafety.api;
 
 import com.mojang.datafixers.util.Function3;
-import committee.nova.firesafety.FireSafety;
-import committee.nova.firesafety.api.item.IFireFightingWaterContainer;
-import committee.nova.firesafety.common.config.Configuration;
+import committee.nova.firesafety.api.event.FireSafetyExtensionEvent;
 import net.minecraft.core.BlockPos;
-import net.minecraft.sounds.SoundSource;
-import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.event.server.ServerStartedEvent;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.common.Mod;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.HashMap;
@@ -21,97 +19,19 @@ import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
 import java.util.function.BiPredicate;
 
-import static committee.nova.firesafety.common.tools.TagKeyReference.BURNING;
-import static committee.nova.firesafety.common.tools.TagKeyReference.IGNORED;
-import static net.minecraft.sounds.SoundEvents.GENERIC_EXTINGUISH_FIRE;
-
+@Mod.EventBusSubscriber
 public class FireSafetyApi {
     private static final HashMap<Short, ExtinguishableBlock> extinguishableBlockList = new HashMap<>();
     private static final HashMap<Short, ExtinguishableEntity> extinguishableEntityList = new HashMap<>();
     private static final HashMap<Short, FireFightingWaterContainerItem> firefightingWaterContainerList = new HashMap<>();
 
-    public static void init() {
-        addExtinguishable(Short.MAX_VALUE, new ExtinguishableBlock((w, p) -> w.getBlockState(p).is(Blocks.FIRE), (w, p) -> Blocks.AIR.defaultBlockState()));
-        addExtinguishable((short) -32767, new ExtinguishableEntity((w, e) -> e.isOnFire() && !e.getType().is(IGNORED), (w, e) -> {
-            e.clearFire();
-            e.level.playSound(null, e, GENERIC_EXTINGUISH_FIRE, SoundSource.BLOCKS, 1F, 1F);
-        }));
-        addExtinguishable((short) -32765, new ExtinguishableEntity((w, e) -> e.getType().is(BURNING), (w, e) -> e.hurt(DamageSource.FREEZE, Configuration.freezeDamage.get().floatValue())));
-        addFireFightingWaterItem((short) 32767, new FireFightingWaterContainerItem((p, s) -> s.is(Items.WATER_BUCKET), (p, i) -> 1000, (p, a, s) -> Items.BUCKET.getDefaultInstance()));
-        addFireFightingWaterItem((short) 32766, new FireFightingWaterContainerItem((p, i) -> i.getItem() instanceof IFireFightingWaterContainer,
-                (p, i) -> ((IFireFightingWaterContainer) i.getItem()).getWaterAmount(i),
-                (p, a, s) -> ((IFireFightingWaterContainer) s.getItem()).consume(p, a, s)));
-    }
-
-    public static short getFireFightingContainerIndex(Player player, ItemStack stack) {
-        final short[] s = {Short.MIN_VALUE};
-        firefightingWaterContainerList.forEach((p, i) -> {
-            if (p > s[0] && i.stackCondition().test(player, stack)) s[0] = p;
-        });
-        return s[0];
-    }
-
-    public static short getTargetBlockIndex(Level level, BlockPos pos) {
-        final short[] s = {Short.MIN_VALUE};
-        extinguishableBlockList.forEach((p, e) -> {
-            if (p > s[0] && e.blockCondition().test(level, pos)) s[0] = p;
-        });
-        return s[0];
-    }
-
-    public static short getTargetEntityIndex(Level level, Entity entity) {
-        final short[] s = {Short.MIN_VALUE};
-        extinguishableEntityList.forEach((p, e) -> {
-            if (p > s[0] && e.entityCondition().test(level, entity)) s[0] = p;
-        });
-        return s[0];
-    }
-
-    public static void addExtinguishable(short priority, ExtinguishableBlock extinguishable) {
-        if (extinguishableBlockList.containsKey(priority)) {
-            FireSafety.LOGGER.warn("Duplicate priority value {}, new extinguishable block won't be added!", priority);
-            return;
-        }
-        extinguishableBlockList.put(priority, extinguishable);
-        FireSafety.LOGGER.info("Adding new extinguishable block with priority {}!", priority);
-    }
-
-    public static void addExtinguishable(short priority, ExtinguishableEntity extinguishable) {
-        if (extinguishableEntityList.containsKey(priority)) {
-            FireSafety.LOGGER.warn("Duplicate priority value {}, new extinguishable entity won't be added!", priority);
-            return;
-        }
-        extinguishableEntityList.put(priority, extinguishable);
-        FireSafety.LOGGER.info("Adding new extinguishable entity with priority {}!", priority);
-    }
-
-    public static void addFireFightingWaterItem(short priority, FireFightingWaterContainerItem container) {
-        if (firefightingWaterContainerList.containsKey(priority)) {
-            FireSafety.LOGGER.warn("Duplicate priority value {}, new firefighting container won't be added!", priority);
-            return;
-        }
-        firefightingWaterContainerList.put(priority, container);
-        FireSafety.LOGGER.info("Adding new firefighting container with priority {}!", priority);
-    }
-
-    public static BiFunction<Player, ItemStack, Integer> getFireFightingContainerAmount(short index) {
-        if (index == Short.MIN_VALUE) throw new NumberFormatException("Priority value should be greater than -32768");
-        return firefightingWaterContainerList.get(index).amount();
-    }
-
-    public static Function3<Player, Integer, ItemStack, ItemStack> getFireFightingContainerUsedResult(short index) {
-        if (index == Short.MIN_VALUE) throw new NumberFormatException("Priority value should be greater than -32768");
-        return firefightingWaterContainerList.get(index).usedResult();
-    }
-
-    public static BiFunction<Level, BlockPos, BlockState> getTargetBlockState(short index) {
-        if (index == Short.MIN_VALUE) throw new NumberFormatException("Priority value should be greater than -32768");
-        return extinguishableBlockList.get(index).targetBlock();
-    }
-
-    public static BiConsumer<Level, Entity> getTargetEntityAction(short index) {
-        if (index == Short.MIN_VALUE) throw new NumberFormatException("Priority value should be greater than -32768");
-        return extinguishableEntityList.get(index).entityAction();
+    @SubscribeEvent
+    public static void onStarted(ServerStartedEvent v) {
+        final FireSafetyExtensionEvent event = new FireSafetyExtensionEvent();
+        MinecraftForge.EVENT_BUS.post(event);
+        extinguishableBlockList.putAll(event.getExtinguishableBlockList());
+        extinguishableEntityList.putAll(event.getExtinguishableEntityList());
+        firefightingWaterContainerList.putAll(event.getFirefightingWaterContainerList());
     }
 
     /**
@@ -145,4 +65,49 @@ public class FireSafetyApi {
             BiPredicate<Level, Entity> entityCondition,
             BiConsumer<Level, Entity> entityAction) {
     }
+
+    public static short getFireFightingContainerIndex(Player player, ItemStack stack) {
+        final short[] s = {Short.MIN_VALUE};
+        firefightingWaterContainerList.forEach((p, i) -> {
+            if (p > s[0] && i.stackCondition().test(player, stack)) s[0] = p;
+        });
+        return s[0];
+    }
+
+    public static short getTargetBlockIndex(Level level, BlockPos pos) {
+        final short[] s = {Short.MIN_VALUE};
+        extinguishableBlockList.forEach((p, e) -> {
+            if (p > s[0] && e.blockCondition().test(level, pos)) s[0] = p;
+        });
+        return s[0];
+    }
+
+    public static short getTargetEntityIndex(Level level, Entity entity) {
+        final short[] s = {Short.MIN_VALUE};
+        extinguishableEntityList.forEach((p, e) -> {
+            if (p > s[0] && e.entityCondition().test(level, entity)) s[0] = p;
+        });
+        return s[0];
+    }
+
+    public static BiFunction<Player, ItemStack, Integer> getFireFightingContainerAmount(short index) {
+        if (index == Short.MIN_VALUE) throw new NumberFormatException("Priority value should be greater than -32768");
+        return firefightingWaterContainerList.get(index).amount();
+    }
+
+    public static Function3<Player, Integer, ItemStack, ItemStack> getFireFightingContainerUsedResult(short index) {
+        if (index == Short.MIN_VALUE) throw new NumberFormatException("Priority value should be greater than -32768");
+        return firefightingWaterContainerList.get(index).usedResult();
+    }
+
+    public static BiFunction<Level, BlockPos, BlockState> getTargetBlockState(short index) {
+        if (index == Short.MIN_VALUE) throw new NumberFormatException("Priority value should be greater than -32768");
+        return extinguishableBlockList.get(index).targetBlock();
+    }
+
+    public static BiConsumer<Level, Entity> getTargetEntityAction(short index) {
+        if (index == Short.MIN_VALUE) throw new NumberFormatException("Priority value should be greater than -32768");
+        return extinguishableEntityList.get(index).entityAction();
+    }
+
 }
