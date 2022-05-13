@@ -22,17 +22,17 @@ import java.util.function.BiPredicate;
 
 @Mod.EventBusSubscriber
 public class FireSafetyApi {
+    private static final HashMap<Short, FireFightingWaterContainerItem> firefightingWaterContainerList = new HashMap<>();
     private static final HashMap<Short, ExtinguishableBlock> extinguishableBlockList = new HashMap<>();
     private static final HashMap<Short, ExtinguishableEntity> extinguishableEntityList = new HashMap<>();
-    private static final HashMap<Short, FireFightingWaterContainerItem> firefightingWaterContainerList = new HashMap<>();
 
     @SubscribeEvent
     public static void onStarted(ServerStartedEvent v) {
         final FireSafetyExtensionEvent event = new FireSafetyExtensionEvent();
         MinecraftForge.EVENT_BUS.post(event);
+        firefightingWaterContainerList.putAll(event.getFirefightingWaterContainerList());
         extinguishableBlockList.putAll(event.getExtinguishableBlockList());
         extinguishableEntityList.putAll(event.getExtinguishableEntityList());
-        firefightingWaterContainerList.putAll(event.getFirefightingWaterContainerList());
     }
 
     public static FireFightingWaterContainerItem getFireFightingContainer(short index) {
@@ -46,13 +46,17 @@ public class FireSafetyApi {
     }
 
     /**
-     * @param entityCondition What kind of entity should be seen as extinguishable
-     * @param entityAction    What should the extinguisher do with such entity
+     * @param stackCondition What kind of stack should be seen as a firefighting water container
+     * @param amount         The water amount the stack can provide
+     * @param usedResult     What is the corresponding water-consumed stack like
+     * @param usedInfluence  What else will happen when the container stack is consumed
      **/
     @ParametersAreNonnullByDefault
-    public record ExtinguishableEntity(
-            BiPredicate<Level, Entity> entityCondition,
-            BiConsumer<Level, Entity> entityAction) {
+    public record FireFightingWaterContainerItem(
+            BiPredicate<Player, ItemStack> stackCondition,
+            BiFunction<Player, ItemStack, Integer> amount,
+            Function3<Player, Integer, ItemStack, ItemStack> usedResult,
+            Consumer3<Player, Integer, ItemStack> usedInfluence) {
     }
 
     public static short getFireFightingContainerIndex(Player player, ItemStack stack) {
@@ -79,25 +83,6 @@ public class FireSafetyApi {
         return s[0];
     }
 
-    public static ExtinguishableEntity getTargetEntity(short index) {
-        if (index == Short.MIN_VALUE) throw new NumberFormatException("Priority value should be greater than -32768");
-        return extinguishableEntityList.get(index);
-    }
-
-    /**
-     * @param stackCondition What kind of stack should be seen as a firefighting water container
-     * @param amount         The water amount the stack can provide
-     * @param usedResult     What is the corresponding water-consumed stack like
-     * @param usedInfluence  What else will happen when the container stack is consumed
-     **/
-    @ParametersAreNonnullByDefault
-    public record FireFightingWaterContainerItem(
-            BiPredicate<Player, ItemStack> stackCondition,
-            BiFunction<Player, ItemStack, Integer> amount,
-            Function3<Player, Integer, ItemStack, ItemStack> usedResult,
-            Consumer3<Player, Integer, ItemStack> usedInfluence) {
-    }
-
     /**
      * @param blockCondition        What kind of block state should be seen as extinguishable
      * @param targetBlock           What is the extinguished block state like
@@ -108,6 +93,21 @@ public class FireSafetyApi {
             BiPredicate<Level, BlockPos> blockCondition,
             BiFunction<Level, BlockPos, BlockState> targetBlock,
             BiConsumer<Level, BlockPos> extinguishedInfluence) {
+    }
+
+    /**
+     * @param entityCondition What kind of entity should be seen as extinguishable
+     * @param entityAction    What should the extinguisher do with such entity
+     **/
+    @ParametersAreNonnullByDefault
+    public record ExtinguishableEntity(
+            BiPredicate<Level, Entity> entityCondition,
+            BiConsumer<Level, Entity> entityAction) {
+    }
+
+    public static ExtinguishableEntity getTargetEntity(short index) {
+        if (index == Short.MIN_VALUE) throw new NumberFormatException("Priority value should be greater than -32768");
+        return extinguishableEntityList.get(index);
     }
 
 }

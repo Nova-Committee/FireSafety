@@ -67,17 +67,13 @@ public class ExtinguisherBlock extends AbstractCeilingDeviceBlock implements Ent
     public InteractionResult use(BlockState state, Level world, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
         final ItemStack stack = player.getItemInHand(hand);
         if (world.isClientSide) return InteractionResult.SUCCESS;
-        final short index = FireSafetyApi.getFireFightingContainerIndex(player, stack);
-        if (!stack.getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY).isPresent() && index == Short.MIN_VALUE) {
-            reportWaterAmount(player, world, pos);
-            return super.use(state, world, pos, player, hand, hit);
-        }
         final BlockEntity e = world.getBlockEntity(pos);
         if (!(e instanceof final ExtinguisherBlockEntity g)) return InteractionResult.SUCCESS;
         final int needFill = g.getMaxWaterStorage() - g.getWaterStorage();
         if (needFill <= 0) return InteractionResult.SUCCESS;
         final FluidStack[] toFill = new FluidStack[1];
         toFill[0] = FluidStack.EMPTY;
+        final short index = FireSafetyApi.getFireFightingContainerIndex(player, stack);
         if (index > Short.MIN_VALUE) {
             final FireSafetyApi.FireFightingWaterContainerItem i = FireSafetyApi.getFireFightingContainer(index);
             final int shouldFill = Math.min(i.amount().apply(player, stack), needFill);
@@ -89,6 +85,10 @@ public class ExtinguisherBlock extends AbstractCeilingDeviceBlock implements Ent
                 if (f.getFluidInTank(0).getFluid().is(TagKeyReference.FIREFIGHTING))
                     toFill[0] = new FluidStack(Fluids.WATER, f.drain(needFill, player.isCreative() ? IFluidHandler.FluidAction.SIMULATE : IFluidHandler.FluidAction.EXECUTE).getAmount());
             });
+        }
+        if (toFill[0].isEmpty()) {
+            reportWaterAmount(player, world, pos);
+            return super.use(state, world, pos, player, hand, hit);
         }
         g.getTank().fill(toFill[0], IFluidHandler.FluidAction.EXECUTE);
         reportWaterAmount(player, world, pos);
