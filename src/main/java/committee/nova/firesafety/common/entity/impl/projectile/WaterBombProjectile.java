@@ -62,9 +62,7 @@ public class WaterBombProjectile extends AbstractArrow {
     protected void onHitEntity(EntityHitResult r) {
         var entity = r.getEntity();
         final var i = FireSafetyApi.getTargetEntityIndex(level, entity);
-        if (i == Short.MIN_VALUE) {
-            drop();
-        } else {
+        if (i != Short.MIN_VALUE) {
             final var t = FireSafetyApi.getTargetEntity(i);
             t.entityAction().accept(level, entity);
         }
