@@ -14,8 +14,8 @@ import net.minecraftforge.fml.common.Mod;
 
 import java.util.Random;
 
-import static committee.nova.firesafety.common.tools.TagKeyReference.BURNING;
-import static committee.nova.firesafety.common.tools.TagKeyReference.IGNORED;
+import static committee.nova.firesafety.common.tools.reference.TagKeyReference.BURNING;
+import static committee.nova.firesafety.common.tools.reference.TagKeyReference.IGNORED;
 import static net.minecraft.sounds.SoundEvents.FIRE_EXTINGUISH;
 import static net.minecraft.sounds.SoundEvents.GENERIC_EXTINGUISH_FIRE;
 

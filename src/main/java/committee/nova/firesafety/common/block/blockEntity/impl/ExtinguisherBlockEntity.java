@@ -23,9 +23,9 @@ import java.util.List;
 import java.util.Random;
 
 import static committee.nova.firesafety.common.block.impl.ExtinguisherBlock.WATERED;
-import static committee.nova.firesafety.common.block.reference.BlockReference.EXTINGUISHER;
-import static committee.nova.firesafety.common.block.reference.BlockReference.getRegisteredBlockEntityType;
 import static committee.nova.firesafety.common.config.Configuration.*;
+import static committee.nova.firesafety.common.tools.reference.BlockReference.EXTINGUISHER;
+import static committee.nova.firesafety.common.tools.reference.BlockReference.getRegisteredBlockEntityType;
 import static net.minecraft.sounds.SoundEvents.BUCKET_FILL;
 
 @ParametersAreNonnullByDefault

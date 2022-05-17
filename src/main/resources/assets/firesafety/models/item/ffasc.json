@@ -1,0 +1,14 @@
+{
+  "parent": "firesafety:item/ffasc/ffasc_off",
+  "textures": {
+    "1": "firesafety:special/empty"
+  },
+  "overrides": [
+    {
+      "predicate": {
+        "on": 1
+      },
+      "model": "firesafety:item/ffasc/ffasc_on"
+    }
+  ]
+}

@@ -3,7 +3,10 @@
   "advancements.firesafety.be_careful_with_candles.desc": "放置火灾警报器",
   "advancements.firesafety.to_nip_it_in_the_spark.title": "防患于未然",
   "advancements.firesafety.to_nip_it_in_the_spark.desc": "放置灭火器",
+  "entity.firesafety.water_bomb": "灭火炸弹",
   "itemGroup.firesafety": "§5安全§4用火§r",
+  "item.firesafety.water_bomb": "水炸弹",
+  "item.firesafety.ffasc": "消防空袭控制器",
   "block.firesafety.extinguisher": "灭火器",
   "block.firesafety.fire_alarm": "火灾警报器",
   "msg.firesafety.device.fire_detected": "§c位于§r{0}§c的设备侦测到火情§f（火源数：方块 >> {1}, 实体 >> {2}）{3}§r",
@@ -11,6 +14,14 @@
   "msg.firesafety.device.listening.false": "§4不再监听此设备§r",
   "msg.firesafety.device.listening.true": "§2正在监听此设备§r",
   "msg.firesafety.device.current_water_amount": "当前水量：{0} mB",
+  "tips.firesafety.listen": "右击设备以改变您对它的监听状态",
+  "info.firesafety.ffasc.location": "位置：{0}",
+  "info.firesafety.ffasc.too_far": "距离太远",
+  "info.firesafety.ffasc.reload": "装填：{0}",
+  "info.firesafety.ffasc.cd": "冷却：{0}",
+  "msg.firesafety.ffasc.confirm_query": "是否确认对{0}进行消防空袭？",
+  "msg.firesafety.ffasc.confirmed": "确认对{0}进行消防空袭。",
+  "msg.firesafety.ffasc.cancelled": "消防空袭取消。",
   "phrase.firesafety.insufficient_water": "§3[供水不足]§r",
-  "tips.firesafety.listen": "右击设备以改变您对它的监听状态"
+  "phrase.firesafety.finished": "完毕"
 }

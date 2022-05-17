@@ -3,9 +3,9 @@ package committee.nova.firesafety.common.block.impl;
 import committee.nova.firesafety.api.FireSafetyApi;
 import committee.nova.firesafety.common.block.base.AbstractCeilingDeviceBlock;
 import committee.nova.firesafety.common.block.blockEntity.impl.ExtinguisherBlockEntity;
-import committee.nova.firesafety.common.tools.DataReference;
 import committee.nova.firesafety.common.tools.PlayerHandler;
-import committee.nova.firesafety.common.tools.TagKeyReference;
+import committee.nova.firesafety.common.tools.reference.DataReference;
+import committee.nova.firesafety.common.tools.reference.TagKeyReference;
 import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -62,7 +62,7 @@ public class ExtinguisherBlock extends AbstractCeilingDeviceBlock implements Ent
     public void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> definition) {
         definition.add(ONFIRE, WATERED);
     }
-    
+
     @Override
     public InteractionResult use(BlockState state, Level world, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
         final ItemStack stack = player.getItemInHand(hand);

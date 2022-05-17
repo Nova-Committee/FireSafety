@@ -1,6 +1,6 @@
 package committee.nova.firesafety;
 
-import committee.nova.firesafety.common.tools.DataReference;
+import committee.nova.firesafety.common.tools.reference.DataReference;
 import committee.nova.firesafety.common.util.RegistryHandler;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.ItemStack;
@@ -11,8 +11,8 @@ import org.apache.logging.log4j.Logger;
 
 import javax.annotation.Nonnull;
 
-import static committee.nova.firesafety.common.block.reference.BlockReference.EXTINGUISHER;
-import static committee.nova.firesafety.common.block.reference.BlockReference.getRegisteredBlock;
+import static committee.nova.firesafety.common.tools.reference.BlockReference.EXTINGUISHER;
+import static committee.nova.firesafety.common.tools.reference.BlockReference.getRegisteredBlock;
 
 @Mod(FireSafety.MODID)
 public class FireSafety {

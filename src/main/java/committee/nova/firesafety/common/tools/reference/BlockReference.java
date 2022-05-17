@@ -1,4 +1,4 @@
-package committee.nova.firesafety.common.block.reference;
+package committee.nova.firesafety.common.tools.reference;
 
 import committee.nova.firesafety.common.block.blockEntity.init.BlockEntityInit;
 import committee.nova.firesafety.common.block.init.BlockInit;

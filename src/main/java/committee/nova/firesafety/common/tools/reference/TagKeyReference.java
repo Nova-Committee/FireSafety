@@ -1,4 +1,4 @@
-package committee.nova.firesafety.common.tools;
+package committee.nova.firesafety.common.tools.reference;
 
 import committee.nova.firesafety.FireSafety;
 import net.minecraft.core.Registry;

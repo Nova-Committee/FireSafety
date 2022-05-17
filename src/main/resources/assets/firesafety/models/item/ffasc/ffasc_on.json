@@ -1,0 +1,6 @@
+{
+  "parent": "firesafety:item/ffasc/ffasc_off",
+  "textures": {
+    "1": "firesafety:item/ffasc/ray_on"
+  }
+}

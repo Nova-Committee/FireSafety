@@ -10,8 +10,8 @@ import net.minecraftforge.registries.RegistryObject;
 
 import java.util.TreeMap;
 
-import static committee.nova.firesafety.common.block.reference.BlockReference.EXTINGUISHER;
-import static committee.nova.firesafety.common.block.reference.BlockReference.FIRE_ALARM;
+import static committee.nova.firesafety.common.tools.reference.BlockReference.EXTINGUISHER;
+import static committee.nova.firesafety.common.tools.reference.BlockReference.FIRE_ALARM;
 import static committee.nova.firesafety.common.util.RegistryHandler.BLOCKS;
 import static committee.nova.firesafety.common.util.RegistryHandler.ITEMS;
 

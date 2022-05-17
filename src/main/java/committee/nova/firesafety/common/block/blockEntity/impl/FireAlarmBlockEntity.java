@@ -17,11 +17,11 @@ import javax.annotation.ParametersAreNonnullByDefault;
 
 import static committee.nova.firesafety.common.block.base.AbstractCeilingDeviceBlock.ONFIRE;
 import static committee.nova.firesafety.common.block.impl.ExtinguisherBlock.WATERED;
-import static committee.nova.firesafety.common.block.reference.BlockReference.FIRE_ALARM;
-import static committee.nova.firesafety.common.block.reference.BlockReference.getRegisteredBlockEntityType;
 import static committee.nova.firesafety.common.config.Configuration.*;
 import static committee.nova.firesafety.common.tools.PlayerHandler.displayClientMessage;
 import static committee.nova.firesafety.common.tools.PlayerHandler.notifyServerPlayer;
+import static committee.nova.firesafety.common.tools.reference.BlockReference.FIRE_ALARM;
+import static committee.nova.firesafety.common.tools.reference.BlockReference.getRegisteredBlockEntityType;
 
 @ParametersAreNonnullByDefault
 public class FireAlarmBlockEntity extends RecordableDeviceBlockEntity {

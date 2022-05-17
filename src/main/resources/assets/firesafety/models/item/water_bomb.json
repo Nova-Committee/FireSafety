@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "firesafety:item/bombs/water_bomb"
+  }
+}

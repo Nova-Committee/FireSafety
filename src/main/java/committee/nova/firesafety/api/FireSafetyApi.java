@@ -48,7 +48,7 @@ public class FireSafetyApi {
             Function3<Player, Integer, ItemStack, ItemStack> usedResult,
             Consumer3<Player, Integer, ItemStack> usedInfluence) {
     }
-    
+
     /**
      * @param blockCondition        What kind of block state should be seen as extinguishable
      * @param targetBlock           What is the extinguished block state like
