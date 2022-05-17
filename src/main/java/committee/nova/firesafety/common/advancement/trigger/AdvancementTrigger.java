@@ -10,7 +10,7 @@ import net.minecraftforge.fml.common.Mod;
 public class AdvancementTrigger {
     @SubscribeEvent
     public static void onAdvancementAcquired(AdvancementEvent event) {
-        final String adv = event.getAdvancement().getId().getPath();
+        final var adv = event.getAdvancement().getId().getPath();
         if (!adv.equals("be_careful_with_candles") && !adv.equals("to_nip_it_in_the_spark")) return;
         PlayerHandler.notifyServerPlayer(event.getPlayer(), new TranslatableComponent("tips.firesafety.listen"));
     }

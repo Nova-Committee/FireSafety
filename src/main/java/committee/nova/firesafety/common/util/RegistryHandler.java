@@ -12,7 +12,6 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntityType;
-import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.config.ModConfig;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
@@ -28,7 +27,7 @@ public class RegistryHandler {
 
     public static void init() {
         ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, Configuration.COMMON_CONFIG);
-        final IEventBus eventBus = FMLJavaModLoadingContext.get().getModEventBus();
+        final var eventBus = FMLJavaModLoadingContext.get().getModEventBus();
         SOUNDS.register(eventBus);
         BLOCKS.register(eventBus);
         BLOCK_ENTITIES.register(eventBus);

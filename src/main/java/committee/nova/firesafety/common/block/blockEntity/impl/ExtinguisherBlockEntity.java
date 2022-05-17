@@ -19,8 +19,6 @@ import net.minecraftforge.fluids.capability.templates.FluidTank;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
-import java.util.List;
-import java.util.Random;
 
 import static committee.nova.firesafety.common.block.impl.ExtinguisherBlock.WATERED;
 import static committee.nova.firesafety.common.config.Configuration.*;
@@ -38,9 +36,9 @@ public class ExtinguisherBlockEntity extends FireAlarmBlockEntity {
     }
 
     public boolean tickServer() {
-        final boolean needExtinguish = super.tickServer();
+        final var needExtinguish = super.tickServer();
         if (level == null) return false;
-        final BlockState state = level.getBlockState(worldPosition);
+        final var state = level.getBlockState(worldPosition);
         if (tank.isEmpty()) {
             level.setBlockAndUpdate(worldPosition, state.setValue(WATERED, false));
             return true;
@@ -76,23 +74,23 @@ public class ExtinguisherBlockEntity extends FireAlarmBlockEntity {
 
     private void extinguish(int amount) {
         assert level != null;
-        final Iterable<BlockPos> posList = BlockPos.betweenClosed(monitoringAreaPos()[0], monitoringAreaPos()[1]);
-        final Random r = level.random;
+        final var posList = BlockPos.betweenClosed(monitoringAreaPos()[0], monitoringAreaPos()[1]);
+        final var r = level.random;
         final int a = (int) (amount * 100F / waterConsumption.get()) + 1;
-        for (final BlockPos p : posList) {
+        for (final var p : posList) {
             if (r.nextInt(a) < 100 - blockExtinguishingPossibility.get() * 100) continue;
             final short i = FireSafetyApi.getTargetBlockIndex(level, p);
             if (i == Short.MIN_VALUE) continue;
-            final FireSafetyApi.ExtinguishableBlock b = FireSafetyApi.getTargetBlock(i);
+            final var b = FireSafetyApi.getTargetBlock(i);
             level.setBlockAndUpdate(p, b.targetBlock().apply(level, p));
             b.extinguishedInfluence().accept(level, p);
         }
-        final List<Entity> entityList = level.getEntitiesOfClass(Entity.class, monitoringArea(), l -> FireSafetyApi.getTargetEntityIndex(level, l) > Short.MIN_VALUE);
-        for (final Entity e : entityList) {
+        final var entityList = level.getEntitiesOfClass(Entity.class, monitoringArea(), l -> FireSafetyApi.getTargetEntityIndex(level, l) > Short.MIN_VALUE);
+        for (final var e : entityList) {
             if (r.nextInt(a) < 100 - entityExtinguishingPossibility.get() * 100) continue;
             final short i = FireSafetyApi.getTargetEntityIndex(level, e);
             if (i == Short.MIN_VALUE) continue;
-            final FireSafetyApi.ExtinguishableEntity t = FireSafetyApi.getTargetEntity(i);
+            final var t = FireSafetyApi.getTargetEntity(i);
             t.entityAction().accept(level, e);
         }
     }

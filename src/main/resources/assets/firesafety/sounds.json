@@ -6,5 +6,21 @@
         "stream": true
       }
     ]
+  },
+  "awaiting_orders": {
+    "sounds": [
+      {
+        "name": "firesafety:awaiting_orders",
+        "stream": true
+      }
+    ]
+  },
+  "standby": {
+    "sounds": [
+      {
+        "name": "firesafety:standby",
+        "stream": true
+      }
+    ]
   }
 }

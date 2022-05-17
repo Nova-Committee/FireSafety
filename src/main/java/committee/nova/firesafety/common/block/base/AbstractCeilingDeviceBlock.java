@@ -21,7 +21,6 @@ import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.SoundType;
-import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
@@ -50,7 +49,7 @@ public abstract class AbstractCeilingDeviceBlock extends Block implements ISpeci
     }
 
     public static void tryHandleListener(Player player, Level world, BlockPos pos) {
-        final BlockEntity e = world.getBlockEntity(pos);
+        final var e = world.getBlockEntity(pos);
         if (!(e instanceof final RecordableDeviceBlockEntity r)) return;
         if (player.isCrouching()) {
             if (player.hasPermissions(2)) PlayerHandler.notifyServerPlayer(player, new TextComponent(r.toString()));

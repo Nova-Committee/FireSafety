@@ -12,7 +12,7 @@ import static committee.nova.firesafety.common.util.RegistryHandler.SOUNDS;
 
 public class SoundInit {
     public static final String[] soundNames = new String[]{
-            "fire_alarm"
+            "fire_alarm", "confirm", "awaiting_orders", "standby"
     };
 
     public static final HashMap<String, RegistryObject<SoundEvent>> soundList = new HashMap<>();

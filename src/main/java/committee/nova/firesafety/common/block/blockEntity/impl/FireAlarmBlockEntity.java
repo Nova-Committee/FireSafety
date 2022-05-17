@@ -5,7 +5,6 @@ import committee.nova.firesafety.common.block.blockEntity.base.RecordableDeviceB
 import committee.nova.firesafety.common.sound.init.SoundInit;
 import committee.nova.firesafety.common.tools.PlayerHandler;
 import net.minecraft.core.BlockPos;
-import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.Entity;
@@ -37,7 +36,7 @@ public class FireAlarmBlockEntity extends RecordableDeviceBlockEntity {
 
     public boolean tickServer() {
         if (level == null) return false;
-        final BlockState state = level.getBlockState(worldPosition);
+        final var state = level.getBlockState(worldPosition);
         final int[] c = fireSourceCount();
         if (c[0] + c[1] <= 0) {
             level.setBlockAndUpdate(worldPosition, state.setValue(ONFIRE, false));
@@ -47,7 +46,7 @@ public class FireAlarmBlockEntity extends RecordableDeviceBlockEntity {
         level.setBlockAndUpdate(worldPosition, state.setValue(ONFIRE, true));
         fireStartedTick++;
         if (level.getDayTime() % 100 != 25) return level.getDayTime() % 50 == 0;
-        final Component msg = new TranslatableComponent("msg.firesafety.device.fire_detected",
+        final var msg = new TranslatableComponent("msg.firesafety.device.fire_detected",
                 formatBlockPos(), c[0], c[1], (state.hasProperty(WATERED) && !state.getValue(WATERED)) ? new TranslatableComponent("phrase.firesafety.insufficient_water").getString() : "");
         toListeningPlayers(level, player -> {
             if (notifyByChat.get()) notifyServerPlayer(player, msg);
@@ -60,9 +59,9 @@ public class FireAlarmBlockEntity extends RecordableDeviceBlockEntity {
 
     private int[] fireSourceCount() {
         if (level == null) return new int[]{0, 0};
-        final AABB range = monitoringArea();
+        final var range = monitoringArea();
         int b = 0;
-        for (final BlockPos p : BlockPos.betweenClosed(monitoringAreaPos()[0], monitoringAreaPos()[1]))
+        for (final var p : BlockPos.betweenClosed(monitoringAreaPos()[0], monitoringAreaPos()[1]))
             if (FireSafetyApi.getTargetBlockIndex(level, p) > Short.MIN_VALUE) b++;
         return new int[]{b, level.getEntitiesOfClass(Entity.class, range, l -> FireSafetyApi.getTargetEntityIndex(level, l) > Short.MIN_VALUE).size()};
     }
@@ -74,7 +73,7 @@ public class FireAlarmBlockEntity extends RecordableDeviceBlockEntity {
     }
 
     public AABB monitoringArea() {
-        final BlockPos[] p = monitoringAreaPos();
+        final var p = monitoringAreaPos();
         return new AABB(p[0], p[1]);
     }
 }

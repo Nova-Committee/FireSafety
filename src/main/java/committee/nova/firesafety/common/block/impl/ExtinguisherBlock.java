@@ -15,7 +15,6 @@ import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
@@ -29,7 +28,6 @@ import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.phys.BlockHitResult;
-import net.minecraft.world.phys.Vec2;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler;
@@ -65,17 +63,17 @@ public class ExtinguisherBlock extends AbstractCeilingDeviceBlock implements Ent
 
     @Override
     public InteractionResult use(BlockState state, Level world, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
-        final ItemStack stack = player.getItemInHand(hand);
+        final var stack = player.getItemInHand(hand);
         if (world.isClientSide) return InteractionResult.SUCCESS;
-        final BlockEntity e = world.getBlockEntity(pos);
+        final var e = world.getBlockEntity(pos);
         if (!(e instanceof final ExtinguisherBlockEntity g)) return InteractionResult.SUCCESS;
         final int needFill = g.getMaxWaterStorage() - g.getWaterStorage();
         if (needFill <= 0) return InteractionResult.SUCCESS;
-        final FluidStack[] toFill = new FluidStack[1];
+        final var toFill = new FluidStack[1];
         toFill[0] = FluidStack.EMPTY;
         final short index = FireSafetyApi.getFireFightingContainerIndex(player, stack);
         if (index > Short.MIN_VALUE) {
-            final FireSafetyApi.FireFightingWaterContainerItem i = FireSafetyApi.getFireFightingContainer(index);
+            final var i = FireSafetyApi.getFireFightingContainer(index);
             final int shouldFill = Math.min(i.amount().apply(player, stack), needFill);
             toFill[0] = new FluidStack(Fluids.WATER, shouldFill);
             if (!player.isCreative()) player.setItemInHand(hand, i.usedResult().apply(player, shouldFill, stack));
@@ -118,7 +116,7 @@ public class ExtinguisherBlock extends AbstractCeilingDeviceBlock implements Ent
     }
 
     private void extinguishParticle(Level world, BlockPos pos, Random r) {
-        for (final Vec2 t : DataReference.water) {
+        for (final var t : DataReference.water) {
             world.addAlwaysVisibleParticle(ParticleTypes.CAMPFIRE_COSY_SMOKE, pos.getX() + .5, pos.getY() + .36, pos.getZ() + .5, t.x + r.nextFloat(.01F), -.2F, t.y + r.nextFloat(.01F));
         }
     }
@@ -128,7 +126,7 @@ public class ExtinguisherBlock extends AbstractCeilingDeviceBlock implements Ent
     }
 
     private void reportWaterAmount(Player player, Level world, BlockPos pos) {
-        final BlockEntity b = world.getBlockEntity(pos);
+        final var b = world.getBlockEntity(pos);
         if (!(b instanceof ExtinguisherBlockEntity e)) return;
         PlayerHandler.notifyServerPlayer(player, new TranslatableComponent("msg.firesafety.device.current_water_amount", e.getWaterStorage()));
     }

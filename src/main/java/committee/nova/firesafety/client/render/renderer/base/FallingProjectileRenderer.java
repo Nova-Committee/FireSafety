@@ -29,11 +29,12 @@ public class FallingProjectileRenderer<T extends Projectile> extends EntityRende
 
     @Override
     public void render(T entityIn, float entityYaw, float partialTicks, PoseStack matrixStackIn, MultiBufferSource bufferIn, int packedLightIn) {
-        final var vb = bufferIn.getBuffer(RenderType.entityCutout(this.getTextureLocation(entityIn)));
+        final var vc = bufferIn.getBuffer(RenderType.entityCutout(this.getTextureLocation(entityIn)));
         matrixStackIn.pushPose();
+        matrixStackIn.scale(.5F, .5F, .5F);
         matrixStackIn.mulPose(Vector3f.ZP.rotationDegrees(180));
         final var model = new WaterBombModel<WaterBombProjectile>(ctx.bakeLayer(WaterBombModel.LAYER_LOCATION));
-        model.renderToBuffer(matrixStackIn, vb, packedLightIn, OverlayTexture.NO_OVERLAY, 1, 1, 1, 0.0625f);
+        model.renderToBuffer(matrixStackIn, vc, packedLightIn, OverlayTexture.NO_OVERLAY, 1, 1, 1, 0.0625f);
         matrixStackIn.popPose();
         super.render(entityIn, entityYaw, partialTicks, matrixStackIn, bufferIn, packedLightIn);
     }

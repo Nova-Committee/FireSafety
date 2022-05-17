@@ -4,8 +4,6 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
-import net.minecraft.server.MinecraftServer;
-import net.minecraft.server.players.PlayerList;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -28,13 +26,13 @@ public abstract class RecordableDeviceBlockEntity extends BlockEntity {
 
     @Override
     public void load(CompoundTag tag) {
-        final ListTag listeners = tag.getList("listeners", Tag.TAG_COMPOUND);
+        final var listeners = tag.getList("listeners", Tag.TAG_COMPOUND);
         synchronized (notifies) {
             notifies.clear();
             if (listeners.isEmpty()) return;
             final int lSize = listeners.size();
             for (int i = 0; i < lSize; i++) {
-                final CompoundTag s = listeners.getCompound(i);
+                final var s = listeners.getCompound(i);
                 notifies.put(s.getUUID("uuid"), s.getBoolean("on"));
             }
         }
@@ -45,9 +43,9 @@ public abstract class RecordableDeviceBlockEntity extends BlockEntity {
     protected void saveAdditional(CompoundTag tag) {
         super.saveAdditional(tag);
         if (notifies.isEmpty()) return;
-        final ListTag listeners = new ListTag();
-        for (final UUID uuid : notifies.keySet()) {
-            final CompoundTag u = new CompoundTag();
+        final var listeners = new ListTag();
+        for (final var uuid : notifies.keySet()) {
+            final var u = new CompoundTag();
             u.putUUID("uuid", uuid);
             u.putBoolean("on", notifies.get(uuid));
             listeners.add(u);
@@ -56,7 +54,7 @@ public abstract class RecordableDeviceBlockEntity extends BlockEntity {
     }
 
     public boolean handleListener(Player player) {
-        final UUID u = player.getUUID();
+        final var u = player.getUUID();
         if (!notifies.containsKey(u) || !notifies.get(u)) {
             notifies.put(u, true);
             return true;
@@ -66,12 +64,12 @@ public abstract class RecordableDeviceBlockEntity extends BlockEntity {
     }
 
     public void toListeningPlayers(Level level, Consumer<Player> action) {
-        final MinecraftServer server = level.getServer();
+        final var server = level.getServer();
         if (server == null) return;
-        final PlayerList list = server.getPlayerList();
-        for (final UUID u : notifies.keySet()) {
+        final var list = server.getPlayerList();
+        for (final var u : notifies.keySet()) {
             if (!notifies.containsKey(u) || !notifies.get(u)) continue;
-            final Player p = list.getPlayer(u);
+            final var p = list.getPlayer(u);
             if (p == null) continue;
             action.accept(p);
         }
@@ -79,7 +77,7 @@ public abstract class RecordableDeviceBlockEntity extends BlockEntity {
 
     @Override
     public String toString() {
-        final StringBuilder b = new StringBuilder();
+        final var b = new StringBuilder();
         for (final UUID u : notifies.keySet())
             if (notifies.get(u)) {
                 b.append(" ");

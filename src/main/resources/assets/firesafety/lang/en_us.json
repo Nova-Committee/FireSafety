@@ -14,14 +14,14 @@
   "msg.firesafety.device.listening.false": "§4You are no longer listening to the device§r",
   "msg.firesafety.device.listening.true": "§2You are listening to the device now§r",
   "msg.firesafety.device.current_water_amount": "Current Water Amount: {0} mB",
-  "tips.firesafety.listen": "Right-click on the device to change your listening status for it",
+  "tips.firesafety.listen": "§5Right-click on the device to change your listening status for it§r",
   "info.firesafety.ffasc.location": "Location: {0}",
-  "info.firesafety.ffasc.too_far": "Too Far",
+  "info.firesafety.ffasc.too_far": "§cToo Far§r",
   "info.firesafety.ffasc.reload": "Reload: {0}",
   "info.firesafety.ffasc.cd": "Cool Down: {0}",
-  "msg.firesafety.ffasc.confirm_query": "Do you confirm air-striking at {0}?",
-  "msg.firesafety.ffasc.confirmed": "Confirmed air-striking at {0}",
-  "msg.firesafety.ffasc.cancelled": "Air Strike cancelled",
+  "msg.firesafety.ffasc.confirm_query": "§5Do you confirm air-striking at§r {0}?",
+  "msg.firesafety.ffasc.confirmed": "§2Confirmed air-striking at§r {0}",
+  "msg.firesafety.ffasc.cancelled": "§cAir Strike cancelled§r",
   "phrase.firesafety.insufficient_water": "§3[Water Shortage]§r",
-  "phrase.firesafety.finished": "Finished"
+  "phrase.firesafety.finished": "§2Finished§r"
 }
