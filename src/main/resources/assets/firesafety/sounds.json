@@ -7,6 +7,14 @@
       }
     ]
   },
+  "confirm": {
+    "sounds": [
+      {
+        "name": "firesafety:confirm",
+        "stream": true
+      }
+    ]
+  },
   "awaiting_orders": {
     "sounds": [
       {
