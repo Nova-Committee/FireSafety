@@ -45,6 +45,7 @@ public class FireFightingAirStrikeControllerItem extends FireSafetyItem {
         final var confirm = tag.getBoolean(FFASC_CONFIRM);
         if (confirm) {
             if (player.isCrouching()) {
+                playSoundForThisPlayer(player, getSound(1), 1F, 1F);
                 notifyServerPlayer(player, new TranslatableComponent("msg.firesafety.ffasc.cancelled"));
                 tag.putBoolean(FFASC_CONFIRM, false);
                 return success(stack);
