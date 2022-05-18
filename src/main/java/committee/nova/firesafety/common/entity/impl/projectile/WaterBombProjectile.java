@@ -80,6 +80,7 @@ public class WaterBombProjectile extends AbstractArrow {
             discard();
             return;
         }
+        setDeltaMovement(0, -.3, 0);
         final var p = blockPosition();
         if (level.getBlockState(p).is(Blocks.FIRE)) level.setBlockAndUpdate(p, Blocks.AIR.defaultBlockState());
         if (inGround || onGround) extinguish();
@@ -87,7 +88,7 @@ public class WaterBombProjectile extends AbstractArrow {
 
     private void extinguish() {
         final var pos = getOnPos();
-        final var posList = BlockPos.betweenClosed(pos.offset(0, -5, 0), pos.offset(0, 3, 0));
+        final var posList = BlockPos.betweenClosed(pos.offset(0, -5, 0), pos.offset(0, 1, 0));
         posList.forEach(b -> {
             final var i = FireSafetyApi.getTargetBlockIndex(level, b);
             if (i > Short.MIN_VALUE) {
@@ -107,9 +108,9 @@ public class WaterBombProjectile extends AbstractArrow {
     public static void bombard(Level world, BlockPos pos) {
         final var random = world.random;
         final var bomb = new WaterBombProjectile(pos.getX() + .5 + random.nextDouble(-.2, .4), pos.getY() + random.nextDouble(-.2, .4), pos.getZ() + .5 + random.nextDouble(-.2, .4), world);
-        bomb.shoot(0, -1, 0, .2F, 0);
+        bomb.shoot(0, -1, 0, .5F, 0);
         bomb.setNoGravity(true);
-        bomb.setDeltaMovement(new Vec3(0, -.5, 0));
+        bomb.setDeltaMovement(new Vec3(0, -.3, 0));
         bomb.setSilent(true);
         bomb.setCritArrow(false);
         world.addFreshEntity(bomb);
