@@ -56,7 +56,6 @@ public abstract class AbstractCeilingDeviceBlock extends Block implements ISpeci
             return;
         }
         final boolean b = r.handleListener(player);
-        //todo
         player.playNotifySound(NOTE_BLOCK_IRON_XYLOPHONE, SoundSource.BLOCKS, .5F, b ? 1F : .5F);
         PlayerHandler.notifyServerPlayer(player, new TranslatableComponent("msg.firesafety.device.listening." + b));
     }

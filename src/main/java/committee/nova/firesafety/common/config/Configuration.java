@@ -12,11 +12,12 @@ public class Configuration {
     public static final ForgeConfigSpec.DoubleValue freezeDamage;
     public static final ForgeConfigSpec.IntValue extinguishDelay;
     public static final ForgeConfigSpec.BooleanValue notifyByChat;
+    public static final ForgeConfigSpec.IntValue ffascMaxDistance;
     public static final ForgeConfigSpec COMMON_CONFIG;
 
     static {
         builder.comment("FireSafety Configuration");
-        fireAlarmMonitoringWidth = builder.comment("The width of the fire alarm monitoring area = 2 * (the value) + 1")
+        fireAlarmMonitoringWidth = builder.comment("Configurations of firesafety block devices", "The width of the fire alarm monitoring area = 2 * (the value) + 1")
                 .defineInRange("fireAlarmMonitoringWidth", 3, 1, 50);
         fireAlarmMonitoringHeight = builder.comment("The height of the fire alarm monitoring area")
                 .defineInRange("fireAlarmMonitoringHeight", 10, 1, 384);
@@ -33,6 +34,8 @@ public class Configuration {
         notifyByChat = builder.comment("Whether a fire-monitoring device will notify the listening players by chat message or by client message.",
                         "You need to know that only one client message could be displayed at a time.")
                 .define("notifyByChat", true);
+        ffascMaxDistance = builder.comment("Configurations for the firefighting airstrike", "The max reachable distance(blocks) for the air strike")
+                .defineInRange("ffasc_max_distance", 100, 50, 1000);
         COMMON_CONFIG = builder.build();
     }
 }

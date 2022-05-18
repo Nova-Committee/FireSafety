@@ -1,5 +1,6 @@
 package committee.nova.firesafety.common.tools.math;
 
+import committee.nova.firesafety.common.config.Configuration;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.ClipContext;
@@ -9,7 +10,7 @@ import net.minecraft.world.phys.Vec3;
 
 public class RayTraceUtil {
     public static Vec3 getRaytracingBlock(Entity entity) {
-        return getRaytracingBlock(entity, 100);
+        return getRaytracingBlock(entity, Configuration.ffascMaxDistance.get());
     }
 
     public static Vec3 getRaytracingBlock(Entity entity, double rayLength) {

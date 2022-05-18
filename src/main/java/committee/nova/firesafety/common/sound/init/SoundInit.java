@@ -9,6 +9,7 @@ import net.minecraftforge.registries.RegistryObject;
 import java.util.HashMap;
 
 import static committee.nova.firesafety.common.util.RegistryHandler.SOUNDS;
+import static committee.nova.firesafety.common.util.RegistryHandler.debug;
 
 public class SoundInit {
     public static final String[] soundNames = new String[]{
@@ -18,6 +19,7 @@ public class SoundInit {
     public static final HashMap<String, RegistryObject<SoundEvent>> soundList = new HashMap<>();
 
     public static void init() {
+        debug("sounds");
         for (final String id : soundNames) {
             soundList.put(id, SOUNDS.register(id, () -> new SoundEvent(new ResourceLocation(FireSafety.MODID, id))));
         }

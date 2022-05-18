@@ -39,4 +39,8 @@ public class RegistryHandler {
         ItemInit.init();
         EntityInit.init();
     }
+
+    public static void debug(String registryType) {
+        FireSafety.LOGGER.debug("Initializing FireSafety {}", registryType);
+    }
 }

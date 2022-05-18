@@ -3,7 +3,7 @@ loaderVersion = "[40,)"
 license = "AGPL v3"
 [[mods]]
 modId = "firesafety"
-version = "1.0.0"
+version = "${file.jarVersion}"
 displayName = "FireSafety"
 credits = ""
 authors = "Nova Committee"

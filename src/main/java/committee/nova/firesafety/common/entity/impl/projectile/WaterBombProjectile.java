@@ -11,6 +11,7 @@ import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.item.ItemEntity;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.AbstractArrow;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
@@ -60,7 +61,11 @@ public class WaterBombProjectile extends AbstractArrow {
 
     @Override
     protected void onHitEntity(EntityHitResult r) {
-        var entity = r.getEntity();
+        final var entity = r.getEntity();
+        if (entity instanceof Player p && p.isCreative()) {
+            drop();
+            return;
+        }
         final var i = FireSafetyApi.getTargetEntityIndex(level, entity);
         if (i != Short.MIN_VALUE) {
             final var t = FireSafetyApi.getTargetEntity(i);
@@ -75,9 +80,7 @@ public class WaterBombProjectile extends AbstractArrow {
         super.tick();
         final var timeOut = tickCount > 1000;
         if (timeOut || isInWaterOrBubble()) {
-            //todo: own item
             drop();
-            discard();
             return;
         }
         setDeltaMovement(0, -.3, 0);
@@ -90,6 +93,7 @@ public class WaterBombProjectile extends AbstractArrow {
         final var pos = getOnPos();
         final var posList = BlockPos.betweenClosed(pos.offset(0, -5, 0), pos.offset(0, 1, 0));
         posList.forEach(b -> {
+            if (level.getBlockState(b).isAir()) return;
             final var i = FireSafetyApi.getTargetBlockIndex(level, b);
             if (i > Short.MIN_VALUE) {
                 final var t = FireSafetyApi.getTargetBlock(i);
@@ -102,8 +106,8 @@ public class WaterBombProjectile extends AbstractArrow {
 
     private void drop() {
         level.addFreshEntity(new ItemEntity(level, getX(), getY(), getZ(), getItem()));
+        discard();
     }
-
 
     public static void bombard(Level world, BlockPos pos) {
         final var random = world.random;

@@ -50,12 +50,16 @@ public class FireFightingAirStrikeControllerItem extends FireSafetyItem {
                 tag.putBoolean(FFASC_CONFIRM, false);
                 return success(stack);
             }
+            if (!level.dimension().location().toString().equals(tag.getString(FFASC_DIM))) {
+                notifyServerPlayer(player, new TranslatableComponent("msg.firesafety.ffasc.different_dim"));
+                return success(stack);
+            }
             notifyServerPlayer(player, new TranslatableComponent("msg.firesafety.ffasc.confirmed",
                     vecToIntString(getVecByPos(BlockPos.of(tag.getLong(FFASC_CENTER))))));
             playSoundForThisPlayer(player, getSound(3), 1F, 1F);
-            tag.putInt(FFASC_PROGRESS, 150);
+            launch(stack, player);
             tag.putInt(FFASC_COMMON_PREPARATION, tag.getInt(FFASC_COMMON_PREPARATION) + 1200);
-            player.getCooldowns().addCooldown(getRegisteredItem(FIREFIGHTING_AIRSTRIKE_CONTROLLER), 300);
+            player.getCooldowns().addCooldown(getRegisteredItem(FIREFIGHTING_AIRSTRIKE_CONTROLLER), 60);
             tag.putBoolean(FFASC_CONFIRM, false);
             return success(stack);
         }
@@ -72,7 +76,12 @@ public class FireFightingAirStrikeControllerItem extends FireSafetyItem {
             notifyServerPlayer(player, new TranslatableComponent("msg.firesafety.ffasc.too_far"));
             return success(stack);
         }
+        if (level.dimensionTypeRegistration().value().hasCeiling()) {
+            notifyServerPlayer(player, new TranslatableComponent("msg.firesafety.ffasc.unreachable_dim"));
+            return success(stack);
+        }
         //todo: water bomb item check && consumption
+        tag.putString(FFASC_DIM, level.dimension().location().toString());
         tag.putLong(FFASC_CENTER, BlockPos.asLong((int) trace.x, (int) trace.y, (int) trace.z));
         playSoundForThisPlayer(player, getSound(1), 1F, 1F);
         notifyServerPlayer(player, new TranslatableComponent("msg.firesafety.ffasc.confirm_query", vecToIntString(trace)));
@@ -90,11 +99,7 @@ public class FireFightingAirStrikeControllerItem extends FireSafetyItem {
         final var common = tag.getInt(FFASC_COMMON_PREPARATION);
         if (common % 1200 == 1) playSoundForThisPlayer(player, getSound(2), 1F, 1F);
         if (common > 0) tag.putInt(FFASC_COMMON_PREPARATION, common - 1);
-        //final var mode = tag.getInt(FFASC_MODE);
-        final var progress = tag.getInt(FFASC_PROGRESS);
-        if (progress == 0) return;
-        if (progress == 1) launch(stack, player);
-        tag.putInt(FFASC_PROGRESS, progress - 1);
+        //todo: final var mode = tag.getInt(FFASC_MODE);
     }
 
     private void launch(ItemStack stack, Player player) {
@@ -102,14 +107,15 @@ public class FireFightingAirStrikeControllerItem extends FireSafetyItem {
         final var tag = stack.getOrCreateTag();
         final var center = BlockPos.of(tag.getLong(FFASC_CENTER));
         final var list = BlockPos.betweenClosed(center.offset(5, 0, 5), center.offset(-5, 0, -5));
-        int h = 0;
+        int hRaw = 0;
         final var level = player.level;
         for (final var pos : list) {
             final var h1 = player.level.getHeightmapPos(Heightmap.Types.MOTION_BLOCKING, pos).getY();
-            if (h1 > h) h = h1;
+            if (h1 > hRaw) hRaw = h1;
         }
+        final var h = Math.min(hRaw + 35, level.getMaxBuildHeight());
         for (final var pos : list)
-            WaterBombProjectile.bombard(level, new BlockPos(pos.getX(), Math.min(h + 35, level.getMaxBuildHeight()), pos.getZ()));
+            WaterBombProjectile.bombard(level, new BlockPos(pos.getX(), h, pos.getZ()));
     }
 
     private void displayInformation(ItemStack stack, Player player) {
