@@ -30,5 +30,13 @@
         "stream": true
       }
     ]
+  },
+  "fds_scan": {
+    "sounds": [
+      {
+        "name": "firesafety:fds_scan",
+        "stream": true
+      }
+    ]
   }
 }

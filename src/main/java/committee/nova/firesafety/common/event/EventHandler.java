@@ -4,10 +4,12 @@ import committee.nova.firesafety.api.FireSafetyApi;
 import committee.nova.firesafety.api.event.FireSafetyExtensionEvent;
 import committee.nova.firesafety.api.item.IFireFightingWaterContainer;
 import committee.nova.firesafety.common.config.Configuration;
+import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.material.Material;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -18,6 +20,7 @@ import static committee.nova.firesafety.common.tools.reference.TagKeyReference.B
 import static committee.nova.firesafety.common.tools.reference.TagKeyReference.IGNORED;
 import static net.minecraft.sounds.SoundEvents.FIRE_EXTINGUISH;
 import static net.minecraft.sounds.SoundEvents.GENERIC_EXTINGUISH_FIRE;
+import static net.minecraft.world.entity.EntityType.BLAZE;
 
 @Mod.EventBusSubscriber
 public class EventHandler {
@@ -49,6 +52,27 @@ public class EventHandler {
                 (p, a, s) -> ((IFireFightingWaterContainer) s.getItem()).consume(p, a, s),
                 (p, a, s) -> {
                 }
+        ));
+        event.addFireDanger((short) 32767, new FireSafetyApi.FireDangerBlock(
+                (l, p) -> {
+                    final var s = l.getBlockState(p);
+                    return s.is(Blocks.FIRE) || s.is(Blocks.LAVA);
+                },
+                (l, p) -> 4,
+                (l, p) -> new TranslatableComponent("tips.firesafety.danger.fire_n_lava")
+        ));
+        event.addFireDanger((short) 32766, new FireSafetyApi.FireDangerBlock(
+                (l, p) -> {
+                    final var s = l.getBlockState(p);
+                    return s.getMaterial().isFlammable() && !s.getMaterial().equals(Material.REPLACEABLE_PLANT);
+                },
+                (l, p) -> -1,
+                (l, p) -> new TranslatableComponent("tips.firesafety.danger.flammable_material")
+        ));
+        event.addFireDanger((short) 32767, new FireSafetyApi.FireDangerEntity(
+                (l, e) -> e.getType().equals(BLAZE),
+                (l, e) -> 4,
+                (l, e) -> new TranslatableComponent("tips.firesafety.danger.blaze")
         ));
     }
 }

@@ -2,8 +2,9 @@ package committee.nova.firesafety.api;
 
 import com.mojang.datafixers.util.Function3;
 import committee.nova.firesafety.api.event.FireSafetyExtensionEvent;
-import committee.nova.firesafety.common.tools.fp.Consumer3;
+import committee.nova.firesafety.api.fp.Consumer3;
 import net.minecraft.core.BlockPos;
+import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -25,6 +26,8 @@ public class FireSafetyApi {
     private static final HashMap<Short, FireFightingWaterContainerItem> firefightingWaterContainerList = new HashMap<>();
     private static final HashMap<Short, ExtinguishableBlock> extinguishableBlockList = new HashMap<>();
     private static final HashMap<Short, ExtinguishableEntity> extinguishableEntityList = new HashMap<>();
+    private static final HashMap<Short, FireDangerBlock> fireDangerBlockList = new HashMap<>();
+    private static final HashMap<Short, FireDangerEntity> fireDangerEntityList = new HashMap<>();
 
     @SubscribeEvent
     public static void onStarted(ServerStartedEvent v) {
@@ -33,6 +36,8 @@ public class FireSafetyApi {
         firefightingWaterContainerList.putAll(event.getFirefightingWaterContainerList());
         extinguishableBlockList.putAll(event.getExtinguishableBlockList());
         extinguishableEntityList.putAll(event.getExtinguishableEntityList());
+        fireDangerBlockList.putAll(event.getFireDangerBlockList());
+        fireDangerEntityList.putAll(event.getFireDangerEntityList());
     }
 
     /**
@@ -71,6 +76,28 @@ public class FireSafetyApi {
             BiConsumer<Level, Entity> entityAction) {
     }
 
+    /**
+     * @param blockCondition What kind of block state should be seen as a fire danger
+     * @param dangerousness  The dangerousness of the block, -1 -> flammable, 0 -> very low, 1 -> low, 2 -> normal, 3 -> high, 4 -> very high
+     * @param tips           The tips about the fire danger block, normally the reason why it's a fire danger
+     */
+    public record FireDangerBlock(
+            BiPredicate<Level, BlockPos> blockCondition,
+            BiFunction<Level, BlockPos, Integer> dangerousness,
+            BiFunction<Level, BlockPos, MutableComponent> tips) {
+    }
+
+    /**
+     * @param entityCondition What kind of entity should be seen as a fire danger
+     * @param dangerousness   The dangerousness of the entity, <=0 -> very low, 1 -> low, 2 -> normal, 3 -> high, 4 -> very high
+     * @param tips            The tips about the fire danger entity, normally the reason why it's a fire danger
+     */
+    public record FireDangerEntity(
+            BiPredicate<Level, Entity> entityCondition,
+            BiFunction<Level, Entity, Integer> dangerousness,
+            BiFunction<Level, Entity, MutableComponent> tips) {
+    }
+
     public static short getFireFightingContainerIndex(Player player, ItemStack stack) {
         final short[] s = {Short.MIN_VALUE};
         firefightingWaterContainerList.forEach((p, i) -> {
@@ -95,6 +122,22 @@ public class FireSafetyApi {
         return s[0];
     }
 
+    public static short getFireDangerBlockIndex(Level level, BlockPos pos) {
+        final short[] s = {Short.MIN_VALUE};
+        fireDangerBlockList.forEach((p, e) -> {
+            if (p > s[0] && e.blockCondition().test(level, pos)) s[0] = p;
+        });
+        return s[0];
+    }
+
+    public static short getFireDangerEntityIndex(Level level, Entity entity) {
+        final short[] s = {Short.MIN_VALUE};
+        fireDangerEntityList.forEach((p, e) -> {
+            if (p > s[0] && e.entityCondition().test(level, entity)) s[0] = p;
+        });
+        return s[0];
+    }
+
     public static FireFightingWaterContainerItem getFireFightingContainer(short index) {
         if (index == Short.MIN_VALUE) throw new NumberFormatException("Priority value should be greater than -32768");
         return firefightingWaterContainerList.get(index);
@@ -110,4 +153,13 @@ public class FireSafetyApi {
         return extinguishableEntityList.get(index);
     }
 
+    public static FireDangerBlock getFireDangerBlock(short index) {
+        if (index == Short.MIN_VALUE) throw new NumberFormatException("Priority value should be greater than -32768");
+        return fireDangerBlockList.get(index);
+    }
+
+    public static FireDangerEntity getFireDangerEntity(short index) {
+        if (index == Short.MIN_VALUE) throw new NumberFormatException("Priority value should be greater than -32768");
+        return fireDangerEntityList.get(index);
+    }
 }

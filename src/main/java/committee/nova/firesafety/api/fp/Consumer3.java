@@ -1,4 +1,4 @@
-package committee.nova.firesafety.common.tools.fp;
+package committee.nova.firesafety.api.fp;
 
 import java.util.Objects;
 import java.util.function.BiConsumer;

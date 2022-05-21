@@ -1,7 +1,9 @@
 package committee.nova.firesafety.common.item.impl;
 
 import committee.nova.firesafety.common.entity.impl.projectile.WaterBombProjectile;
+import committee.nova.firesafety.common.item.IArmPoseChangeable;
 import committee.nova.firesafety.common.item.base.FireSafetyItem;
+import committee.nova.firesafety.common.tools.format.DataFormatUtil;
 import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.TextComponent;
@@ -25,12 +27,12 @@ import static committee.nova.firesafety.common.tools.reference.ItemReference.FIR
 import static committee.nova.firesafety.common.tools.reference.ItemReference.getRegisteredItem;
 import static committee.nova.firesafety.common.tools.reference.NBTReference.*;
 import static committee.nova.firesafety.common.tools.string.StringUtil.formattedNumber;
+import static net.minecraft.world.InteractionResultHolder.consume;
 import static net.minecraft.world.InteractionResultHolder.pass;
-import static net.minecraft.world.InteractionResultHolder.success;
 
 @MethodsReturnNonnullByDefault
 @ParametersAreNonnullByDefault
-public class FireFightingAirStrikeControllerItem extends FireSafetyItem {
+public class FireFightingAirStrikeControllerItem extends FireSafetyItem implements IArmPoseChangeable {
 
     public FireFightingAirStrikeControllerItem() {
         super(new Properties().stacksTo(1));
@@ -40,7 +42,7 @@ public class FireFightingAirStrikeControllerItem extends FireSafetyItem {
     public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand hand) {
         if (hand != InteractionHand.MAIN_HAND) return pass(player.getOffhandItem());
         final var stack = player.getMainHandItem();
-        if (level.isClientSide) return success(stack);
+        if (level.isClientSide) return consume(stack);
         final var tag = stack.getOrCreateTag();
         final var confirm = tag.getBoolean(FFASC_CONFIRM);
         if (confirm) {
@@ -48,11 +50,11 @@ public class FireFightingAirStrikeControllerItem extends FireSafetyItem {
                 playSoundForThisPlayer(player, getSound(1), 1F, 1F);
                 notifyServerPlayer(player, new TranslatableComponent("msg.firesafety.ffasc.cancelled"));
                 tag.putBoolean(FFASC_CONFIRM, false);
-                return success(stack);
+                return consume(stack);
             }
             if (!level.dimension().location().toString().equals(tag.getString(FFASC_DIM))) {
                 notifyServerPlayer(player, new TranslatableComponent("msg.firesafety.ffasc.different_dim"));
-                return success(stack);
+                return consume(stack);
             }
             notifyServerPlayer(player, new TranslatableComponent("msg.firesafety.ffasc.confirmed",
                     vecToIntString(getVecByPos(BlockPos.of(tag.getLong(FFASC_CENTER))))));
@@ -61,32 +63,32 @@ public class FireFightingAirStrikeControllerItem extends FireSafetyItem {
             tag.putInt(FFASC_COMMON_PREPARATION, tag.getInt(FFASC_COMMON_PREPARATION) + 1200);
             player.getCooldowns().addCooldown(getRegisteredItem(FIREFIGHTING_AIRSTRIKE_CONTROLLER), 60);
             tag.putBoolean(FFASC_CONFIRM, false);
-            return success(stack);
+            return consume(stack);
         }
         if (player.isCrouching()) {
             //todo(mode)
-            return success(stack);
+            return consume(stack);
         }
         final var trace = getRaytracingBlock(player);
         if (tag.getInt(FFASC_COMMON_PREPARATION) > 4800) {
             notifyServerPlayer(player, new TranslatableComponent("msg.firesafety.ffasc.not_prepared"));
-            return success(stack);
+            return consume(stack);
         }
         if (trace == null) {
             notifyServerPlayer(player, new TranslatableComponent("msg.firesafety.ffasc.too_far"));
-            return success(stack);
+            return consume(stack);
         }
         if (level.dimensionTypeRegistration().value().hasCeiling()) {
             notifyServerPlayer(player, new TranslatableComponent("msg.firesafety.ffasc.unreachable_dim"));
-            return success(stack);
+            return consume(stack);
         }
         //todo: water bomb item check && consumption
         tag.putString(FFASC_DIM, level.dimension().location().toString());
-        tag.putLong(FFASC_CENTER, BlockPos.asLong((int) trace.x, (int) trace.y, (int) trace.z));
+        tag.putLong(FFASC_CENTER, DataFormatUtil.vec3ToLong(trace));
         playSoundForThisPlayer(player, getSound(1), 1F, 1F);
         notifyServerPlayer(player, new TranslatableComponent("msg.firesafety.ffasc.confirm_query", vecToIntString(trace)));
         tag.putBoolean(FFASC_CONFIRM, true);
-        return success(stack);
+        return consume(stack);
     }
 
 
@@ -96,6 +98,7 @@ public class FireFightingAirStrikeControllerItem extends FireSafetyItem {
         if (!(entity instanceof Player player)) return;
         if (isSelected) displayInformation(stack, player);
         final var tag = stack.getOrCreateTag();
+        tag.putBoolean(USING, isSelected);
         final var common = tag.getInt(FFASC_COMMON_PREPARATION);
         if (common % 1200 == 1) playSoundForThisPlayer(player, getSound(2), 1F, 1F);
         if (common > 0) tag.putInt(FFASC_COMMON_PREPARATION, common - 1);
@@ -103,7 +106,6 @@ public class FireFightingAirStrikeControllerItem extends FireSafetyItem {
     }
 
     private void launch(ItemStack stack, Player player) {
-        //playSoundForThisPlayer(player, SoundEvents.FIREWORK_ROCKET_SHOOT, 1F, 1F);
         final var tag = stack.getOrCreateTag();
         final var center = BlockPos.of(tag.getLong(FFASC_CENTER));
         final var list = BlockPos.betweenClosed(center.offset(5, 0, 5), center.offset(-5, 0, -5));

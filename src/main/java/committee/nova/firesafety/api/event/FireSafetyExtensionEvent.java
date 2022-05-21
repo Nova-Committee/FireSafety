@@ -10,11 +10,15 @@ public class FireSafetyExtensionEvent extends Event {
     private final HashMap<Short, FireSafetyApi.ExtinguishableBlock> extinguishableBlockList;
     private final HashMap<Short, FireSafetyApi.ExtinguishableEntity> extinguishableEntityList;
     private final HashMap<Short, FireSafetyApi.FireFightingWaterContainerItem> firefightingWaterContainerList;
+    private final HashMap<Short, FireSafetyApi.FireDangerBlock> fireDangerBlockList;
+    private final HashMap<Short, FireSafetyApi.FireDangerEntity> fireDangerEntityList;
 
     public FireSafetyExtensionEvent() {
         extinguishableBlockList = new HashMap<>();
         extinguishableEntityList = new HashMap<>();
         firefightingWaterContainerList = new HashMap<>();
+        fireDangerBlockList = new HashMap<>();
+        fireDangerEntityList = new HashMap<>();
     }
 
     public void addExtinguishable(short priority, FireSafetyApi.ExtinguishableBlock extinguishable) {
@@ -44,6 +48,24 @@ public class FireSafetyExtensionEvent extends Event {
         FireSafety.LOGGER.info("Adding new firefighting container with priority {}!", priority);
     }
 
+    public void addFireDanger(short priority, FireSafetyApi.FireDangerBlock danger) {
+        if (fireDangerBlockList.containsKey(priority)) {
+            FireSafety.LOGGER.warn("Duplicate priority value {}, new fire danger block won't be added!", priority);
+            return;
+        }
+        fireDangerBlockList.put(priority, danger);
+        FireSafety.LOGGER.info("Adding new fire danger block with priority {}!", priority);
+    }
+
+    public void addFireDanger(short priority, FireSafetyApi.FireDangerEntity danger) {
+        if (fireDangerEntityList.containsKey(priority)) {
+            FireSafety.LOGGER.warn("Duplicate priority value {}, new fire danger entity won't be added!", priority);
+            return;
+        }
+        fireDangerEntityList.put(priority, danger);
+        FireSafety.LOGGER.info("Adding new fire danger entity with priority {}!", priority);
+    }
+
     public HashMap<Short, FireSafetyApi.FireFightingWaterContainerItem> getFirefightingWaterContainerList() {
         return firefightingWaterContainerList;
     }
@@ -54,5 +76,13 @@ public class FireSafetyExtensionEvent extends Event {
 
     public HashMap<Short, FireSafetyApi.ExtinguishableBlock> getExtinguishableBlockList() {
         return extinguishableBlockList;
+    }
+
+    public HashMap<Short, FireSafetyApi.FireDangerBlock> getFireDangerBlockList() {
+        return fireDangerBlockList;
+    }
+
+    public HashMap<Short, FireSafetyApi.FireDangerEntity> getFireDangerEntityList() {
+        return fireDangerEntityList;
     }
 }

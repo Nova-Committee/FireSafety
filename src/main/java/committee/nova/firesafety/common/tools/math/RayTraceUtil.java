@@ -2,6 +2,7 @@ package committee.nova.firesafety.common.tools.math;
 
 import committee.nova.firesafety.common.config.Configuration;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Vec3i;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Level;
@@ -31,5 +32,9 @@ public class RayTraceUtil {
 
     public static String vecToIntString(Vec3 v) {
         return "[" + (int) v.x + ", " + (int) v.y + ", " + (int) v.z + "]";
+    }
+
+    public static String vecToIntString(Vec3i v) {
+        return "[" + v.getX() + ", " + v.getY() + ", " + v.getZ() + "]";
     }
 }

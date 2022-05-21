@@ -1,0 +1,6 @@
+{
+  "parent": "firesafety:item/fds/fds",
+  "textures": {
+    "1": "firesafety:item/fds/fds_radar_on"
+  }
+}
