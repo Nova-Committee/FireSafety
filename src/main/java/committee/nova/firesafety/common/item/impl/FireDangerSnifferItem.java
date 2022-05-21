@@ -31,7 +31,7 @@ import static committee.nova.firesafety.common.tools.math.RayTraceUtil.vecToIntS
 import static committee.nova.firesafety.common.tools.reference.NBTReference.FDS_CENTER;
 import static committee.nova.firesafety.common.tools.reference.NBTReference.FDS_PROGRESS;
 import static committee.nova.firesafety.common.tools.reference.TagKeyReference.FDS_IGNORED;
-import static net.minecraft.network.chat.ComponentUtils.wrapInSquareBrackets;
+import static committee.nova.firesafety.common.tools.string.StringUtil.wrapInArrows;
 import static net.minecraft.world.InteractionResultHolder.consume;
 import static net.minecraft.world.InteractionResultHolder.pass;
 
@@ -134,6 +134,6 @@ public class FireDangerSnifferItem extends FireSafetyItem implements Wearable, I
     }
 
     private MutableComponent getHoveredMessage(Component outer, Component inner) {
-        return wrapInSquareBrackets(outer.copy().withStyle(e -> e.withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, inner))));
+        return wrapInArrows(outer.copy()).withStyle(e -> e.withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, inner)));
     }
 }
