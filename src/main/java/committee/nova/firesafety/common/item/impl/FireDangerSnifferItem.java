@@ -5,6 +5,7 @@ import committee.nova.firesafety.common.item.IArmPoseChangeable;
 import committee.nova.firesafety.common.item.base.FireSafetyItem;
 import net.minecraft.ChatFormatting;
 import net.minecraft.MethodsReturnNonnullByDefault;
+import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.HoverEvent;
@@ -67,17 +68,35 @@ public class FireDangerSnifferItem extends FireSafetyItem implements Wearable, I
     }
 
     @Override
+    public void onArmorTick(ItemStack stack, Level level, Player player) {
+        final var tag = stack.getOrCreateTag();
+        if (player.isCrouching() || tag.getInt(FDS_PROGRESS) > 0 || player.getCooldowns().isOnCooldown(stack.getItem()))
+            return;
+        activate(player, stack);
+    }
+
+    @Override
     public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand hand) {
         if (hand != InteractionHand.MAIN_HAND) return pass(player.getOffhandItem());
         final var stack = player.getMainHandItem();
         if (level.isClientSide) return consume(stack);
         final var tag = stack.getOrCreateTag();
         if (tag.getInt(FDS_PROGRESS) > 0) return consume(stack);
+        activate(player, stack);
+        return consume(stack);
+    }
+
+    private void activate(Player player, ItemStack stack) {
+        final var tag = stack.getOrCreateTag();
         playSoundForThisPlayer(player, getSound(4), 1F, 1F);
         tag.putInt(FDS_PROGRESS, 80);
         tag.putLong(FDS_CENTER, vec3iToLong(player.blockPosition()));
         player.getCooldowns().addCooldown(stack.getItem(), 240);
-        return consume(stack);
+    }
+
+    @Override
+    public HumanoidModel.ArmPose getIdlePose() {
+        return HumanoidModel.ArmPose.BOW_AND_ARROW;
     }
 
     private void notifyPlayerForFireDangers(Player player, ItemStack stack) {
