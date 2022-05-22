@@ -10,12 +10,17 @@ import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.material.Material;
+import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
 import java.util.Random;
 
+import static committee.nova.firesafety.common.tools.reference.ItemReference.FIRE_DANGER_SNIFFER;
+import static committee.nova.firesafety.common.tools.reference.ItemReference.getRegisteredItem;
+import static committee.nova.firesafety.common.tools.reference.NBTReference.FDS_CENTER;
+import static committee.nova.firesafety.common.tools.reference.NBTReference.FDS_PROGRESS;
 import static committee.nova.firesafety.common.tools.reference.TagKeyReference.BURNING;
 import static committee.nova.firesafety.common.tools.reference.TagKeyReference.IGNORED;
 import static net.minecraft.sounds.SoundEvents.FIRE_EXTINGUISH;
@@ -74,5 +79,17 @@ public class EventHandler {
                 (l, e) -> 4,
                 (l, e) -> new TranslatableComponent("tips.firesafety.danger.blaze")
         ));
+    }
+
+    @SubscribeEvent
+    public static void onPlayerChangeDimension(PlayerEvent.PlayerChangedDimensionEvent e) {
+        final var player = e.getPlayer();
+        final var inv = player.getInventory().items;
+        for (final var stack : inv) {
+            if (!stack.is(getRegisteredItem(FIRE_DANGER_SNIFFER))) continue;
+            final var tag = stack.getOrCreateTag();
+            tag.putInt(FDS_PROGRESS, 0);
+            tag.remove(FDS_CENTER);
+        }
     }
 }
