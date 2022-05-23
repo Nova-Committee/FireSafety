@@ -1,7 +1,8 @@
 package committee.nova.firesafety.common.item.impl;
 
 import committee.nova.firesafety.FireSafety;
-import committee.nova.firesafety.common.item.IArmPoseChangeable;
+import committee.nova.firesafety.common.item.api.IAdvancementTriggerable;
+import committee.nova.firesafety.common.item.api.IArmPoseChangeable;
 import committee.nova.firesafety.common.item.base.FireSafetyItem;
 import net.minecraft.ChatFormatting;
 import net.minecraft.MethodsReturnNonnullByDefault;
@@ -11,6 +12,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.HoverEvent;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.Entity;
@@ -38,7 +40,7 @@ import static net.minecraft.world.InteractionResultHolder.pass;
 
 @MethodsReturnNonnullByDefault
 @ParametersAreNonnullByDefault
-public class FireDangerSnifferItem extends FireSafetyItem implements Wearable, IArmPoseChangeable {
+public class FireDangerSnifferItem extends FireSafetyItem implements Wearable, IArmPoseChangeable, IAdvancementTriggerable {
     public FireDangerSnifferItem() {
         super(new Properties().stacksTo(1).fireResistant());
     }
@@ -154,5 +156,10 @@ public class FireDangerSnifferItem extends FireSafetyItem implements Wearable, I
 
     private MutableComponent getHoveredMessage(Component outer, Component inner) {
         return wrapInArrows(outer.copy()).withStyle(e -> e.withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, inner)));
+    }
+
+    @Override
+    public ResourceLocation getAdvancement() {
+        return new ResourceLocation(FireSafety.MODID, "prevention_is_better_than_cure");
     }
 }

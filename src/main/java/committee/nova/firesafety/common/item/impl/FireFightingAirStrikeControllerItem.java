@@ -1,7 +1,7 @@
 package committee.nova.firesafety.common.item.impl;
 
 import committee.nova.firesafety.common.entity.impl.projectile.WaterBombProjectile;
-import committee.nova.firesafety.common.item.IArmPoseChangeable;
+import committee.nova.firesafety.common.item.api.IArmPoseChangeable;
 import committee.nova.firesafety.common.item.base.FireSafetyItem;
 import committee.nova.firesafety.common.tools.format.DataFormatUtil;
 import net.minecraft.MethodsReturnNonnullByDefault;

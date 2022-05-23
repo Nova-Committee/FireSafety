@@ -1,6 +1,6 @@
 package committee.nova.firesafety.client.render.init;
 
-import committee.nova.firesafety.common.item.IArmPoseChangeable;
+import committee.nova.firesafety.common.item.api.IArmPoseChangeable;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.RenderPlayerEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;

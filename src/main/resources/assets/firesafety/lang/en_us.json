@@ -1,6 +1,8 @@
 {
   "advancements.firesafety.be_careful_with_candles.title": "Be Careful With Candles",
   "advancements.firesafety.be_careful_with_candles.desc": "Place a fire alarm",
+  "advancements.firesafety.prevention_is_better_than_cure.title": "Prevention Is Better Than Cure",
+  "advancements.firesafety.prevention_is_better_than_cure.desc": "Use a fire danger sniffer",
   "advancements.firesafety.to_nip_it_in_the_spark.title": "To Nip It In The Spark",
   "advancements.firesafety.to_nip_it_in_the_spark.desc": "Place an extinguisher",
   "entity.firesafety.water_bomb": "Water Bomb",

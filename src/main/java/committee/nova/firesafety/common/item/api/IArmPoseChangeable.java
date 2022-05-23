@@ -1,4 +1,4 @@
-package committee.nova.firesafety.common.item;
+package committee.nova.firesafety.common.item.api;
 
 import net.minecraft.client.model.HumanoidModel;
 

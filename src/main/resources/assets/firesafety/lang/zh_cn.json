@@ -1,6 +1,8 @@
 {
   "advancements.firesafety.be_careful_with_candles.title": "天干物燥，小心火烛",
   "advancements.firesafety.be_careful_with_candles.desc": "放置火灾警报器",
+  "advancements.firesafety.prevention_is_better_than_cure.title": "防范胜于救灾",
+  "advancements.firesafety.prevention_is_better_than_cure.desc": "使用火险嗅探仪",
   "advancements.firesafety.to_nip_it_in_the_spark.title": "防患于未然",
   "advancements.firesafety.to_nip_it_in_the_spark.desc": "放置灭火器",
   "entity.firesafety.water_bomb": "灭火炸弹",
