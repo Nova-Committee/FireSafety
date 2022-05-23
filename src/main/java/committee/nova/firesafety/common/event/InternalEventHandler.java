@@ -20,6 +20,7 @@ import static committee.nova.firesafety.common.tools.reference.NBTReference.FDS_
 public class InternalEventHandler {
     @SubscribeEvent
     public static void onPlayerChangeDimension(PlayerEvent.PlayerChangedDimensionEvent e) {
+        if (e.isCanceled()) return;
         final var player = e.getPlayer();
         final var inv = player.getInventory().items;
         for (final var stack : inv) {
@@ -31,15 +32,16 @@ public class InternalEventHandler {
     }
 
     @SubscribeEvent
-    public static void onAdvancementAcquired(AdvancementEvent event) {
-        final var adv = event.getAdvancement().getId().getPath();
+    public static void onAdvancementAcquired(AdvancementEvent e) {
+        if (e.isCanceled()) return;
+        final var adv = e.getAdvancement().getId().getPath();
         if (!adv.equals("be_careful_with_candles") && !adv.equals("to_nip_it_in_the_spark")) return;
-        PlayerHandler.notifyServerPlayer(event.getPlayer(), new TranslatableComponent("tips.firesafety.listen"));
+        PlayerHandler.notifyServerPlayer(e.getPlayer(), new TranslatableComponent("tips.firesafety.listen"));
     }
 
     @SubscribeEvent
     public static void onRightClick(PlayerInteractEvent.RightClickItem e) {
-        if (e.getSide().isClient()) return;
+        if (e.getSide().isClient() || e.isCanceled()) return;
         final var item = e.getItemStack().getItem();
         if (!(item instanceof IAdvancementTriggerable i)) return;
         AdvancementUtil.tryAwardAdvancement((ServerPlayer) e.getPlayer(), i.getAdvancement());
