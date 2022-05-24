@@ -1,6 +1,7 @@
 package committee.nova.firesafety.common.event;
 
 import committee.nova.firesafety.common.item.api.IAdvancementTriggerable;
+import committee.nova.firesafety.common.item.api.ITagResettable;
 import committee.nova.firesafety.common.tools.PlayerHandler;
 import committee.nova.firesafety.common.tools.advancement.AdvancementUtil;
 import net.minecraft.network.chat.TranslatableComponent;
@@ -11,11 +12,6 @@ import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
-import static committee.nova.firesafety.common.tools.reference.ItemReference.FIRE_DANGER_SNIFFER;
-import static committee.nova.firesafety.common.tools.reference.ItemReference.getRegisteredItem;
-import static committee.nova.firesafety.common.tools.reference.NBTReference.FDS_CENTER;
-import static committee.nova.firesafety.common.tools.reference.NBTReference.FDS_PROGRESS;
-
 @Mod.EventBusSubscriber
 public class InternalEventHandler {
     @SubscribeEvent
@@ -24,10 +20,8 @@ public class InternalEventHandler {
         final var player = e.getPlayer();
         final var inv = player.getInventory().items;
         for (final var stack : inv) {
-            if (!stack.is(getRegisteredItem(FIRE_DANGER_SNIFFER))) continue;
-            final var tag = stack.getOrCreateTag();
-            tag.putInt(FDS_PROGRESS, 0);
-            tag.remove(FDS_CENTER);
+            if (!(stack.getItem() instanceof ITagResettable i)) continue;
+            i.resetTagOnDimensionChange(stack);
         }
     }
 

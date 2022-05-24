@@ -3,6 +3,7 @@ package committee.nova.firesafety.common.item.impl;
 import committee.nova.firesafety.FireSafety;
 import committee.nova.firesafety.common.item.api.IAdvancementTriggerable;
 import committee.nova.firesafety.common.item.api.IArmPoseChangeable;
+import committee.nova.firesafety.common.item.api.ITagResettable;
 import committee.nova.firesafety.common.item.base.FireSafetyItem;
 import net.minecraft.ChatFormatting;
 import net.minecraft.MethodsReturnNonnullByDefault;
@@ -40,7 +41,7 @@ import static net.minecraft.world.InteractionResultHolder.pass;
 
 @MethodsReturnNonnullByDefault
 @ParametersAreNonnullByDefault
-public class FireDangerSnifferItem extends FireSafetyItem implements Wearable, IArmPoseChangeable, IAdvancementTriggerable {
+public class FireDangerSnifferItem extends FireSafetyItem implements Wearable, IArmPoseChangeable, IAdvancementTriggerable, ITagResettable {
     public FireDangerSnifferItem() {
         super(new Properties().stacksTo(1).fireResistant());
     }
@@ -161,5 +162,12 @@ public class FireDangerSnifferItem extends FireSafetyItem implements Wearable, I
     @Override
     public ResourceLocation getAdvancement() {
         return new ResourceLocation(FireSafety.MODID, "prevention_is_better_than_cure");
+    }
+
+    @Override
+    public void resetTagOnDimensionChange(ItemStack stack) {
+        final var tag = stack.getOrCreateTag();
+        tag.putInt(FDS_PROGRESS, 0);
+        tag.remove(FDS_CENTER);
     }
 }

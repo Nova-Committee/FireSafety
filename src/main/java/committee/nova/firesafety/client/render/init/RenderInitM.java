@@ -17,7 +17,6 @@ import net.minecraftforge.client.event.EntityRenderersEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
-import net.minecraftforge.registries.RegistryObject;
 
 import static committee.nova.firesafety.common.tools.reference.ItemReference.*;
 import static committee.nova.firesafety.common.tools.reference.NBTReference.FDS_PROGRESS;
@@ -28,7 +27,7 @@ public class RenderInitM {
     @SubscribeEvent
     public static void setupRenderType(FMLClientSetupEvent e) {
         e.enqueueWork(() -> {
-            for (final RegistryObject<Block> block : BlockInit.blockList.values()) {
+            for (final var block : BlockInit.blockList.values()) {
                 final Block b = block.get();
                 if (b instanceof ISpecialRenderType t) ItemBlockRenderTypes.setRenderLayer(b, t.getRenderType());
             }
