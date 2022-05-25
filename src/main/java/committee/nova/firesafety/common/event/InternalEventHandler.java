@@ -2,8 +2,6 @@ package committee.nova.firesafety.common.event;
 
 import committee.nova.firesafety.common.item.api.IAdvancementTriggerable;
 import committee.nova.firesafety.common.item.api.ITagResettable;
-import committee.nova.firesafety.common.tools.PlayerHandler;
-import committee.nova.firesafety.common.tools.advancement.AdvancementUtil;
 import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraftforge.event.entity.player.AdvancementEvent;
@@ -11,6 +9,9 @@ import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
+
+import static committee.nova.firesafety.common.tools.PlayerHandler.notifyServerPlayer;
+import static committee.nova.firesafety.common.tools.advancement.AdvancementUtil.tryAwardAdvancement;
 
 @Mod.EventBusSubscriber
 public class InternalEventHandler {
@@ -30,7 +31,7 @@ public class InternalEventHandler {
         if (e.isCanceled()) return;
         final var adv = e.getAdvancement().getId().getPath();
         if (!adv.equals("be_careful_with_candles") && !adv.equals("to_nip_it_in_the_spark")) return;
-        PlayerHandler.notifyServerPlayer(e.getPlayer(), new TranslatableComponent("tips.firesafety.listen"));
+        notifyServerPlayer(e.getPlayer(), new TranslatableComponent("tips.firesafety.listen"));
     }
 
     @SubscribeEvent
@@ -38,6 +39,6 @@ public class InternalEventHandler {
         if (e.getSide().isClient() || e.isCanceled()) return;
         final var item = e.getItemStack().getItem();
         if (!(item instanceof IAdvancementTriggerable i)) return;
-        AdvancementUtil.tryAwardAdvancement((ServerPlayer) e.getPlayer(), i.getAdvancement());
+        tryAwardAdvancement((ServerPlayer) e.getPlayer(), i.getAdvancement());
     }
 }
