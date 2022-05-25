@@ -5,7 +5,6 @@ import committee.nova.firesafety.client.render.model.WaterBombModel;
 import committee.nova.firesafety.client.render.renderer.base.FallingProjectileRenderer;
 import committee.nova.firesafety.common.block.api.ISpecialRenderType;
 import committee.nova.firesafety.common.block.init.BlockInit;
-import committee.nova.firesafety.common.entity.init.EntityInit;
 import net.minecraft.client.renderer.ItemBlockRenderTypes;
 import net.minecraft.client.renderer.entity.EntityRenderers;
 import net.minecraft.client.renderer.item.ItemProperties;
@@ -18,6 +17,7 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 
+import static committee.nova.firesafety.common.entity.init.EntityInit.waterBomb;
 import static committee.nova.firesafety.common.tools.reference.ItemReference.*;
 import static committee.nova.firesafety.common.tools.reference.NBTReference.FDS_PROGRESS;
 import static committee.nova.firesafety.common.tools.reference.NBTReference.USING;
@@ -37,7 +37,7 @@ public class RenderInitM {
 
     @SubscribeEvent
     public static void registerRenderer(FMLClientSetupEvent event) {
-        EntityRenderers.register(EntityInit.waterBomb.get(), ctx -> new FallingProjectileRenderer<>(ctx, new ResourceLocation(FireSafety.MODID, "textures/entity/bombs/water_bomb/water_bomb.png")));
+        EntityRenderers.register(waterBomb.get(), ctx -> new FallingProjectileRenderer<>(ctx, new ResourceLocation(FireSafety.MODID, "textures/entity/bombs/water_bomb/water_bomb.png")));
     }
 
     @SubscribeEvent

@@ -8,7 +8,6 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraft.network.chat.TranslatableComponent;
-import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
@@ -24,7 +23,6 @@ import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
-import net.minecraft.world.level.material.Material;
 import net.minecraft.world.level.storage.loot.LootContext;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
@@ -36,6 +34,8 @@ import java.util.Collections;
 import java.util.List;
 
 import static net.minecraft.sounds.SoundEvents.NOTE_BLOCK_IRON_XYLOPHONE;
+import static net.minecraft.sounds.SoundSource.BLOCKS;
+import static net.minecraft.world.level.material.Material.METAL;
 
 @ParametersAreNonnullByDefault
 @MethodsReturnNonnullByDefault
@@ -44,7 +44,7 @@ public abstract class AbstractCeilingDeviceBlock extends Block implements ISpeci
     public static final BooleanProperty ONFIRE = BooleanProperty.create("onfire");
 
     public AbstractCeilingDeviceBlock() {
-        super(Properties.of(Material.METAL).strength(2F, 1000F).sound(SoundType.METAL).destroyTime(1F).lightLevel(s -> s.getValue(ONFIRE) ? 12 : 6).noOcclusion());
+        super(Properties.of(METAL).strength(2F, 1000F).sound(SoundType.METAL).destroyTime(1F).lightLevel(s -> s.getValue(ONFIRE) ? 12 : 6).noOcclusion());
         registerDefaultState(getStateDefinition().any().setValue(ONFIRE, false));
     }
 
@@ -56,7 +56,7 @@ public abstract class AbstractCeilingDeviceBlock extends Block implements ISpeci
             return;
         }
         final boolean b = r.handleListener(player);
-        player.playNotifySound(NOTE_BLOCK_IRON_XYLOPHONE, SoundSource.BLOCKS, .5F, b ? 1F : .5F);
+        player.playNotifySound(NOTE_BLOCK_IRON_XYLOPHONE, BLOCKS, .5F, b ? 1F : .5F);
         PlayerHandler.notifyServerPlayer(player, new TranslatableComponent("msg.firesafety.device.listening." + b));
     }
 

@@ -36,6 +36,8 @@ import static committee.nova.firesafety.common.tools.reference.NBTReference.FDS_
 import static committee.nova.firesafety.common.tools.reference.NBTReference.FDS_PROGRESS;
 import static committee.nova.firesafety.common.tools.reference.TagKeyReference.FDS_IGNORED;
 import static committee.nova.firesafety.common.tools.string.StringUtil.wrapInArrows;
+import static net.minecraft.ChatFormatting.*;
+import static net.minecraft.core.BlockPos.betweenClosed;
 import static net.minecraft.world.InteractionResultHolder.consume;
 import static net.minecraft.world.InteractionResultHolder.pass;
 
@@ -112,7 +114,7 @@ public class FireDangerSnifferItem extends FireSafetyItem implements Wearable, I
         final var c1 = center.offset(-25, -25, -25);
         final var c2 = center.offset(25, 25, 25);
         final var level = player.level;
-        final var blocks = BlockPos.betweenClosed(c1, c2);
+        final var blocks = betweenClosed(c1, c2);
         blocks.forEach(p -> {
             final var state = level.getBlockState(p);
             if (state.is(FDS_IGNORED)) return;
@@ -145,13 +147,13 @@ public class FireDangerSnifferItem extends FireSafetyItem implements Wearable, I
 
     private ChatFormatting getColorFromDangerousness(int d) {
         return switch (d) {
-            case -1 -> ChatFormatting.GOLD;
-            case 0 -> ChatFormatting.DARK_GREEN;
-            case 1 -> ChatFormatting.GREEN;
-            case 2 -> ChatFormatting.AQUA;
-            case 3 -> ChatFormatting.LIGHT_PURPLE;
-            case 4 -> ChatFormatting.RED;
-            default -> ChatFormatting.WHITE;
+            case -1 -> GOLD;
+            case 0 -> DARK_GREEN;
+            case 1 -> GREEN;
+            case 2 -> AQUA;
+            case 3 -> LIGHT_PURPLE;
+            case 4 -> RED;
+            default -> WHITE;
         };
     }
 

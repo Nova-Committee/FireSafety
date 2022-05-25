@@ -3,7 +3,6 @@ package committee.nova.firesafety.common.block.blockEntity.base;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
-import net.minecraft.nbt.Tag;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -11,10 +10,11 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 
 import javax.annotation.ParametersAreNonnullByDefault;
-import java.text.MessageFormat;
 import java.util.HashMap;
 import java.util.UUID;
 import java.util.function.Consumer;
+
+import static net.minecraft.nbt.Tag.TAG_COMPOUND;
 
 @ParametersAreNonnullByDefault
 public abstract class RecordableDeviceBlockEntity extends BlockEntity {
@@ -26,7 +26,7 @@ public abstract class RecordableDeviceBlockEntity extends BlockEntity {
 
     @Override
     public void load(CompoundTag tag) {
-        final var listeners = tag.getList("listeners", Tag.TAG_COMPOUND);
+        final var listeners = tag.getList("listeners", TAG_COMPOUND);
         synchronized (notifies) {
             notifies.clear();
             if (listeners.isEmpty()) return;
@@ -83,10 +83,6 @@ public abstract class RecordableDeviceBlockEntity extends BlockEntity {
                 b.append(" ");
                 b.append(u.toString());
             }
-        return !b.isEmpty() ? "listeners:" + b + ';' : "No listener.";
-    }
-
-    public String formatBlockPos() {
-        return MessageFormat.format("[{0}, {1}, {2}]", worldPosition.getX(), worldPosition.getY(), worldPosition.getZ());
+        return !b.isEmpty() ? "Listeners:" + b + ';' : "No listener.";
     }
 }

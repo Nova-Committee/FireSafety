@@ -1,14 +1,15 @@
 package committee.nova.firesafety.common.tools;
 
-import net.minecraft.Util;
 import net.minecraft.network.chat.Component;
 import net.minecraft.sounds.SoundEvent;
-import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.player.Player;
+
+import static net.minecraft.Util.NIL_UUID;
+import static net.minecraft.sounds.SoundSource.PLAYERS;
 
 public class PlayerHandler {
     public static void notifyServerPlayer(Player p, Component c) {
-        if (!p.level.isClientSide) p.sendMessage(c, Util.NIL_UUID);
+        if (!p.level.isClientSide) p.sendMessage(c, NIL_UUID);
     }
 
     public static void displayClientMessage(Player p, Component c) {
@@ -16,6 +17,6 @@ public class PlayerHandler {
     }
 
     public static void playSoundForThisPlayer(Player player, SoundEvent sound, float volume, float pitch) {
-        player.playNotifySound(sound, SoundSource.PLAYERS, volume, pitch);
+        player.playNotifySound(sound, PLAYERS, volume, pitch);
     }
 }

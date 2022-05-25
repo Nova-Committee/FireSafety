@@ -1,10 +1,7 @@
 package committee.nova.firesafety.common.entity.impl.projectile;
 
-import committee.nova.firesafety.api.FireSafetyApi;
-import committee.nova.firesafety.common.entity.init.EntityInit;
 import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
@@ -15,15 +12,20 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.AbstractArrow;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.network.NetworkHooks;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 
+import static committee.nova.firesafety.api.FireSafetyApi.*;
+import static committee.nova.firesafety.common.entity.init.EntityInit.waterBomb;
 import static committee.nova.firesafety.common.tools.reference.ItemReference.WATER_BOMB;
 import static committee.nova.firesafety.common.tools.reference.ItemReference.getRegisteredItem;
+import static net.minecraft.core.BlockPos.betweenClosed;
+import static net.minecraft.core.particles.ParticleTypes.CAMPFIRE_COSY_SMOKE;
+import static net.minecraft.world.level.block.Blocks.AIR;
+import static net.minecraft.world.level.block.Blocks.FIRE;
 
 @ParametersAreNonnullByDefault
 @MethodsReturnNonnullByDefault
@@ -33,11 +35,11 @@ public class WaterBombProjectile extends AbstractArrow {
     }
 
     public WaterBombProjectile(double x, double y, double z, Level l) {
-        super(EntityInit.waterBomb.get(), x, y, z, l);
+        super(waterBomb.get(), x, y, z, l);
     }
 
     public WaterBombProjectile(LivingEntity f, Level l) {
-        super(EntityInit.waterBomb.get(), f, l);
+        super(waterBomb.get(), f, l);
     }
 
     @Override
@@ -66,9 +68,9 @@ public class WaterBombProjectile extends AbstractArrow {
             drop();
             return;
         }
-        final var i = FireSafetyApi.getTargetEntityIndex(level, entity);
+        final var i = getTargetEntityIndex(level, entity);
         if (i != Short.MIN_VALUE) {
-            final var t = FireSafetyApi.getTargetEntity(i);
+            final var t = getTargetEntity(i);
             t.entityAction().accept(level, entity);
         }
         discard();
@@ -85,18 +87,18 @@ public class WaterBombProjectile extends AbstractArrow {
         }
         setDeltaMovement(0, -.3, 0);
         final var p = blockPosition();
-        if (level.getBlockState(p).is(Blocks.FIRE)) level.setBlockAndUpdate(p, Blocks.AIR.defaultBlockState());
+        if (level.getBlockState(p).is(FIRE)) level.setBlockAndUpdate(p, AIR.defaultBlockState());
         if (inGround || onGround) extinguish();
     }
 
     private void extinguish() {
         final var pos = getOnPos();
-        final var posList = BlockPos.betweenClosed(pos.offset(0, -5, 0), pos.offset(0, 1, 0));
+        final var posList = betweenClosed(pos.offset(0, -5, 0), pos.offset(0, 1, 0));
         posList.forEach(b -> {
             if (level.getBlockState(b).isAir()) return;
-            final var i = FireSafetyApi.getTargetBlockIndex(level, b);
+            final var i = getTargetBlockIndex(level, b);
             if (i > Short.MIN_VALUE) {
-                final var t = FireSafetyApi.getTargetBlock(i);
+                final var t = getTargetBlock(i);
                 level.setBlockAndUpdate(b, t.targetBlock().apply(level, b));
                 t.extinguishedInfluence().accept(level, b);
             }
@@ -123,7 +125,7 @@ public class WaterBombProjectile extends AbstractArrow {
     @Override
     public void onRemovedFromWorld() {
         for (int i = 0; i < 10; i++) {
-            level.addAlwaysVisibleParticle(ParticleTypes.CAMPFIRE_COSY_SMOKE, getX() + random.nextDouble(-.3, .6), getY(), getZ() + random.nextDouble(-.3, .6), 0, 0, 0);
+            level.addAlwaysVisibleParticle(CAMPFIRE_COSY_SMOKE, getX() + random.nextDouble(-.3, .6), getY(), getZ() + random.nextDouble(-.3, .6), 0, 0, 0);
         }
     }
 }

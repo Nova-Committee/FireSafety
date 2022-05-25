@@ -1,7 +1,5 @@
 package committee.nova.firesafety.common.block.blockEntity.impl;
 
-import committee.nova.firesafety.api.FireSafetyApi;
-import committee.nova.firesafety.common.tools.PlayerHandler;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
@@ -11,8 +9,6 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.Fluids;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.fluids.FluidAttributes;
-import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fluids.capability.templates.FluidTank;
 
@@ -20,15 +16,23 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 
+import static committee.nova.firesafety.api.FireSafetyApi.*;
 import static committee.nova.firesafety.common.block.impl.ExtinguisherBlock.WATERED;
 import static committee.nova.firesafety.common.config.Configuration.*;
+import static committee.nova.firesafety.common.tools.PlayerHandler.notifyServerPlayer;
+import static committee.nova.firesafety.common.tools.PlayerHandler.playSoundForThisPlayer;
+import static committee.nova.firesafety.common.tools.math.RayTraceUtil.vecToIntString;
 import static committee.nova.firesafety.common.tools.reference.BlockReference.EXTINGUISHER;
 import static committee.nova.firesafety.common.tools.reference.BlockReference.getRegisteredBlockEntityType;
+import static net.minecraft.core.BlockPos.betweenClosed;
+import static net.minecraft.core.Direction.UP;
 import static net.minecraft.sounds.SoundEvents.BUCKET_FILL;
+import static net.minecraftforge.fluids.FluidAttributes.BUCKET_VOLUME;
+import static net.minecraftforge.fluids.capability.CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY;
 
 @ParametersAreNonnullByDefault
 public class ExtinguisherBlockEntity extends FireAlarmBlockEntity {
-    protected final FluidTank tank = new FluidTank(8 * FluidAttributes.BUCKET_VOLUME, f -> f.getFluid().isSame(Fluids.WATER));
+    protected final FluidTank tank = new FluidTank(8 * BUCKET_VOLUME, f -> f.getFluid().isSame(Fluids.WATER));
     private final LazyOptional<IFluidHandler> holder = LazyOptional.of(() -> tank);
 
     public ExtinguisherBlockEntity(BlockPos pos, BlockState state) {
@@ -68,29 +72,29 @@ public class ExtinguisherBlockEntity extends FireAlarmBlockEntity {
         final int consumption = waterConsumption.get();
         extinguish(tank.drain(consumption, IFluidHandler.FluidAction.EXECUTE).getAmount());
         if (remain > consumption) return;
-        toListeningPlayers(level, player -> PlayerHandler.playSoundForThisPlayer(player, BUCKET_FILL, 1F, 1F));
-        toListeningPlayers(level, player -> PlayerHandler.notifyServerPlayer(player, new TranslatableComponent("msg.firesafety.device.insufficient_water", formatBlockPos())));
+        toListeningPlayers(level, player -> playSoundForThisPlayer(player, BUCKET_FILL, 1F, 1F));
+        toListeningPlayers(level, player -> notifyServerPlayer(player, new TranslatableComponent("msg.firesafety.device.insufficient_water", vecToIntString(worldPosition))));
     }
 
     private void extinguish(int amount) {
         assert level != null;
-        final var posList = BlockPos.betweenClosed(monitoringAreaPos()[0], monitoringAreaPos()[1]);
+        final var posList = betweenClosed(monitoringAreaPos()[0], monitoringAreaPos()[1]);
         final var r = level.random;
         final int a = (int) (amount * 100F / waterConsumption.get()) + 1;
         for (final var p : posList) {
             if (r.nextInt(a) < 100 - blockExtinguishingPossibility.get() * 100) continue;
-            final short i = FireSafetyApi.getTargetBlockIndex(level, p);
+            final short i = getTargetBlockIndex(level, p);
             if (i == Short.MIN_VALUE) continue;
-            final var b = FireSafetyApi.getTargetBlock(i);
+            final var b = getTargetBlock(i);
             level.setBlockAndUpdate(p, b.targetBlock().apply(level, p));
             b.extinguishedInfluence().accept(level, p);
         }
-        final var entityList = level.getEntitiesOfClass(Entity.class, monitoringArea(), l -> FireSafetyApi.getTargetEntityIndex(level, l) > Short.MIN_VALUE);
+        final var entityList = level.getEntitiesOfClass(Entity.class, monitoringArea(), l -> getTargetEntityIndex(level, l) > Short.MIN_VALUE);
         for (final var e : entityList) {
             if (r.nextInt(a) < 100 - entityExtinguishingPossibility.get() * 100) continue;
-            final short i = FireSafetyApi.getTargetEntityIndex(level, e);
+            final short i = getTargetEntityIndex(level, e);
             if (i == Short.MIN_VALUE) continue;
-            final var t = FireSafetyApi.getTargetEntity(i);
+            final var t = getTargetEntity(i);
             t.entityAction().accept(level, e);
         }
     }
@@ -98,7 +102,7 @@ public class ExtinguisherBlockEntity extends FireAlarmBlockEntity {
     @Override
     @Nonnull
     public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> capability, @Nullable Direction facing) {
-        return (capability != CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY || facing != Direction.UP) ? super.getCapability(capability, facing) : holder.cast();
+        return (capability != FLUID_HANDLER_CAPABILITY || facing != UP) ? super.getCapability(capability, facing) : holder.cast();
     }
 
     public FluidTank getTank() {

@@ -1,12 +1,8 @@
 package committee.nova.firesafety.common.block.blockEntity.impl;
 
-import committee.nova.firesafety.api.FireSafetyApi;
 import committee.nova.firesafety.common.block.blockEntity.base.RecordableDeviceBlockEntity;
-import committee.nova.firesafety.common.sound.init.SoundInit;
-import committee.nova.firesafety.common.tools.PlayerHandler;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.TranslatableComponent;
-import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
@@ -14,13 +10,18 @@ import net.minecraft.world.phys.AABB;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 
+import static committee.nova.firesafety.api.FireSafetyApi.getTargetBlockIndex;
+import static committee.nova.firesafety.api.FireSafetyApi.getTargetEntityIndex;
 import static committee.nova.firesafety.common.block.base.AbstractCeilingDeviceBlock.ONFIRE;
 import static committee.nova.firesafety.common.block.impl.ExtinguisherBlock.WATERED;
 import static committee.nova.firesafety.common.config.Configuration.*;
-import static committee.nova.firesafety.common.tools.PlayerHandler.displayClientMessage;
-import static committee.nova.firesafety.common.tools.PlayerHandler.notifyServerPlayer;
+import static committee.nova.firesafety.common.sound.init.SoundInit.getSound;
+import static committee.nova.firesafety.common.tools.PlayerHandler.*;
+import static committee.nova.firesafety.common.tools.math.RayTraceUtil.vecToIntString;
 import static committee.nova.firesafety.common.tools.reference.BlockReference.FIRE_ALARM;
 import static committee.nova.firesafety.common.tools.reference.BlockReference.getRegisteredBlockEntityType;
+import static net.minecraft.core.BlockPos.betweenClosed;
+import static net.minecraft.sounds.SoundSource.BLOCKS;
 
 @ParametersAreNonnullByDefault
 public class FireAlarmBlockEntity extends RecordableDeviceBlockEntity {
@@ -47,13 +48,13 @@ public class FireAlarmBlockEntity extends RecordableDeviceBlockEntity {
         fireStartedTick++;
         if (level.getDayTime() % 100 != 25) return level.getDayTime() % 50 == 0;
         final var msg = new TranslatableComponent("msg.firesafety.device.fire_detected",
-                formatBlockPos(), c[0], c[1], (state.hasProperty(WATERED) && !state.getValue(WATERED)) ? new TranslatableComponent("phrase.firesafety.insufficient_water").getString() : "");
+                vecToIntString(worldPosition), c[0], c[1], (state.hasProperty(WATERED) && !state.getValue(WATERED)) ? new TranslatableComponent("phrase.firesafety.insufficient_water").getString() : "");
         toListeningPlayers(level, player -> {
             if (notifyByChat.get()) notifyServerPlayer(player, msg);
             else displayClientMessage(player, msg);
         });
-        toListeningPlayers(level, player -> PlayerHandler.playSoundForThisPlayer(player, SoundInit.getSound(0), .5F, 1F));
-        level.playSound(null, worldPosition, SoundInit.getSound(0), SoundSource.BLOCKS, .8F, 1F);
+        toListeningPlayers(level, player -> playSoundForThisPlayer(player, getSound(0), .5F, 1F));
+        level.playSound(null, worldPosition, getSound(0), BLOCKS, .8F, 1F);
         return false;
     }
 
@@ -61,9 +62,9 @@ public class FireAlarmBlockEntity extends RecordableDeviceBlockEntity {
         if (level == null) return new int[]{0, 0};
         final var range = monitoringArea();
         int b = 0;
-        for (final var p : BlockPos.betweenClosed(monitoringAreaPos()[0], monitoringAreaPos()[1]))
-            if (FireSafetyApi.getTargetBlockIndex(level, p) > Short.MIN_VALUE) b++;
-        return new int[]{b, level.getEntitiesOfClass(Entity.class, range, l -> FireSafetyApi.getTargetEntityIndex(level, l) > Short.MIN_VALUE).size()};
+        for (final var p : betweenClosed(monitoringAreaPos()[0], monitoringAreaPos()[1]))
+            if (getTargetBlockIndex(level, p) > Short.MIN_VALUE) b++;
+        return new int[]{b, level.getEntitiesOfClass(Entity.class, range, l -> getTargetEntityIndex(level, l) > Short.MIN_VALUE).size()};
     }
 
     public BlockPos[] monitoringAreaPos() {

@@ -17,4 +17,12 @@ public interface IFireFightingWaterContainer {
      * @return Returns an ItemStack being consumed of water
      **/
     ItemStack consume(Player player, int amount, ItemStack stack);
+
+    /**
+     * @param player The player using the itemstack
+     * @param amount The amount of water consumed
+     * @param stack  The old stack
+     *               Execute other actions when consumed
+     */
+    void influence(Player player, int amount, ItemStack stack);
 }

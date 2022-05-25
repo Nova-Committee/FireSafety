@@ -1,34 +1,36 @@
 package committee.nova.firesafety.common.item.impl;
 
-import committee.nova.firesafety.common.entity.impl.projectile.WaterBombProjectile;
 import committee.nova.firesafety.common.item.api.IArmPoseChangeable;
 import committee.nova.firesafety.common.item.base.FireSafetyItem;
-import committee.nova.firesafety.common.tools.format.DataFormatUtil;
 import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraft.network.chat.TranslatableComponent;
-import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.levelgen.Heightmap;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 
+import static committee.nova.firesafety.common.entity.impl.projectile.WaterBombProjectile.bombard;
 import static committee.nova.firesafety.common.sound.init.SoundInit.getSound;
 import static committee.nova.firesafety.common.tools.PlayerHandler.notifyServerPlayer;
 import static committee.nova.firesafety.common.tools.PlayerHandler.playSoundForThisPlayer;
+import static committee.nova.firesafety.common.tools.format.DataFormatUtil.vec3ToLong;
 import static committee.nova.firesafety.common.tools.math.RayTraceUtil.*;
 import static committee.nova.firesafety.common.tools.reference.ItemReference.FIREFIGHTING_AIRSTRIKE_CONTROLLER;
 import static committee.nova.firesafety.common.tools.reference.ItemReference.getRegisteredItem;
 import static committee.nova.firesafety.common.tools.reference.NBTReference.*;
 import static committee.nova.firesafety.common.tools.string.StringUtil.formattedNumber;
+import static java.lang.Math.*;
+import static net.minecraft.core.BlockPos.betweenClosed;
+import static net.minecraft.util.Mth.hsvToRgb;
 import static net.minecraft.world.InteractionResultHolder.consume;
 import static net.minecraft.world.InteractionResultHolder.pass;
+import static net.minecraft.world.level.levelgen.Heightmap.Types.MOTION_BLOCKING;
 
 @MethodsReturnNonnullByDefault
 @ParametersAreNonnullByDefault
@@ -84,7 +86,7 @@ public class FireFightingAirStrikeControllerItem extends FireSafetyItem implemen
         }
         //todo: water bomb item check && consumption
         tag.putString(FFASC_DIM, level.dimension().location().toString());
-        tag.putLong(FFASC_CENTER, DataFormatUtil.vec3ToLong(trace));
+        tag.putLong(FFASC_CENTER, vec3ToLong(trace));
         playSoundForThisPlayer(player, getSound(1), 1F, 1F);
         notifyServerPlayer(player, new TranslatableComponent("msg.firesafety.ffasc.confirm_query", vecToIntString(trace)));
         tag.putBoolean(FFASC_CONFIRM, true);
@@ -108,16 +110,15 @@ public class FireFightingAirStrikeControllerItem extends FireSafetyItem implemen
     private void launch(ItemStack stack, Player player) {
         final var tag = stack.getOrCreateTag();
         final var center = BlockPos.of(tag.getLong(FFASC_CENTER));
-        final var list = BlockPos.betweenClosed(center.offset(5, 0, 5), center.offset(-5, 0, -5));
+        final var list = betweenClosed(center.offset(5, 0, 5), center.offset(-5, 0, -5));
         int hRaw = 0;
         final var level = player.level;
         for (final var pos : list) {
-            final var h1 = player.level.getHeightmapPos(Heightmap.Types.MOTION_BLOCKING, pos).getY();
+            final var h1 = player.level.getHeightmapPos(MOTION_BLOCKING, pos).getY();
             if (h1 > hRaw) hRaw = h1;
         }
-        final var h = Math.min(hRaw + 35, level.getMaxBuildHeight());
-        for (final var pos : list)
-            WaterBombProjectile.bombard(level, new BlockPos(pos.getX(), h, pos.getZ()));
+        final var h = min(hRaw + 35, level.getMaxBuildHeight());
+        for (final var pos : list) bombard(level, new BlockPos(pos.getX(), h, pos.getZ()));
     }
 
     private void displayInformation(ItemStack stack, Player player) {
@@ -145,13 +146,13 @@ public class FireFightingAirStrikeControllerItem extends FireSafetyItem implemen
 
     @Override
     public int getBarColor(ItemStack stack) {
-        final var f = Math.max(0.0F, (6000 - (float) stack.getOrCreateTag().getInt(FFASC_COMMON_PREPARATION)) / (float) 6000);
-        return Mth.hsvToRgb(f / 3.0F, 1.0F, 1.0F);
+        final var f = max(0.0F, (6000 - (float) stack.getOrCreateTag().getInt(FFASC_COMMON_PREPARATION)) / (float) 6000);
+        return hsvToRgb(f / 3.0F, 1.0F, 1.0F);
     }
 
     @Override
     public int getBarWidth(ItemStack stack) {
-        return Math.round(13.0F - (float) stack.getOrCreateTag().getInt(FFASC_COMMON_PREPARATION) * 13.0F / (float) 6000);
+        return round(13.0F - (float) stack.getOrCreateTag().getInt(FFASC_COMMON_PREPARATION) * 13.0F / (float) 6000);
     }
 
     @Override
