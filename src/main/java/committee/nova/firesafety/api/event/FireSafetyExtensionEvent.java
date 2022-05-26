@@ -8,6 +8,7 @@ import java.util.HashMap;
 import static committee.nova.firesafety.FireSafety.LOGGER;
 
 public class FireSafetyExtensionEvent extends Event {
+    private final String UNKNOWN = "an unknown mod";
     private final HashMap<Short, FireSafetyApi.ExtinguishableBlock> extinguishableBlockList;
     private final HashMap<Short, FireSafetyApi.ExtinguishableEntity> extinguishableEntityList;
     private final HashMap<Short, FireSafetyApi.FireFightingWaterContainerItem> firefightingWaterContainerList;
@@ -22,49 +23,74 @@ public class FireSafetyExtensionEvent extends Event {
         fireDangerEntityList = new HashMap<>();
     }
 
-    public void addExtinguishable(short priority, FireSafetyApi.ExtinguishableBlock extinguishable) {
+    public void addExtinguishable(String modName, short priority, FireSafetyApi.ExtinguishableBlock extinguishable) {
         if (extinguishableBlockList.containsKey(priority)) {
-            LOGGER.warn("Duplicate priority value {}, new extinguishable block won't be added!", priority);
+            LOGGER.warn("Duplicate priority value {}, new extinguishable block by {} won't be added!", priority, modName);
             return;
         }
         extinguishableBlockList.put(priority, extinguishable);
-        LOGGER.info("Adding new extinguishable block with priority {}!", priority);
+        LOGGER.info("Adding new extinguishable block by {} with priority {}!", modName, priority);
     }
 
-    public void addExtinguishable(short priority, FireSafetyApi.ExtinguishableEntity extinguishable) {
+    public void addExtinguishable(String modName, short priority, FireSafetyApi.ExtinguishableEntity extinguishable) {
         if (extinguishableEntityList.containsKey(priority)) {
-            LOGGER.warn("Duplicate priority value {}, new extinguishable entity won't be added!", priority);
+            LOGGER.warn("Duplicate priority value {}, new extinguishable entity by {} won't be added!", priority, modName);
             return;
         }
         extinguishableEntityList.put(priority, extinguishable);
-        LOGGER.info("Adding new extinguishable entity with priority {}!", priority);
+        LOGGER.info("Adding new extinguishable entity by {} with priority {}!", modName, priority);
     }
 
-    public void addFireFightingWaterItem(short priority, FireSafetyApi.FireFightingWaterContainerItem container) {
+    public void addFireFightingWaterItem(String modName, short priority, FireSafetyApi.FireFightingWaterContainerItem container) {
         if (firefightingWaterContainerList.containsKey(priority)) {
-            LOGGER.warn("Duplicate priority value {}, new firefighting container won't be added!", priority);
+            LOGGER.warn("Duplicate priority value {}, new firefighting container by {} won't be added!", priority, modName);
             return;
         }
         firefightingWaterContainerList.put(priority, container);
-        LOGGER.info("Adding new firefighting container with priority {}!", priority);
+        LOGGER.info("Adding new firefighting container by {} with priority {}!", modName, priority);
     }
 
-    public void addFireDanger(short priority, FireSafetyApi.FireDangerBlock danger) {
+    public void addFireDanger(String modName, short priority, FireSafetyApi.FireDangerBlock danger) {
         if (fireDangerBlockList.containsKey(priority)) {
-            LOGGER.warn("Duplicate priority value {}, new fire danger block won't be added!", priority);
+            LOGGER.warn("Duplicate priority value {}, new fire danger block by {} won't be added!", priority, modName);
             return;
         }
         fireDangerBlockList.put(priority, danger);
-        LOGGER.info("Adding new fire danger block with priority {}!", priority);
+        LOGGER.info("Adding new fire danger block by {} with priority {}!", modName, priority);
     }
 
-    public void addFireDanger(short priority, FireSafetyApi.FireDangerEntity danger) {
+    public void addFireDanger(String modName, short priority, FireSafetyApi.FireDangerEntity danger) {
         if (fireDangerEntityList.containsKey(priority)) {
-            LOGGER.warn("Duplicate priority value {}, new fire danger entity won't be added!", priority);
+            LOGGER.warn("Duplicate priority value {}, new fire danger entity by {} won't be added!", priority, modName);
             return;
         }
         fireDangerEntityList.put(priority, danger);
-        LOGGER.info("Adding new fire danger entity with priority {}!", priority);
+        LOGGER.info("Adding new fire danger entity by {} with priority {}!", modName, priority);
+    }
+
+    @Deprecated
+    public void addExtinguishable(short priority, FireSafetyApi.ExtinguishableBlock extinguishable) {
+        addExtinguishable(UNKNOWN, priority, extinguishable);
+    }
+
+    @Deprecated
+    public void addExtinguishable(short priority, FireSafetyApi.ExtinguishableEntity extinguishable) {
+        addExtinguishable(UNKNOWN, priority, extinguishable);
+    }
+
+    @Deprecated
+    public void addFireFightingWaterItem(short priority, FireSafetyApi.FireFightingWaterContainerItem container) {
+        addFireFightingWaterItem(UNKNOWN, priority, container);
+    }
+
+    @Deprecated
+    public void addFireDanger(short priority, FireSafetyApi.FireDangerBlock danger) {
+        addFireDanger(UNKNOWN, priority, danger);
+    }
+
+    @Deprecated
+    public void addFireDanger(short priority, FireSafetyApi.FireDangerEntity danger) {
+        addFireDanger(UNKNOWN, priority, danger);
     }
 
     public HashMap<Short, FireSafetyApi.FireFightingWaterContainerItem> getFirefightingWaterContainerList() {

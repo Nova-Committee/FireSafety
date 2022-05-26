@@ -25,35 +25,36 @@ import static net.minecraft.world.level.material.Material.REPLACEABLE_PLANT;
 
 @Mod.EventBusSubscriber
 public class EventHandler {
+    public static final String MODNAME = "FireSafety";
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public static void onExtension(FireSafetyExtensionEvent event) {
-        event.addExtinguishable(Short.MAX_VALUE, new FireSafetyApi.ExtinguishableBlock(
+        event.addExtinguishable(MODNAME, Short.MAX_VALUE, new FireSafetyApi.ExtinguishableBlock(
                 (w, p) -> w.getBlockState(p).is(FIRE),
                 (w, p) -> AIR.defaultBlockState(),
                 (w, p) -> {
                     final Random r = w.random;
                     w.playSound(null, p, FIRE_EXTINGUISH, BLOCKS, 0.7F, 1.6F + (r.nextFloat() - r.nextFloat()) * 0.4F);
                 }));
-        event.addExtinguishable((short) -32767, new FireSafetyApi.ExtinguishableEntity(
+        event.addExtinguishable(MODNAME, (short) -32767, new FireSafetyApi.ExtinguishableEntity(
                 (w, e) -> e.isOnFire() && !e.getType().is(IGNORED),
                 (w, e) -> {
                     e.clearFire();
                     e.level.playSound(null, e, GENERIC_EXTINGUISH_FIRE, BLOCKS, 1F, 1F);
                 }));
-        event.addExtinguishable((short) -32765, new FireSafetyApi.ExtinguishableEntity((w, e) -> e.getType().is(BURNING), (w, e) -> e.hurt(FREEZE, freezeDamage.get().floatValue())));
-        event.addFireFightingWaterItem((short) 32767, new FireSafetyApi.FireFightingWaterContainerItem(
+        event.addExtinguishable(MODNAME, (short) -32765, new FireSafetyApi.ExtinguishableEntity((w, e) -> e.getType().is(BURNING), (w, e) -> e.hurt(FREEZE, freezeDamage.get().floatValue())));
+        event.addFireFightingWaterItem(MODNAME, (short) 32767, new FireSafetyApi.FireFightingWaterContainerItem(
                 (p, s) -> s.is(WATER_BUCKET),
                 (p, i) -> 1000, (p, a, s) -> BUCKET.getDefaultInstance(),
                 (p, a, s) -> {
                 }
         ));
-        event.addFireFightingWaterItem((short) 32766, new FireSafetyApi.FireFightingWaterContainerItem(
+        event.addFireFightingWaterItem(MODNAME, (short) 32766, new FireSafetyApi.FireFightingWaterContainerItem(
                 (p, i) -> i.getItem() instanceof IFireFightingWaterContainer,
                 (p, i) -> ((IFireFightingWaterContainer) i.getItem()).getWaterAmount(i),
                 (p, a, s) -> ((IFireFightingWaterContainer) s.getItem()).consume(p, a, s),
                 (p, a, s) -> ((IFireFightingWaterContainer) s.getItem()).influence(p, a, s)
         ));
-        event.addFireDanger((short) 32767, new FireSafetyApi.FireDangerBlock(
+        event.addFireDanger(MODNAME, (short) 32767, new FireSafetyApi.FireDangerBlock(
                 (l, p) -> {
                     final var s = l.getBlockState(p);
                     return s.is(FIRE) || s.is(LAVA);
@@ -61,7 +62,7 @@ public class EventHandler {
                 (l, p) -> 4,
                 (l, p) -> new TranslatableComponent("tips.firesafety.danger.fire_n_lava")
         ));
-        event.addFireDanger((short) 32766, new FireSafetyApi.FireDangerBlock(
+        event.addFireDanger(MODNAME, (short) 32766, new FireSafetyApi.FireDangerBlock(
                 (l, p) -> {
                     final var s = l.getBlockState(p);
                     return s.getMaterial().isFlammable() && !s.getMaterial().equals(REPLACEABLE_PLANT);
@@ -69,7 +70,7 @@ public class EventHandler {
                 (l, p) -> -1,
                 (l, p) -> new TranslatableComponent("tips.firesafety.danger.flammable_material")
         ));
-        event.addFireDanger((short) 32767, new FireSafetyApi.FireDangerEntity(
+        event.addFireDanger(MODNAME, (short) 32767, new FireSafetyApi.FireDangerEntity(
                 (l, e) -> e.getType().equals(BLAZE),
                 (l, e) -> 4,
                 (l, e) -> new TranslatableComponent("tips.firesafety.danger.blaze")
