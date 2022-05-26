@@ -67,32 +67,7 @@ public class FireSafetyExtensionEvent extends Event {
         fireDangerEntityList.put(priority, danger);
         LOGGER.info("Adding new fire danger entity by {} with priority {}!", modName, priority);
     }
-
-    @Deprecated
-    public void addExtinguishable(short priority, FireSafetyApi.ExtinguishableBlock extinguishable) {
-        addExtinguishable(UNKNOWN, priority, extinguishable);
-    }
-
-    @Deprecated
-    public void addExtinguishable(short priority, FireSafetyApi.ExtinguishableEntity extinguishable) {
-        addExtinguishable(UNKNOWN, priority, extinguishable);
-    }
-
-    @Deprecated
-    public void addFireFightingWaterItem(short priority, FireSafetyApi.FireFightingWaterContainerItem container) {
-        addFireFightingWaterItem(UNKNOWN, priority, container);
-    }
-
-    @Deprecated
-    public void addFireDanger(short priority, FireSafetyApi.FireDangerBlock danger) {
-        addFireDanger(UNKNOWN, priority, danger);
-    }
-
-    @Deprecated
-    public void addFireDanger(short priority, FireSafetyApi.FireDangerEntity danger) {
-        addFireDanger(UNKNOWN, priority, danger);
-    }
-
+    
     public HashMap<Short, FireSafetyApi.FireFightingWaterContainerItem> getFirefightingWaterContainerList() {
         return firefightingWaterContainerList;
     }
