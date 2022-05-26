@@ -39,7 +39,7 @@ public class EventHandler {
                 (w, e) -> e.isOnFire() && !e.getType().is(IGNORED),
                 (w, e) -> {
                     e.clearFire();
-                    e.level.playSound(null, e, GENERIC_EXTINGUISH_FIRE, BLOCKS, 1F, 1F);
+                    w.playSound(null, e, GENERIC_EXTINGUISH_FIRE, BLOCKS, 1F, 1F);
                 }));
         event.addExtinguishable(MODNAME, (short) -32765, new FireSafetyApi.ExtinguishableEntity((w, e) -> e.getType().is(BURNING), (w, e) -> e.hurt(FREEZE, freezeDamage.get().floatValue())));
         event.addFireFightingWaterItem(MODNAME, (short) 32767, new FireSafetyApi.FireFightingWaterContainerItem(
