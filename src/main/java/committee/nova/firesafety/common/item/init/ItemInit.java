@@ -3,6 +3,7 @@ package committee.nova.firesafety.common.item.init;
 import committee.nova.firesafety.common.item.base.FireSafetyItem;
 import committee.nova.firesafety.common.item.impl.FireDangerSnifferItem;
 import committee.nova.firesafety.common.item.impl.FireFightingAirStrikeControllerItem;
+import committee.nova.firesafety.common.item.impl.HandheldExtinguisherItem;
 import net.minecraft.world.item.Item;
 import net.minecraftforge.registries.RegistryObject;
 
@@ -20,5 +21,6 @@ public class ItemInit {
         items.put(WATER_BOMB, ITEMS.register(WATER_BOMB, FireSafetyItem::new));
         items.put(FIREFIGHTING_AIRSTRIKE_CONTROLLER, ITEMS.register(FIREFIGHTING_AIRSTRIKE_CONTROLLER, FireFightingAirStrikeControllerItem::new));
         items.put(FIRE_DANGER_SNIFFER, ITEMS.register(FIRE_DANGER_SNIFFER, FireDangerSnifferItem::new));
+        items.put(HANDHELD_EXTINGUISHER, ITEMS.register(HANDHELD_EXTINGUISHER, HandheldExtinguisherItem::new));
     }
 }

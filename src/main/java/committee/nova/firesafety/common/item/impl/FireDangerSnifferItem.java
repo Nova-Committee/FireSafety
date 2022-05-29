@@ -28,10 +28,10 @@ import javax.annotation.ParametersAreNonnullByDefault;
 
 import static committee.nova.firesafety.api.FireSafetyApi.*;
 import static committee.nova.firesafety.common.sound.init.SoundInit.getSound;
-import static committee.nova.firesafety.common.tools.PlayerHandler.notifyServerPlayer;
-import static committee.nova.firesafety.common.tools.PlayerHandler.playSoundForThisPlayer;
 import static committee.nova.firesafety.common.tools.format.DataFormatUtil.vec3iToLong;
 import static committee.nova.firesafety.common.tools.math.RayTraceUtil.vecToIntString;
+import static committee.nova.firesafety.common.tools.misc.PlayerHandler.notifyServerPlayer;
+import static committee.nova.firesafety.common.tools.misc.PlayerHandler.playSoundForThisPlayer;
 import static committee.nova.firesafety.common.tools.reference.NBTReference.FDS_CENTER;
 import static committee.nova.firesafety.common.tools.reference.NBTReference.FDS_PROGRESS;
 import static committee.nova.firesafety.common.tools.reference.TagKeyReference.FDS_IGNORED;

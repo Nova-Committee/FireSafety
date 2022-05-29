@@ -6,7 +6,7 @@
   "overrides": [
     {
       "predicate": {
-        "on": 1
+        "using": 1
       },
       "model": "firesafety:item/ffasc/ffasc_on"
     }

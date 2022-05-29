@@ -7,9 +7,9 @@ import committee.nova.firesafety.common.block.api.ISpecialRenderType;
 import committee.nova.firesafety.common.block.init.BlockInit;
 import net.minecraft.client.renderer.ItemBlockRenderTypes;
 import net.minecraft.client.renderer.entity.EntityRenderers;
+import net.minecraft.client.renderer.entity.ThrownItemRenderer;
 import net.minecraft.client.renderer.item.ItemProperties;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.EntityRenderersEvent;
@@ -18,6 +18,7 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 
 import static committee.nova.firesafety.common.entity.init.EntityInit.waterBomb;
+import static committee.nova.firesafety.common.entity.init.EntityInit.waterSpray;
 import static committee.nova.firesafety.common.tools.reference.ItemReference.*;
 import static committee.nova.firesafety.common.tools.reference.NBTReference.FDS_PROGRESS;
 import static committee.nova.firesafety.common.tools.reference.NBTReference.USING;
@@ -38,6 +39,7 @@ public class RenderInitM {
     @SubscribeEvent
     public static void registerRenderer(FMLClientSetupEvent event) {
         EntityRenderers.register(waterBomb.get(), ctx -> new FallingProjectileRenderer<>(ctx, new ResourceLocation(FireSafety.MODID, "textures/entity/bombs/water_bomb/water_bomb.png")));
+        EntityRenderers.register(waterSpray.get(), ThrownItemRenderer::new);
     }
 
     @SubscribeEvent
@@ -47,17 +49,11 @@ public class RenderInitM {
 
     @SubscribeEvent
     public static void overrideRegistry(FMLClientSetupEvent event) {
-        event.enqueueWork(laserTracker(getRegisteredItem(FIREFIGHTING_AIRSTRIKE_CONTROLLER)));
-        event.enqueueWork(fds(getRegisteredItem(FIRE_DANGER_SNIFFER)));
-    }
-
-    public static Runnable laserTracker(Item laser) {
-        return () -> ItemProperties.register(laser, new ResourceLocation("on"),
-                (stack, world, entity, i) -> stack.getOrCreateTag().getBoolean(USING) ? 1 : 0);
-    }
-
-    public static Runnable fds(Item fds) {
-        return () -> ItemProperties.register(fds, new ResourceLocation("on"),
-                (stack, world, entity, i) -> stack.getOrCreateTag().getInt(FDS_PROGRESS) > 0 ? 1 : 0);
+        event.enqueueWork(() -> ItemProperties.register(getRegisteredItem(FIREFIGHTING_AIRSTRIKE_CONTROLLER), new ResourceLocation("using"),
+                (stack, world, entity, i) -> stack.getOrCreateTag().getBoolean(USING) ? 1 : 0));
+        event.enqueueWork(() -> ItemProperties.register(getRegisteredItem(HANDHELD_EXTINGUISHER), new ResourceLocation("using"),
+                (stack, world, entity, i) -> stack.getOrCreateTag().getBoolean(USING) ? 1 : 0));
+        event.enqueueWork(() -> ItemProperties.register(getRegisteredItem(FIRE_DANGER_SNIFFER), new ResourceLocation("on"),
+                (stack, world, entity, i) -> stack.getOrCreateTag().getInt(FDS_PROGRESS) > 0 ? 1 : 0));
     }
 }

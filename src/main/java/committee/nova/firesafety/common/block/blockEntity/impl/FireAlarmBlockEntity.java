@@ -16,8 +16,8 @@ import static committee.nova.firesafety.common.block.base.AbstractCeilingDeviceB
 import static committee.nova.firesafety.common.block.impl.ExtinguisherBlock.WATERED;
 import static committee.nova.firesafety.common.config.Configuration.*;
 import static committee.nova.firesafety.common.sound.init.SoundInit.getSound;
-import static committee.nova.firesafety.common.tools.PlayerHandler.*;
 import static committee.nova.firesafety.common.tools.math.RayTraceUtil.vecToIntString;
+import static committee.nova.firesafety.common.tools.misc.PlayerHandler.*;
 import static committee.nova.firesafety.common.tools.reference.BlockReference.FIRE_ALARM;
 import static committee.nova.firesafety.common.tools.reference.BlockReference.getRegisteredBlockEntityType;
 import static net.minecraft.core.BlockPos.betweenClosed;

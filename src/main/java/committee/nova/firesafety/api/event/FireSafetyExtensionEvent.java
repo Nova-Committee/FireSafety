@@ -8,7 +8,6 @@ import java.util.HashMap;
 import static committee.nova.firesafety.FireSafety.LOGGER;
 
 public class FireSafetyExtensionEvent extends Event {
-    private final String UNKNOWN = "an unknown mod";
     private final HashMap<Short, FireSafetyApi.ExtinguishableBlock> extinguishableBlockList;
     private final HashMap<Short, FireSafetyApi.ExtinguishableEntity> extinguishableEntityList;
     private final HashMap<Short, FireSafetyApi.FireFightingWaterContainerItem> firefightingWaterContainerList;

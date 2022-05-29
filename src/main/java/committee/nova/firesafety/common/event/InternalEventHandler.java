@@ -10,8 +10,8 @@ import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
-import static committee.nova.firesafety.common.tools.PlayerHandler.notifyServerPlayer;
 import static committee.nova.firesafety.common.tools.advancement.AdvancementUtil.tryAwardAdvancement;
+import static committee.nova.firesafety.common.tools.misc.PlayerHandler.notifyServerPlayer;
 
 @Mod.EventBusSubscriber
 public class InternalEventHandler {

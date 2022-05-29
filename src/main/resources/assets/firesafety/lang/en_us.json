@@ -1,4 +1,6 @@
 {
+  "advancements.firesafety.a_hero_in_harms_way.title": "A Hero In Harm's Way",
+  "advancements.firesafety.a_hero_in_harms_way.desc": "Use a handheld extinguisher",
   "advancements.firesafety.be_careful_with_candles.title": "Be Careful With Candles",
   "advancements.firesafety.be_careful_with_candles.desc": "Place a fire alarm",
   "advancements.firesafety.prevention_is_better_than_cure.title": "Prevention Is Better Than Cure",
@@ -10,6 +12,7 @@
   "item.firesafety.water_bomb": "Water Bomb",
   "item.firesafety.fds": "Fire Danger Sniffer",
   "item.firesafety.ffasc": "Firefighting Air Strike Controller",
+  "item.firesafety.handheld_extinguisher": "Handheld Extinguisher",
   "block.firesafety.extinguisher": "Extinguisher",
   "block.firesafety.fire_alarm": "Fire Alarm",
   "msg.firesafety.device.fire_detected": "§cDevice at §r{0}§c spotted fire §f[Block >> {1}, Entity >> {2}] {3}§r",
@@ -25,6 +28,8 @@
   "msg.firesafety.ffasc.different_dim": "§cPrevious location record points to a different dimension§r",
   "msg.firesafety.ffasc.unreachable_dim": "§cAir strike cannot reach the dimension!§r",
   "msg.firesafety.ffasc.too_far": "§cUnreachable distance§r",
+  "msg.firesafety.main_hand": "§cPlease use {0} with your main hand§r",
+  "tooltips.firesafety.water_amount": "§bWater Amount:§r {0} mB §b/§r {1} mB",
   "tips.firesafety.listen": "§5Right-click on the device to change your listening status for it§r",
   "tips.firesafety.danger.fire_n_lava": "Flammable blocks are easy to be set alight when there's lava or fire nearby",
   "tips.firesafety.danger.blaze": "Fire charges launched by blazes can set flammable blocks hit alight",

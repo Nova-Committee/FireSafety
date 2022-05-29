@@ -21,7 +21,6 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.phys.BlockHitResult;
-import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import org.jetbrains.annotations.Nullable;
 
@@ -29,17 +28,13 @@ import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.Random;
 
-import static committee.nova.firesafety.api.FireSafetyApi.getFireFightingContainer;
-import static committee.nova.firesafety.api.FireSafetyApi.getFireFightingContainerIndex;
-import static committee.nova.firesafety.common.tools.PlayerHandler.notifyServerPlayer;
+import static committee.nova.firesafety.common.tools.misc.FluidUtil.tryFill;
+import static committee.nova.firesafety.common.tools.misc.PlayerHandler.notifyServerPlayer;
 import static committee.nova.firesafety.common.tools.reference.DataReference.water;
-import static committee.nova.firesafety.common.tools.reference.TagKeyReference.FIREFIGHTING;
 import static net.minecraft.core.particles.ParticleTypes.CAMPFIRE_COSY_SMOKE;
 import static net.minecraft.sounds.SoundEvents.BUCKET_EMPTY;
 import static net.minecraft.sounds.SoundSource.BLOCKS;
 import static net.minecraft.world.InteractionResult.SUCCESS;
-import static net.minecraft.world.level.material.Fluids.WATER;
-import static net.minecraftforge.fluids.capability.CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY;
 
 @MethodsReturnNonnullByDefault
 @ParametersAreNonnullByDefault
@@ -71,26 +66,12 @@ public class ExtinguisherBlock extends AbstractCeilingDeviceBlock implements Ent
         if (!(e instanceof final ExtinguisherBlockEntity g)) return SUCCESS;
         final int needFill = g.getMaxWaterStorage() - g.getWaterStorage();
         if (needFill <= 0) return SUCCESS;
-        final var toFill = new FluidStack[1];
-        toFill[0] = FluidStack.EMPTY;
-        final short index = getFireFightingContainerIndex(player, stack);
-        if (index > Short.MIN_VALUE) {
-            final var i = getFireFightingContainer(index);
-            final int shouldFill = Math.min(i.amount().apply(player, stack), needFill);
-            toFill[0] = new FluidStack(WATER, shouldFill);
-            if (!player.isCreative()) player.setItemInHand(hand, i.usedResult().apply(player, shouldFill, stack));
-            i.usedInfluence().accept(player, shouldFill, stack);
-        } else {
-            stack.getCapability(FLUID_HANDLER_ITEM_CAPABILITY).ifPresent(f -> {
-                if (f.getFluidInTank(0).getFluid().is(FIREFIGHTING))
-                    toFill[0] = new FluidStack(WATER, f.drain(needFill, player.isCreative() ? IFluidHandler.FluidAction.SIMULATE : IFluidHandler.FluidAction.EXECUTE).getAmount());
-            });
-        }
-        if (toFill[0].isEmpty()) {
+        final var filled = tryFill(player, hand, needFill, stack);
+        if (filled.isEmpty()) {
             reportWaterAmount(player, world, pos);
             return super.use(state, world, pos, player, hand, hit);
         }
-        g.getTank().fill(toFill[0], IFluidHandler.FluidAction.EXECUTE);
+        g.getTank().fill(filled, IFluidHandler.FluidAction.EXECUTE);
         reportWaterAmount(player, world, pos);
         world.playSound(null, pos, BUCKET_EMPTY, BLOCKS, 1F, 1F);
         return SUCCESS;

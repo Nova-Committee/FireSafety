@@ -33,7 +33,7 @@ public class EventHandler {
                 (w, p) -> AIR.defaultBlockState(),
                 (w, p) -> {
                     final Random r = w.random;
-                    w.playSound(null, p, FIRE_EXTINGUISH, BLOCKS, 0.7F, 1.6F + (r.nextFloat() - r.nextFloat()) * 0.4F);
+                    w.playSound(null, p, FIRE_EXTINGUISH, BLOCKS, .7F, 1.6F + (r.nextFloat() - r.nextFloat()) * 0.4F);
                 }));
         event.addExtinguishable(MODNAME, (short) -32767, new FireSafetyApi.ExtinguishableEntity(
                 (w, e) -> e.isOnFire() && !e.getType().is(IGNORED),

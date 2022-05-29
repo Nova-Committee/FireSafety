@@ -1,4 +1,6 @@
 {
+  "advancements.firesafety.a_hero_in_harms_way.title": "逆行者",
+  "advancements.firesafety.a_hero_in_harms_way.desc": "使用手持滅火器",
   "advancements.firesafety.be_careful_with_candles.title": "天乾物燥，小心火燭",
   "advancements.firesafety.be_careful_with_candles.desc": "放置火災警報器",
   "advancements.firesafety.prevention_is_better_than_cure.title": "防范胜于救灾",
@@ -10,6 +12,7 @@
   "item.firesafety.water_bomb": "水炸彈",
   "item.firesafety.fds": "火險嗅探儀",
   "item.firesafety.ffasc": "消防空襲控制器",
+  "item.firesafety.handheld_extinguisher": "手持滅火器",
   "block.firesafety.extinguisher": "滅火器",
   "block.firesafety.fire_alarm": "火災警報器",
   "msg.firesafety.device.fire_detected": "§c位於§r{0}§c的設備偵測到火情§f（火源数：方塊 >> {1}, 實體 >> {2}）{3}§r",
@@ -25,6 +28,8 @@
   "msg.firesafety.ffasc.different_dim": "§c先前的位置記錄指向一個不同的維度§r",
   "msg.firesafety.ffasc.unreachable_dim": "§c空袭无法到達该維度！§r",
   "msg.firesafety.ffasc.too_far": "§c距離过远§r",
+  "msg.firesafety.main_hand": "§c請以主手使用{0}§r",
+  "tooltips.firesafety.water_amount": "§b水量：§r{0} mB §b/§r {1} mB",
   "tips.firesafety.listen": "§5右击設備以改變您对它的監聽狀態§r",
   "tips.firesafety.danger.fire_n_lava": "易燃方塊可被附近的熔岩或火焰點燃",
   "tips.firesafety.danger.blaze": "易燃方塊可被烈焰人发射的火焰弹點燃",

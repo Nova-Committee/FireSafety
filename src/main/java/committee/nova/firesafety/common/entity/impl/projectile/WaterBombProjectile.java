@@ -4,7 +4,6 @@ import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.sounds.SoundEvent;
-import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.item.ItemEntity;
@@ -24,6 +23,7 @@ import static committee.nova.firesafety.common.tools.reference.ItemReference.WAT
 import static committee.nova.firesafety.common.tools.reference.ItemReference.getRegisteredItem;
 import static net.minecraft.core.BlockPos.betweenClosed;
 import static net.minecraft.core.particles.ParticleTypes.CAMPFIRE_COSY_SMOKE;
+import static net.minecraft.sounds.SoundEvents.CANDLE_EXTINGUISH;
 import static net.minecraft.world.level.block.Blocks.AIR;
 import static net.minecraft.world.level.block.Blocks.FIRE;
 
@@ -58,7 +58,7 @@ public class WaterBombProjectile extends AbstractArrow {
 
     @Override
     protected SoundEvent getDefaultHitGroundSoundEvent() {
-        return SoundEvents.CANDLE_EXTINGUISH;
+        return CANDLE_EXTINGUISH;
     }
 
     @Override

@@ -2,7 +2,7 @@ package committee.nova.firesafety.common.block.base;
 
 import committee.nova.firesafety.common.block.api.ISpecialRenderType;
 import committee.nova.firesafety.common.block.blockEntity.base.RecordableDeviceBlockEntity;
-import committee.nova.firesafety.common.tools.PlayerHandler;
+import committee.nova.firesafety.common.tools.misc.PlayerHandler;
 import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
