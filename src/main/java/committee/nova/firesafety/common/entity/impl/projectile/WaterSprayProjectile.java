@@ -21,6 +21,8 @@ import static committee.nova.firesafety.common.entity.init.EntityInit.waterSpray
 import static net.minecraft.core.BlockPos.betweenClosed;
 import static net.minecraft.core.particles.ParticleTypes.CAMPFIRE_COSY_SMOKE;
 import static net.minecraft.sounds.SoundEvents.CANDLE_EXTINGUISH;
+import static net.minecraft.tags.BlockTags.FIRE;
+import static net.minecraft.world.level.block.Blocks.AIR;
 
 @ParametersAreNonnullByDefault
 @MethodsReturnNonnullByDefault
@@ -62,8 +64,8 @@ public class WaterSprayProjectile extends AbstractArrow implements ItemSupplier 
         setDeltaMovement(getDeltaMovement().add(0, -.001, 0));
         if (tickCount % 2 == 0)
             level.addParticle(CAMPFIRE_COSY_SMOKE, getX(), getY(), getZ(), getDeltaMovement().x * .01, -.01, getDeltaMovement().z * .01);
-        final var blocks = betweenClosed(blockPosition(), blockPosition().offset(1, 1, 1));
-        extinguishBlocks(blocks);
+        final var pos = blockPosition();
+        if (level.getBlockState(pos).is(FIRE)) level.setBlockAndUpdate(pos, AIR.defaultBlockState());
     }
 
     @Override
@@ -99,13 +101,15 @@ public class WaterSprayProjectile extends AbstractArrow implements ItemSupplier 
     }
 
     private void extinguishBlocks(final Iterable<BlockPos> blocks) {
-        blocks.forEach(p -> {
-            final short i = getTargetBlockIndex(level, p);
-            if (i == Short.MIN_VALUE) return;
-            final var t = getTargetBlock(i);
-            level.setBlockAndUpdate(p, t.targetBlock().apply(level, p));
-            t.extinguishedInfluence().accept(level, p);
-        });
+        blocks.forEach(this::extinguishBlock);
+    }
+
+    private void extinguishBlock(final BlockPos p) {
+        final short i = getTargetBlockIndex(level, p);
+        if (i == Short.MIN_VALUE) return;
+        final var t = getTargetBlock(i);
+        level.setBlockAndUpdate(p, t.targetBlock().apply(level, p));
+        t.extinguishedInfluence().accept(level, p);
     }
 
     private void extinguishEntities(Iterable<Entity> entities) {

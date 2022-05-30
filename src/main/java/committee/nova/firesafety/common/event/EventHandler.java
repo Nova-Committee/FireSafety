@@ -4,6 +4,7 @@ import committee.nova.firesafety.api.FireSafetyApi;
 import committee.nova.firesafety.api.event.FireSafetyExtensionEvent;
 import committee.nova.firesafety.api.item.IFireFightingWaterContainer;
 import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.tags.BlockTags;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -20,7 +21,8 @@ import static net.minecraft.world.damagesource.DamageSource.FREEZE;
 import static net.minecraft.world.entity.EntityType.BLAZE;
 import static net.minecraft.world.item.Items.BUCKET;
 import static net.minecraft.world.item.Items.WATER_BUCKET;
-import static net.minecraft.world.level.block.Blocks.*;
+import static net.minecraft.world.level.block.Blocks.AIR;
+import static net.minecraft.world.level.block.Blocks.LAVA;
 import static net.minecraft.world.level.material.Material.REPLACEABLE_PLANT;
 
 @Mod.EventBusSubscriber
@@ -29,7 +31,7 @@ public class EventHandler {
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public static void onExtension(FireSafetyExtensionEvent event) {
         event.addExtinguishable(MODNAME, Short.MAX_VALUE, new FireSafetyApi.ExtinguishableBlock(
-                (w, p) -> w.getBlockState(p).is(FIRE),
+                (w, p) -> w.getBlockState(p).is(BlockTags.FIRE),
                 (w, p) -> AIR.defaultBlockState(),
                 (w, p) -> {
                     final Random r = w.random;
@@ -57,7 +59,7 @@ public class EventHandler {
         event.addFireDanger(MODNAME, (short) 32767, new FireSafetyApi.FireDangerBlock(
                 (l, p) -> {
                     final var s = l.getBlockState(p);
-                    return s.is(FIRE) || s.is(LAVA);
+                    return s.is(BlockTags.FIRE) || s.is(LAVA);
                 },
                 (l, p) -> 4,
                 (l, p) -> new TranslatableComponent("tips.firesafety.danger.fire_n_lava")

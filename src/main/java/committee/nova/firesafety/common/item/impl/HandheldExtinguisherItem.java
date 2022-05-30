@@ -157,7 +157,7 @@ public class HandheldExtinguisherItem extends FireSafetyItem implements IArmPose
     }
 
     private void extinguish(Player player, int consumed) {
-        final var amount = consumed / 2;
+        final var amount = consumed / 8;
         for (var i = 0; i < amount; i++) {
             spray(player);
         }
