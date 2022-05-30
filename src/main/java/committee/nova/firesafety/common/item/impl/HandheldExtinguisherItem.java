@@ -85,7 +85,7 @@ public class HandheldExtinguisherItem extends FireSafetyItem implements IArmPose
         if (amount < 1) return;
         if ((level.getDayTime() & 1) == 1)
             level.playSound(null, entity, CANDLE_EXTINGUISH, SoundSource.PLAYERS, .7F, 1.6F);
-        final var consumed = fluid.drain(50, getActionByMode(player));
+        final var consumed = fluid.drain(20, getActionByMode(player));
         extinguish(player, consumed.getAmount());
     }
 
