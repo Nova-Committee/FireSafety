@@ -24,8 +24,8 @@ import static committee.nova.firesafety.common.tools.reference.ItemReference.get
 import static net.minecraft.core.BlockPos.betweenClosed;
 import static net.minecraft.core.particles.ParticleTypes.CAMPFIRE_COSY_SMOKE;
 import static net.minecraft.sounds.SoundEvents.CANDLE_EXTINGUISH;
+import static net.minecraft.tags.BlockTags.FIRE;
 import static net.minecraft.world.level.block.Blocks.AIR;
-import static net.minecraft.world.level.block.Blocks.FIRE;
 
 @ParametersAreNonnullByDefault
 @MethodsReturnNonnullByDefault
