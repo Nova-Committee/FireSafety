@@ -1,0 +1,19 @@
+[
+  {
+    "modid": "firesafety",
+    "name": "FireSafety",
+    "description": "",
+    "version": "${version}",
+    "mcversion": "${mcversion}",
+    "url": "",
+    "updateUrl": "",
+    "authorList": [
+      "Tapio",
+      "Radekemia"
+    ],
+    "credits": "",
+    "logoFile": "",
+    "screenshots": [],
+    "dependencies": []
+  }
+]
