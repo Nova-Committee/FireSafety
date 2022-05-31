@@ -7,6 +7,7 @@ import net.minecraftforge.fluids.capability.templates.FluidHandlerItemStack;
 import org.jetbrains.annotations.NotNull;
 
 import static committee.nova.firesafety.common.tools.reference.TagKeyReference.FIREFIGHTING;
+import static net.minecraft.world.level.material.Fluids.WATER;
 
 public class HandheldExtinguisherFluidHandler extends FluidHandlerItemStack {
     public HandheldExtinguisherFluidHandler(@NotNull ItemStack container, int capacity) {
@@ -25,8 +26,7 @@ public class HandheldExtinguisherFluidHandler extends FluidHandlerItemStack {
         if (contained.isEmpty()) {
             final int fillAmount = Math.min(capacity, resource.getAmount());
             if (doFill.execute()) {
-                final var filled = resource.copy();
-                filled.setAmount(fillAmount);
+                final var filled = new FluidStack(WATER, fillAmount);
                 setFluid(filled);
             }
             return fillAmount;

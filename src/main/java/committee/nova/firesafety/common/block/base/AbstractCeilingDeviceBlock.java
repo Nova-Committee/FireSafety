@@ -2,7 +2,6 @@ package committee.nova.firesafety.common.block.base;
 
 import committee.nova.firesafety.common.block.api.ISpecialRenderType;
 import committee.nova.firesafety.common.block.blockEntity.base.RecordableDeviceBlockEntity;
-import committee.nova.firesafety.common.tools.misc.PlayerHandler;
 import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -18,7 +17,6 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
@@ -33,8 +31,10 @@ import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.Collections;
 import java.util.List;
 
+import static committee.nova.firesafety.common.tools.misc.PlayerHandler.notifyServerPlayer;
 import static net.minecraft.sounds.SoundEvents.NOTE_BLOCK_IRON_XYLOPHONE;
 import static net.minecraft.sounds.SoundSource.BLOCKS;
+import static net.minecraft.world.level.block.Blocks.AIR;
 import static net.minecraft.world.level.material.Material.METAL;
 
 @ParametersAreNonnullByDefault
@@ -52,12 +52,12 @@ public abstract class AbstractCeilingDeviceBlock extends Block implements ISpeci
         final var e = world.getBlockEntity(pos);
         if (!(e instanceof final RecordableDeviceBlockEntity r)) return;
         if (player.isCrouching()) {
-            if (player.hasPermissions(2)) PlayerHandler.notifyServerPlayer(player, new TextComponent(r.toString()));
+            if (player.hasPermissions(2)) notifyServerPlayer(player, new TextComponent(r.toString()));
             return;
         }
         final boolean b = r.handleListener(player);
         player.playNotifySound(NOTE_BLOCK_IRON_XYLOPHONE, BLOCKS, .5F, b ? 1F : .5F);
-        PlayerHandler.notifyServerPlayer(player, new TranslatableComponent("msg.firesafety.device.listening." + b));
+        notifyServerPlayer(player, new TranslatableComponent("msg.firesafety.device.listening." + b));
     }
 
     @Override
@@ -68,7 +68,7 @@ public abstract class AbstractCeilingDeviceBlock extends Block implements ISpeci
     @Override
     public BlockState updateShape(BlockState state1, Direction direction, BlockState state2, LevelAccessor world, BlockPos pos1, BlockPos pos2) {
         if (state1.canSurvive(world, pos1)) return super.updateShape(state1, direction, state2, world, pos1, pos2);
-        return Blocks.AIR.defaultBlockState();
+        return AIR.defaultBlockState();
     }
 
     public boolean canSurvive(BlockState state, LevelReader world, BlockPos pos) {
