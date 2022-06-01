@@ -1,5 +1,6 @@
 package committee.nova.firesafety.common.block.blockEntity.impl;
 
+import committee.nova.firesafety.api.event.FireExtinguishedEvent;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
@@ -7,6 +8,7 @@ import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.Fluids;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.fluids.capability.IFluidHandler;
@@ -88,6 +90,8 @@ public class ExtinguisherBlockEntity extends FireAlarmBlockEntity {
             final var b = getTargetBlock(i);
             level.setBlockAndUpdate(p, b.targetBlock().apply(level, p));
             b.extinguishedInfluence().accept(level, p);
+            final var event = new FireExtinguishedEvent(FireExtinguishedEvent.ExtinguisherType.DEVICE, level, worldPosition, p, i);
+            MinecraftForge.EVENT_BUS.post(event);
         }
         final var entityList = level.getEntitiesOfClass(Entity.class, monitoringArea(), l -> getTargetEntityIndex(level, l) > Short.MIN_VALUE);
         for (final var e : entityList) {
@@ -96,6 +100,8 @@ public class ExtinguisherBlockEntity extends FireAlarmBlockEntity {
             if (i == Short.MIN_VALUE) continue;
             final var t = getTargetEntity(i);
             t.entityAction().accept(level, e);
+            final var event = new FireExtinguishedEvent(FireExtinguishedEvent.ExtinguisherType.DEVICE, level, worldPosition, e, i);
+            MinecraftForge.EVENT_BUS.post(event);
         }
     }
 

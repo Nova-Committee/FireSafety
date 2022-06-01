@@ -2,13 +2,13 @@
   "display": {
     "background": "minecraft:textures/block/oak_planks.png",
     "icon": {
-      "item": "minecraft:water_bucket"
+      "item": "firesafety:handheld_extinguisher"
     },
     "title": {
-      "translate": "advancements.firesafety.to_nip_it_in_the_spark.title"
+      "translate": "advancements.firesafety.pass.title"
     },
     "description": {
-      "translate": "advancements.firesafety.to_nip_it_in_the_spark.desc"
+      "translate": "advancements.firesafety.pass.desc"
     },
     "frame": "task",
     "show_toast": true,

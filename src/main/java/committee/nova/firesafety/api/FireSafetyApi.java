@@ -31,7 +31,7 @@ public class FireSafetyApi {
 
     @SubscribeEvent
     public static void onStarted(ServerStartedEvent v) {
-        final FireSafetyExtensionEvent event = new FireSafetyExtensionEvent();
+        final var event = new FireSafetyExtensionEvent();
         MinecraftForge.EVENT_BUS.post(event);
         firefightingWaterContainerList.putAll(event.getFirefightingWaterContainerList());
         extinguishableBlockList.putAll(event.getExtinguishableBlockList());

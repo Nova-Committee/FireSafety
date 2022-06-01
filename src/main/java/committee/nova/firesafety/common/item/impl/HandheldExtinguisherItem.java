@@ -119,7 +119,7 @@ public class HandheldExtinguisherItem extends FireSafetyItem implements IArmPose
 
     @Override
     public ResourceLocation getAdvancement() {
-        return new ResourceLocation(FireSafety.MODID, "a_hero_in_harm_s_way");
+        return new ResourceLocation(FireSafety.MODID, "pass");
     }
 
     @Nullable

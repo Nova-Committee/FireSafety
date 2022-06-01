@@ -3,12 +3,15 @@ package committee.nova.firesafety.common.block.blockEntity.base;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 
+import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.HashMap;
 import java.util.UUID;
@@ -18,7 +21,9 @@ import static net.minecraft.nbt.Tag.TAG_COMPOUND;
 
 @ParametersAreNonnullByDefault
 public abstract class RecordableDeviceBlockEntity extends BlockEntity {
-    public final HashMap<UUID, Boolean> notifies = new HashMap<>();
+    private Entity cachedOwner;
+    private UUID ownerUUID;
+    private final HashMap<UUID, Boolean> notifies = new HashMap<>();
 
     public RecordableDeviceBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState state) {
         super(type, pos, state);
@@ -36,6 +41,7 @@ public abstract class RecordableDeviceBlockEntity extends BlockEntity {
                 notifies.put(s.getUUID("uuid"), s.getBoolean("on"));
             }
         }
+        if (tag.hasUUID("owner")) ownerUUID = tag.getUUID("owner");
         super.load(tag);
     }
 
@@ -51,6 +57,7 @@ public abstract class RecordableDeviceBlockEntity extends BlockEntity {
             listeners.add(u);
         }
         tag.put("listeners", listeners);
+        if (ownerUUID != null) tag.putUUID("owner", ownerUUID);
     }
 
     public boolean handleListener(Player player) {
@@ -84,5 +91,20 @@ public abstract class RecordableDeviceBlockEntity extends BlockEntity {
                 b.append(u.toString());
             }
         return !b.isEmpty() ? "Listeners:" + b + ';' : "No listener.";
+    }
+
+    @Nullable
+    public Entity getOwner() {
+        if (cachedOwner != null && !cachedOwner.isRemoved()) return cachedOwner;
+        if (this.ownerUUID != null && this.level instanceof ServerLevel serverLevel) {
+            this.cachedOwner = serverLevel.getEntity(this.ownerUUID);
+        }
+        return this.cachedOwner;
+    }
+
+    public void setOwner(@Nullable Entity entity) {
+        if (entity == null || cachedOwner != null || ownerUUID != null) return;
+        cachedOwner = entity;
+        ownerUUID = entity.getUUID();
     }
 }

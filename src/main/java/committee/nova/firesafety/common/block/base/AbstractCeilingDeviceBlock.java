@@ -9,6 +9,8 @@ import net.minecraft.network.chat.TextComponent;
 import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
@@ -25,6 +27,7 @@ import net.minecraft.world.level.storage.loot.LootContext;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
+import org.jetbrains.annotations.Nullable;
 
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
@@ -71,6 +74,7 @@ public abstract class AbstractCeilingDeviceBlock extends Block implements ISpeci
         return AIR.defaultBlockState();
     }
 
+    @Override
     public boolean canSurvive(BlockState state, LevelReader world, BlockPos pos) {
         return Block.canSupportCenter(world, pos.above(), Direction.DOWN);
     }
@@ -81,18 +85,32 @@ public abstract class AbstractCeilingDeviceBlock extends Block implements ISpeci
     }
 
     @Override
+    public void setPlacedBy(Level level, BlockPos pos, BlockState state, @Nullable LivingEntity placer, ItemStack stack) {
+        super.setPlacedBy(level, pos, state, placer, stack);
+        setOwner(level, pos, placer);
+    }
+
+    @Override
     public void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> definition) {
         definition.add(ONFIRE);
     }
 
     @Override
     public InteractionResult use(BlockState state, Level world, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
-        if (!world.isClientSide) tryHandleListener(player, world, pos);
+        if (!world.isClientSide) {
+            tryHandleListener(player, world, pos);
+            setOwner(world, pos, player);
+        }
         return InteractionResult.SUCCESS;
     }
 
     @Override
     public List<ItemStack> getDrops(BlockState state, LootContext.Builder ctx) {
         return Collections.singletonList(new ItemStack(this));
+    }
+
+    public static void setOwner(Level level, BlockPos pos, @Nullable Entity owner) {
+        final var blockEntity = level.getBlockEntity(pos);
+        if (blockEntity instanceof RecordableDeviceBlockEntity r) r.setOwner(owner);
     }
 }

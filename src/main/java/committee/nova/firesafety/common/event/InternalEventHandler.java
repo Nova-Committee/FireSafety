@@ -30,7 +30,7 @@ public class InternalEventHandler {
     public static void onAdvancementAcquired(AdvancementEvent e) {
         if (e.isCanceled()) return;
         final var adv = e.getAdvancement().getId().getPath();
-        if (!adv.equals("be_careful_with_candles") && !adv.equals("to_nip_it_in_the_spark")) return;
+        if (!adv.equals("be_careful_with_candles")) return;
         notifyServerPlayer(e.getPlayer(), new TranslatableComponent("tips.firesafety.listen"));
     }
 

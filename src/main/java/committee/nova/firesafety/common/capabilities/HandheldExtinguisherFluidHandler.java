@@ -4,18 +4,20 @@ import committee.nova.firesafety.common.tools.misc.FluidUtil;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.templates.FluidHandlerItemStack;
-import org.jetbrains.annotations.NotNull;
+
+import javax.annotation.ParametersAreNonnullByDefault;
 
 import static committee.nova.firesafety.common.tools.reference.TagKeyReference.FIREFIGHTING;
 import static net.minecraft.world.level.material.Fluids.WATER;
 
+@ParametersAreNonnullByDefault
 public class HandheldExtinguisherFluidHandler extends FluidHandlerItemStack {
-    public HandheldExtinguisherFluidHandler(@NotNull ItemStack container, int capacity) {
+    public HandheldExtinguisherFluidHandler(ItemStack container, int capacity) {
         super(container, capacity);
     }
 
     @Override
-    public boolean isFluidValid(int tank, @NotNull FluidStack stack) {
+    public boolean isFluidValid(int tank, FluidStack stack) {
         return stack.getFluid().is(FIREFIGHTING);
     }
 

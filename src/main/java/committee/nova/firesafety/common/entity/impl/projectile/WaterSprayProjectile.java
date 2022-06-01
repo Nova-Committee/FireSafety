@@ -1,5 +1,6 @@
 package committee.nova.firesafety.common.entity.impl.projectile;
 
+import committee.nova.firesafety.api.event.FireExtinguishedEvent;
 import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.core.BlockPos;
 import net.minecraft.sounds.SoundEvent;
@@ -13,6 +14,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
+import net.minecraftforge.common.MinecraftForge;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 
@@ -21,6 +23,8 @@ import static committee.nova.firesafety.common.entity.init.EntityInit.waterSpray
 import static net.minecraft.core.BlockPos.betweenClosed;
 import static net.minecraft.core.particles.ParticleTypes.CAMPFIRE_COSY_SMOKE;
 import static net.minecraft.sounds.SoundEvents.CANDLE_EXTINGUISH;
+import static net.minecraft.sounds.SoundEvents.FIRE_EXTINGUISH;
+import static net.minecraft.sounds.SoundSource.BLOCKS;
 import static net.minecraft.tags.BlockTags.FIRE;
 import static net.minecraft.world.level.block.Blocks.AIR;
 
@@ -37,6 +41,7 @@ public class WaterSprayProjectile extends AbstractArrow implements ItemSupplier 
 
     public WaterSprayProjectile(LivingEntity e, Level l) {
         this(e.getX() + e.getLookAngle().x, e.getEyeY() + e.getLookAngle().y - 0.1, e.getZ() + e.getLookAngle().z, l);
+        setOwner(e);
     }
 
     @Override
@@ -65,7 +70,13 @@ public class WaterSprayProjectile extends AbstractArrow implements ItemSupplier 
         if (tickCount % 2 == 0)
             level.addParticle(CAMPFIRE_COSY_SMOKE, getX(), getY(), getZ(), getDeltaMovement().x * .01, -.01, getDeltaMovement().z * .01);
         final var pos = blockPosition();
-        if (level.getBlockState(pos).is(FIRE)) level.setBlockAndUpdate(pos, AIR.defaultBlockState());
+        if (level.getBlockState(pos).is(FIRE)) {
+            level.setBlockAndUpdate(pos, AIR.defaultBlockState());
+            final var r = level.random;
+            level.playSound(null, pos, FIRE_EXTINGUISH, BLOCKS, .7F, 1.6F + (r.nextFloat() - r.nextFloat()) * 0.4F);
+            final var event = new FireExtinguishedEvent(FireExtinguishedEvent.ExtinguisherType.HANDHELD, level, this, pos, (short) 32766);
+            MinecraftForge.EVENT_BUS.post(event);
+        }
     }
 
     @Override
@@ -110,12 +121,17 @@ public class WaterSprayProjectile extends AbstractArrow implements ItemSupplier 
         final var t = getTargetBlock(i);
         level.setBlockAndUpdate(p, t.targetBlock().apply(level, p));
         t.extinguishedInfluence().accept(level, p);
+        final var event = new FireExtinguishedEvent(FireExtinguishedEvent.ExtinguisherType.HANDHELD, level, this, p, i);
+        MinecraftForge.EVENT_BUS.post(event);
     }
 
     private void extinguishEntities(Iterable<Entity> entities) {
         entities.forEach(e -> {
-            final var t = getTargetEntity(getTargetEntityIndex(level, e));
+            final var i = getTargetEntityIndex(level, e);
+            final var t = getTargetEntity(i);
             t.entityAction().accept(level, e);
+            final var event = new FireExtinguishedEvent(FireExtinguishedEvent.ExtinguisherType.HANDHELD, level, this, e, i);
+            MinecraftForge.EVENT_BUS.post(event);
         });
     }
 }
