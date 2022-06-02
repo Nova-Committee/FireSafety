@@ -58,22 +58,41 @@ public class FireSafetyApi {
      * @param blockCondition        What kind of block state should be seen as extinguishable
      * @param targetBlock           What is the extinguished block state like
      * @param extinguishedInfluence What else will happen when extinguished
+     * @param detectable            Will the block state be detectable? If false it won't be detected,
+     *                              but will be extinguished when the extinguisher does work.
+     *                              Default is true.
      **/
     @ParametersAreNonnullByDefault
     public record ExtinguishableBlock(
             BiPredicate<Level, BlockPos> blockCondition,
             BiFunction<Level, BlockPos, BlockState> targetBlock,
-            BiConsumer<Level, BlockPos> extinguishedInfluence) {
+            BiConsumer<Level, BlockPos> extinguishedInfluence,
+            boolean detectable) {
+        public ExtinguishableBlock(
+                BiPredicate<Level, BlockPos> blockCondition,
+                BiFunction<Level, BlockPos, BlockState> targetBlock,
+                BiConsumer<Level, BlockPos> extinguishedInfluence) {
+            this(blockCondition, targetBlock, extinguishedInfluence, true);
+        }
     }
 
     /**
      * @param entityCondition What kind of entity should be seen as extinguishable
      * @param entityAction    What should the extinguisher do with such entity
+     * @param detectable      Will the entity be detectable? If false it won't be detected,
+     *                        but will be extinguished when the extinguisher does work.
+     *                        Default is true.
      **/
     @ParametersAreNonnullByDefault
     public record ExtinguishableEntity(
             BiPredicate<Level, Entity> entityCondition,
-            BiConsumer<Level, Entity> entityAction) {
+            BiConsumer<Level, Entity> entityAction,
+            boolean detectable) {
+        public ExtinguishableEntity(
+                BiPredicate<Level, Entity> entityCondition,
+                BiConsumer<Level, Entity> entityAction) {
+            this(entityCondition, entityAction, true);
+        }
     }
 
     /**

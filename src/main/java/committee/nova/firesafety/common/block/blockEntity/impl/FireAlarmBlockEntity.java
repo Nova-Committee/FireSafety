@@ -10,8 +10,7 @@ import net.minecraft.world.phys.AABB;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 
-import static committee.nova.firesafety.api.FireSafetyApi.getTargetBlockIndex;
-import static committee.nova.firesafety.api.FireSafetyApi.getTargetEntityIndex;
+import static committee.nova.firesafety.api.FireSafetyApi.*;
 import static committee.nova.firesafety.common.block.base.AbstractCeilingDeviceBlock.ONFIRE;
 import static committee.nova.firesafety.common.block.impl.ExtinguisherBlock.WATERED;
 import static committee.nova.firesafety.common.config.Configuration.*;
@@ -62,9 +61,14 @@ public class FireAlarmBlockEntity extends RecordableDeviceBlockEntity {
         if (level == null) return new int[]{0, 0};
         final var range = monitoringArea();
         int b = 0;
-        for (final var p : betweenClosed(monitoringAreaPos()[0], monitoringAreaPos()[1]))
-            if (getTargetBlockIndex(level, p) > Short.MIN_VALUE) b++;
-        return new int[]{b, level.getEntitiesOfClass(Entity.class, range, l -> getTargetEntityIndex(level, l) > Short.MIN_VALUE).size()};
+        for (final var p : betweenClosed(monitoringAreaPos()[0], monitoringAreaPos()[1])) {
+            final var index = getTargetBlockIndex(level, p);
+            if (index > Short.MIN_VALUE && getTargetBlock(index).detectable()) b++;
+        }
+        return new int[]{b, level.getEntitiesOfClass(Entity.class, range, l -> {
+            final var index = getTargetEntityIndex(level, l);
+            return index > Short.MIN_VALUE && getTargetEntity(index).detectable();
+        }).size()};
     }
 
     public BlockPos[] monitoringAreaPos() {
