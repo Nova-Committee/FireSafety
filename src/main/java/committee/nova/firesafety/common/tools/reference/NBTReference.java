@@ -11,4 +11,5 @@ public class NBTReference {
 
     public static final String FDS_PROGRESS = "fds_process";
     public static final String FDS_CENTER = "fds_center";
+    public static final String FDS_MODE = "fds_mode";
 }

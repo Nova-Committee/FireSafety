@@ -25,15 +25,14 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
 
 import javax.annotation.ParametersAreNonnullByDefault;
+import java.util.function.IntPredicate;
 
 import static committee.nova.firesafety.api.FireSafetyApi.*;
 import static committee.nova.firesafety.common.sound.init.SoundInit.getSound;
 import static committee.nova.firesafety.common.tools.format.DataFormatUtil.vec3iToLong;
 import static committee.nova.firesafety.common.tools.math.RayTraceUtil.vecToIntString;
-import static committee.nova.firesafety.common.tools.misc.PlayerHandler.notifyServerPlayer;
-import static committee.nova.firesafety.common.tools.misc.PlayerHandler.playSoundForThisPlayer;
-import static committee.nova.firesafety.common.tools.reference.NBTReference.FDS_CENTER;
-import static committee.nova.firesafety.common.tools.reference.NBTReference.FDS_PROGRESS;
+import static committee.nova.firesafety.common.tools.misc.PlayerHandler.*;
+import static committee.nova.firesafety.common.tools.reference.NBTReference.*;
 import static committee.nova.firesafety.common.tools.reference.TagKeyReference.FDS_IGNORED;
 import static committee.nova.firesafety.common.tools.string.StringUtil.wrapInArrows;
 import static net.minecraft.ChatFormatting.*;
@@ -63,6 +62,8 @@ public class FireDangerSnifferItem extends FireSafetyItem implements Wearable, I
         if (world.isClientSide) return;
         if (!(entity instanceof Player player)) return;
         final var tag = stack.getOrCreateTag();
+        if (selected) displayClientMessage(player, new TranslatableComponent("info.firesafety.fds",
+                new TranslatableComponent("info.firesafety.fds." + tag.getInt(FDS_MODE)).getString()));
         final var p = tag.getInt(FDS_PROGRESS);
         if (p == 0) return;
         if (p == 1) {
@@ -86,6 +87,11 @@ public class FireDangerSnifferItem extends FireSafetyItem implements Wearable, I
         final var stack = player.getMainHandItem();
         if (level.isClientSide) return consume(stack);
         final var tag = stack.getOrCreateTag();
+        if (player.isCrouching()) {
+            tag.putInt(FDS_MODE, (tag.getInt(FDS_MODE) + 1) % 7);
+            playSoundForThisPlayer(player, getSound(1), 1F, 1F);
+            return consume(stack);
+        }
         if (tag.getInt(FDS_PROGRESS) > 0) return consume(stack);
         activate(player, stack);
         return consume(stack);
@@ -115,6 +121,7 @@ public class FireDangerSnifferItem extends FireSafetyItem implements Wearable, I
         final var c2 = center.offset(25, 25, 25);
         final var level = player.level;
         final var blocks = betweenClosed(c1, c2);
+        final var filter = SniffingFilter.getByIndex(tag.getInt(FDS_MODE)).condition;
         blocks.forEach(p -> {
             final var state = level.getBlockState(p);
             if (state.is(FDS_IGNORED)) return;
@@ -122,6 +129,7 @@ public class FireDangerSnifferItem extends FireSafetyItem implements Wearable, I
             if (index == Short.MIN_VALUE) return;
             final var danger = getFireDangerBlock(index);
             final var dangerousness = danger.dangerousness().apply(level, p);
+            if (!filter.test(dangerousness)) return;
             final var msgO = new TranslatableComponent("msg.firesafety.fds.danger",
                     state.getBlock().getName().getString(), vecToIntString(p),
                     getDangerousness(dangerousness).getString());
@@ -133,6 +141,7 @@ public class FireDangerSnifferItem extends FireSafetyItem implements Wearable, I
         entities.forEach(e -> {
             final var danger = getFireDangerEntity(getFireDangerEntityIndex(level, e));
             final var dangerousness = danger.dangerousness().apply(level, e);
+            if (!filter.test(dangerousness)) return;
             final var msgO = new TranslatableComponent("msg.firesafety.fds.danger",
                     e.getName().getString(), vecToIntString(e.position()),
                     getDangerousness(dangerousness).getString());
@@ -171,5 +180,28 @@ public class FireDangerSnifferItem extends FireSafetyItem implements Wearable, I
         final var tag = stack.getOrCreateTag();
         tag.putInt(FDS_PROGRESS, 0);
         tag.remove(FDS_CENTER);
+    }
+
+    public enum SniffingFilter {
+        ALL(0, i -> true),
+        FLAMMABLE_ONLY(1, i -> i == -1),
+        FIRE_SOURCE_ONLY(2, i -> i != -1),
+        LOW(3, i -> i > 0),
+        NORMAL(4, i -> i > 1),
+        HIGH(5, i -> i > 2),
+        VERY_HIGH(6, i -> i > 3);
+        private final int index;
+        private final IntPredicate condition;
+
+        SniffingFilter(int index, IntPredicate condition) {
+            this.index = index;
+            this.condition = condition;
+        }
+
+        public static SniffingFilter getByIndex(int i) {
+            final var values = SniffingFilter.values();
+            for (final var s : values) if (s.index == i) return s;
+            return ALL;
+        }
     }
 }
