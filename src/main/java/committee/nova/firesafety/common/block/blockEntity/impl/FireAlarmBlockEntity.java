@@ -14,11 +14,11 @@ import static committee.nova.firesafety.api.FireSafetyApi.*;
 import static committee.nova.firesafety.common.block.base.AbstractCeilingDeviceBlock.ONFIRE;
 import static committee.nova.firesafety.common.block.impl.ExtinguisherBlock.WATERED;
 import static committee.nova.firesafety.common.config.Configuration.*;
-import static committee.nova.firesafety.common.sound.init.SoundInit.getSound;
 import static committee.nova.firesafety.common.tools.math.RayTraceUtil.vecToIntString;
 import static committee.nova.firesafety.common.tools.misc.PlayerHandler.*;
 import static committee.nova.firesafety.common.tools.reference.BlockReference.FIRE_ALARM;
 import static committee.nova.firesafety.common.tools.reference.BlockReference.getRegisteredBlockEntityType;
+import static committee.nova.firesafety.common.tools.sound.init.SoundInit.getSound;
 import static net.minecraft.core.BlockPos.betweenClosed;
 import static net.minecraft.sounds.SoundSource.BLOCKS;
 

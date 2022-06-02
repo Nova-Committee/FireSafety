@@ -1,4 +1,4 @@
-package committee.nova.firesafety.common.sound.init;
+package committee.nova.firesafety.common.tools.sound.init;
 
 import committee.nova.firesafety.FireSafety;
 import net.minecraft.resources.ResourceLocation;

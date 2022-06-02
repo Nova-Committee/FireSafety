@@ -5,7 +5,7 @@ import committee.nova.firesafety.common.block.blockEntity.init.BlockEntityInit;
 import committee.nova.firesafety.common.block.init.BlockInit;
 import committee.nova.firesafety.common.entity.init.EntityInit;
 import committee.nova.firesafety.common.item.init.ItemInit;
-import committee.nova.firesafety.common.sound.init.SoundInit;
+import committee.nova.firesafety.common.tools.sound.init.SoundInit;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.item.Item;

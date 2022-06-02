@@ -28,12 +28,12 @@ import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.function.IntPredicate;
 
 import static committee.nova.firesafety.api.FireSafetyApi.*;
-import static committee.nova.firesafety.common.sound.init.SoundInit.getSound;
 import static committee.nova.firesafety.common.tools.format.DataFormatUtil.vec3iToLong;
 import static committee.nova.firesafety.common.tools.math.RayTraceUtil.vecToIntString;
 import static committee.nova.firesafety.common.tools.misc.PlayerHandler.*;
 import static committee.nova.firesafety.common.tools.reference.NBTReference.*;
 import static committee.nova.firesafety.common.tools.reference.TagKeyReference.FDS_IGNORED;
+import static committee.nova.firesafety.common.tools.sound.init.SoundInit.getSound;
 import static committee.nova.firesafety.common.tools.string.StringUtil.wrapInArrows;
 import static net.minecraft.ChatFormatting.*;
 import static net.minecraft.core.BlockPos.betweenClosed;
