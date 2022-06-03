@@ -49,6 +49,7 @@
   "info.firesafety.ffasc.reload": "装填：{0}",
   "info.firesafety.ffasc.cd": "冷却：{0}",
   "format.firesafety.arrows": ">>%s<<",
+  "packs.firesafety.firesafety_pbr.desc": "安全用火-PBR纹理",
   "phrase.firesafety.dangerousness.m1": "§6易燃§r",
   "phrase.firesafety.dangerousness.0": "§2非常低§r",
   "phrase.firesafety.dangerousness.1": "§a低§r",

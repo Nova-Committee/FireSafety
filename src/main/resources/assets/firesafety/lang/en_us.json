@@ -49,6 +49,7 @@
   "info.firesafety.ffasc.reload": "Reload: {0}",
   "info.firesafety.ffasc.cd": "Cool Down: {0}",
   "format.firesafety.arrows": ">>%s<<",
+  "packs.firesafety.firesafety_pbr.desc": "PBR textures for FireSafety",
   "phrase.firesafety.dangerousness.m1": "§6Flammable§r",
   "phrase.firesafety.dangerousness.0": "§2Very Low§r",
   "phrase.firesafety.dangerousness.1": "§aLow§r",
