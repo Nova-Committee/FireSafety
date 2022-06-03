@@ -19,6 +19,8 @@ import net.minecraftforge.common.MinecraftForge;
 import javax.annotation.ParametersAreNonnullByDefault;
 
 import static committee.nova.firesafety.api.FireSafetyApi.*;
+import static committee.nova.firesafety.common.config.Configuration.blockExtinguishingPossibility;
+import static committee.nova.firesafety.common.config.Configuration.entityExtinguishingPossibility;
 import static committee.nova.firesafety.common.entity.init.EntityInit.waterSpray;
 import static net.minecraft.core.BlockPos.betweenClosed;
 import static net.minecraft.core.particles.ParticleTypes.CAMPFIRE_COSY_SMOKE;
@@ -116,6 +118,7 @@ public class WaterSprayProjectile extends AbstractArrow implements ItemSupplier 
     }
 
     private void extinguishBlock(final BlockPos p) {
+        if (random.nextInt(101) < 100 - blockExtinguishingPossibility.get() * 100) return;
         final short i = getTargetBlockIndex(level, p);
         if (i == Short.MIN_VALUE) return;
         final var t = getTargetBlock(i);
@@ -127,6 +130,7 @@ public class WaterSprayProjectile extends AbstractArrow implements ItemSupplier 
 
     private void extinguishEntities(Iterable<Entity> entities) {
         entities.forEach(e -> {
+            if (random.nextInt(101) < 100 - entityExtinguishingPossibility.get() * 100) return;
             final var i = getTargetEntityIndex(level, e);
             final var t = getTargetEntity(i);
             t.entityAction().accept(level, e);
