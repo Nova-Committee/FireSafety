@@ -17,8 +17,7 @@ import java.util.Random;
 
 import static committee.nova.firesafety.common.config.Configuration.freezeDamage;
 import static committee.nova.firesafety.common.tools.advancement.AdvancementUtil.tryAwardAdvancement;
-import static committee.nova.firesafety.common.tools.reference.TagKeyReference.BURNING;
-import static committee.nova.firesafety.common.tools.reference.TagKeyReference.IGNORED;
+import static committee.nova.firesafety.common.tools.reference.TagKeyReference.*;
 import static net.minecraft.sounds.SoundEvents.FIRE_EXTINGUISH;
 import static net.minecraft.sounds.SoundEvents.GENERIC_EXTINGUISH_FIRE;
 import static net.minecraft.sounds.SoundSource.BLOCKS;
@@ -47,7 +46,8 @@ public class EventHandler {
                 (w, e) -> {
                     e.clearFire();
                     w.playSound(null, e, GENERIC_EXTINGUISH_FIRE, BLOCKS, 1F, 1F);
-                }));
+                },
+                (w, e) -> !e.getType().is(UNDETECTABLE)));
         event.addExtinguishable(MODNAME, (short) -32765, new FireSafetyApi.ExtinguishableEntity((w, e) -> e.getType().is(BURNING), (w, e) -> e.hurt(FREEZE, freezeDamage.get().floatValue())));
         event.addFireFightingWaterItem(MODNAME, (short) 32767, new FireSafetyApi.FireFightingWaterContainerItem(
                 (p, s) -> s.is(WATER_BUCKET),

@@ -1,9 +1,4 @@
 {
   "replace": false,
-  "values": [
-    "minecraft:zombie",
-    "minecraft:phantom",
-    "minecraft:skeleton",
-    "minecraft:drowned"
-  ]
+  "values": []
 }

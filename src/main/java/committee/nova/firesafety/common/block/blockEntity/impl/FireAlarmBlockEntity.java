@@ -61,13 +61,14 @@ public class FireAlarmBlockEntity extends RecordableDeviceBlockEntity {
         if (level == null) return new int[]{0, 0};
         final var range = monitoringArea();
         int b = 0;
-        for (final var p : betweenClosed(monitoringAreaPos()[0], monitoringAreaPos()[1])) {
+        final var blocks = betweenClosed(monitoringAreaPos()[0], monitoringAreaPos()[1]);
+        for (final var p : blocks) {
             final var index = getTargetBlockIndex(level, p);
-            if (index > Short.MIN_VALUE && getTargetBlock(index).detectable()) b++;
+            if (index > Short.MIN_VALUE && getTargetBlock(index).detectable().test(level, p)) b++;
         }
-        return new int[]{b, level.getEntitiesOfClass(Entity.class, range, l -> {
-            final var index = getTargetEntityIndex(level, l);
-            return index > Short.MIN_VALUE && getTargetEntity(index).detectable();
+        return new int[]{b, level.getEntitiesOfClass(Entity.class, range, e -> {
+            final var index = getTargetEntityIndex(level, e);
+            return index > Short.MIN_VALUE && getTargetEntity(index).detectable().test(level, e);
         }).size()};
     }
 
