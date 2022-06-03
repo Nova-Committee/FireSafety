@@ -48,7 +48,7 @@ public class EventHandler {
                     w.playSound(null, e, GENERIC_EXTINGUISH_FIRE, BLOCKS, 1F, 1F);
                 },
                 (w, e) -> !e.getType().is(UNDETECTABLE)));
-        event.addExtinguishable(MODNAME, (short) -32765, new FireSafetyApi.ExtinguishableEntity((w, e) -> e.getType().is(BURNING), (w, e) -> e.hurt(FREEZE, freezeDamage.get().floatValue())));
+        event.addExtinguishable(MODNAME, (short) -32000, new FireSafetyApi.ExtinguishableEntity((w, e) -> e.getType().is(BURNING), (w, e) -> e.hurt(FREEZE, freezeDamage.get().floatValue())));
         event.addFireFightingWaterItem(MODNAME, (short) 32767, new FireSafetyApi.FireFightingWaterContainerItem(
                 (p, s) -> s.is(WATER_BUCKET),
                 (p, i) -> 1000, (p, a, s) -> BUCKET.getDefaultInstance(),
@@ -69,7 +69,7 @@ public class EventHandler {
                 (l, p) -> 4,
                 (l, p) -> new TranslatableComponent("tips.firesafety.danger.fire_n_lava")
         ));
-        event.addFireDanger(MODNAME, (short) 32766, new FireSafetyApi.FireDangerBlock(
+        event.addFireDanger(MODNAME, (short) -32000, new FireSafetyApi.FireDangerBlock(
                 (l, p) -> {
                     final var s = l.getBlockState(p);
                     return s.getMaterial().isFlammable() && !s.getMaterial().equals(REPLACEABLE_PLANT);
