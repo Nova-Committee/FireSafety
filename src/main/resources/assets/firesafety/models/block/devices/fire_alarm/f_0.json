@@ -1,0 +1,6 @@
+{
+  "parent": "firesafety:block/devices/fire_alarm/parent",
+  "textures": {
+    "1": "firesafety:block/device/bulbs/green_bulb"
+  }
+}

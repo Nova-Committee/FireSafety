@@ -1,0 +1,24 @@
+{
+  "display": {
+    "background": "minecraft:textures/block/oak_planks.png",
+    "icon": {
+      "item": "firesafety:fds"
+    },
+    "title": {
+      "translate": "advancements.firesafety.prevention_is_better_than_cure.title"
+    },
+    "description": {
+      "translate": "advancements.firesafety.prevention_is_better_than_cure.desc"
+    },
+    "frame": "task",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "criteria": {
+    "gain": {
+      "trigger": "minecraft:impossible"
+    }
+  },
+  "parent": "firesafety:be_careful_with_candles"
+}

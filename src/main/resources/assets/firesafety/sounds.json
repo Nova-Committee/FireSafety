@@ -1,0 +1,42 @@
+{
+  "fire_alarm": {
+    "sounds": [
+      {
+        "name": "firesafety:fire_alarm",
+        "stream": true
+      }
+    ]
+  },
+  "confirm": {
+    "sounds": [
+      {
+        "name": "firesafety:confirm",
+        "stream": true
+      }
+    ]
+  },
+  "awaiting_orders": {
+    "sounds": [
+      {
+        "name": "firesafety:awaiting_orders",
+        "stream": true
+      }
+    ]
+  },
+  "standby": {
+    "sounds": [
+      {
+        "name": "firesafety:standby",
+        "stream": true
+      }
+    ]
+  },
+  "fds_scan": {
+    "sounds": [
+      {
+        "name": "firesafety:fds_scan",
+        "stream": true
+      }
+    ]
+  }
+}

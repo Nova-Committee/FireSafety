@@ -1,0 +1,10 @@
+modLoader = "javafml"
+loaderVersion = "[41,)"
+license = "AGPL v3"
+[[mods]]
+modId = "firesafety"
+version = "${file.jarVersion}"
+displayName = "FireSafety"
+credits = "Part of sounds and concepts from the game WOWS"
+authors = "Nova Pioneers"
+description = "Protect your flammable assets!"
