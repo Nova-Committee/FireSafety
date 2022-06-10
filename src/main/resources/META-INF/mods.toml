@@ -8,3 +8,9 @@ displayName = "FireSafety"
 credits = "Part of sounds and concepts from the game WOWS"
 authors = "Nova Pioneers"
 description = "Protect your flammable assets!"
+[[dependencies.firesafety]]
+modId = "forge"
+mandatory = true
+versionRange = "[41.0.16,)"
+ordering = "NONE"
+side = "BOTH"

@@ -117,7 +117,6 @@ public class FireFightingAirStrikeControllerItem extends FireSafetyItem implemen
             if (h1 > hRaw) hRaw = h1;
         }
         final var h = min(hRaw + 35, level.getMaxBuildHeight());
-        //for (final var pos : list) bombard(level, new BlockPos(pos.getX(), h, pos.getZ()));
         list.forEach(p -> bombard(level, new BlockPos(p.getX(), h, p.getZ())));
     }
 
