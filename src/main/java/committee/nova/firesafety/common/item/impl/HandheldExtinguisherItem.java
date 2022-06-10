@@ -68,9 +68,7 @@ public class HandheldExtinguisherItem extends FireSafetyItem implements IArmPose
         final var toFill = tryFill(player, InteractionHand.OFF_HAND, needed, off);
         if (toFill.isEmpty()) return consume(stack);
         fluid.fill(toFill, IFluidHandler.FluidAction.EXECUTE);
-        //level.playSound(null, player, BUCKET_EMPTY, BLOCKS, 1F, 1F);
-        //todo: some issues with AtEntity
-        level.playSound(null, player.blockPosition(), BUCKET_EMPTY, BLOCKS, 1F, 1F);
+        level.playSound(null, player, BUCKET_EMPTY, BLOCKS, 1F, 1F);
         player.getCooldowns().addCooldown(stack.getItem(), 100);
         return consume(stack);
     }
