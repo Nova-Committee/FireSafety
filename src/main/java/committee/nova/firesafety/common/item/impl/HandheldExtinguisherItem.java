@@ -29,7 +29,7 @@ import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.List;
 import java.util.Optional;
 
-import static committee.nova.firesafety.common.entity.impl.projectile.WaterSprayProjectile.spray;
+import static committee.nova.firesafety.common.entity.projectile.impl.WaterSprayProjectile.spray;
 import static committee.nova.firesafety.common.tools.misc.FluidUtil.tryFill;
 import static committee.nova.firesafety.common.tools.misc.PlayerHandler.displayClientMessage;
 import static committee.nova.firesafety.common.tools.misc.PlayerHandler.getActionByMode;

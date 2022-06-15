@@ -1,7 +1,7 @@
 package committee.nova.firesafety.api.event;
 
 import committee.nova.firesafety.common.block.blockEntity.impl.ExtinguisherBlockEntity;
-import committee.nova.firesafety.common.entity.impl.projectile.WaterSprayProjectile;
+import committee.nova.firesafety.common.entity.projectile.impl.WaterSprayProjectile;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.Level;

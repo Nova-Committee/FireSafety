@@ -1,13 +1,12 @@
-package committee.nova.firesafety.common.entity.impl.projectile;
+package committee.nova.firesafety.common.entity.projectile.impl;
 
 import committee.nova.firesafety.api.event.FireExtinguishedEvent;
+import committee.nova.firesafety.common.entity.projectile.base.FunctionalProjectile;
 import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.core.BlockPos;
-import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.projectile.AbstractArrow;
 import net.minecraft.world.entity.projectile.ItemSupplier;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
@@ -24,7 +23,6 @@ import static committee.nova.firesafety.common.config.Configuration.entityExting
 import static committee.nova.firesafety.common.entity.init.EntityInit.waterSpray;
 import static net.minecraft.core.BlockPos.betweenClosed;
 import static net.minecraft.core.particles.ParticleTypes.CAMPFIRE_COSY_SMOKE;
-import static net.minecraft.sounds.SoundEvents.CANDLE_EXTINGUISH;
 import static net.minecraft.sounds.SoundEvents.FIRE_EXTINGUISH;
 import static net.minecraft.sounds.SoundSource.BLOCKS;
 import static net.minecraft.tags.BlockTags.FIRE;
@@ -32,8 +30,8 @@ import static net.minecraft.world.level.block.Blocks.AIR;
 
 @ParametersAreNonnullByDefault
 @MethodsReturnNonnullByDefault
-public class WaterSprayProjectile extends AbstractArrow implements ItemSupplier {
-    public WaterSprayProjectile(EntityType<? extends AbstractArrow> e, Level l) {
+public class WaterSprayProjectile extends FunctionalProjectile implements ItemSupplier {
+    public WaterSprayProjectile(EntityType<? extends FunctionalProjectile> e, Level l) {
         super(e, l);
     }
 
@@ -47,18 +45,8 @@ public class WaterSprayProjectile extends AbstractArrow implements ItemSupplier 
     }
 
     @Override
-    protected ItemStack getPickupItem() {
-        return ItemStack.EMPTY;
-    }
-
-    @Override
     public ItemStack getItem() {
-        return getPickupItem();
-    }
-
-    @Override
-    protected SoundEvent getDefaultHitGroundSoundEvent() {
-        return CANDLE_EXTINGUISH;
+        return ItemStack.EMPTY;
     }
 
     @Override
@@ -101,7 +89,6 @@ public class WaterSprayProjectile extends AbstractArrow implements ItemSupplier 
         water.shoot(look.x + r.nextFloat() * .1F, look.y + r.nextFloat() * .1F, look.z + r.nextFloat() * .1F, .3F, 0);
         water.setNoGravity(true);
         water.setSilent(true);
-        water.setCritArrow(false);
         world.addFreshEntity(water);
     }
 

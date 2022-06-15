@@ -3,7 +3,7 @@ package committee.nova.firesafety.client.render.renderer.base;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Vector3f;
 import committee.nova.firesafety.client.render.model.WaterBombModel;
-import committee.nova.firesafety.common.entity.impl.projectile.WaterBombProjectile;
+import committee.nova.firesafety.common.entity.projectile.impl.WaterBombProjectile;
 import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;

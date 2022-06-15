@@ -14,7 +14,7 @@ import net.minecraft.world.level.Level;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 
-import static committee.nova.firesafety.common.entity.impl.projectile.WaterBombProjectile.bombard;
+import static committee.nova.firesafety.common.entity.projectile.impl.WaterBombProjectile.bombard;
 import static committee.nova.firesafety.common.tools.format.DataFormatUtil.vec3ToLong;
 import static committee.nova.firesafety.common.tools.math.RayTraceUtil.*;
 import static committee.nova.firesafety.common.tools.misc.PlayerHandler.notifyServerPlayer;
