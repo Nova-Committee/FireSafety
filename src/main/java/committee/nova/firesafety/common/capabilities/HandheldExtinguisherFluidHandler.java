@@ -27,10 +27,7 @@ public class HandheldExtinguisherFluidHandler extends FluidHandlerItemStack {
         final var contained = getFluidInTank(0);
         if (contained.isEmpty()) {
             final int fillAmount = Math.min(capacity, resource.getAmount());
-            if (doFill.execute()) {
-                final var filled = new FluidStack(WATER, fillAmount);
-                setFluid(filled);
-            }
+            if (doFill.execute()) setFluid(new FluidStack(WATER, fillAmount));
             return fillAmount;
         }
         if (!FluidUtil.areFluidsIn(contained, resource, FIREFIGHTING)) return 0;

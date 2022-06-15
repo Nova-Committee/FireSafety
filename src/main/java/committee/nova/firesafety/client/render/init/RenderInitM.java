@@ -30,7 +30,7 @@ public class RenderInitM {
         e.enqueueWork(() -> {
             for (final var block : BlockInit.blockList.values()) {
                 final Block b = block.get();
-                if (b instanceof ISpecialRenderType t) ItemBlockRenderTypes.setRenderLayer(b, t.getRenderType());
+                if (b instanceof final ISpecialRenderType t) ItemBlockRenderTypes.setRenderLayer(b, t.getRenderType());
             }
         });
     }

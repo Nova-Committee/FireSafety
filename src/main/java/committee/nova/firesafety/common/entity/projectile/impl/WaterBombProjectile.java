@@ -1,14 +1,13 @@
-package committee.nova.firesafety.common.entity.impl.projectile;
+package committee.nova.firesafety.common.entity.projectile.impl;
 
+import committee.nova.firesafety.common.entity.projectile.base.FunctionalProjectile;
 import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.protocol.Packet;
-import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.entity.projectile.AbstractArrow;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.EntityHitResult;
@@ -24,13 +23,14 @@ import static committee.nova.firesafety.common.tools.reference.ItemReference.get
 import static net.minecraft.core.BlockPos.betweenClosed;
 import static net.minecraft.core.particles.ParticleTypes.CAMPFIRE_COSY_SMOKE;
 import static net.minecraft.sounds.SoundEvents.CANDLE_EXTINGUISH;
+import static net.minecraft.sounds.SoundSource.BLOCKS;
 import static net.minecraft.tags.BlockTags.FIRE;
 import static net.minecraft.world.level.block.Blocks.AIR;
 
 @ParametersAreNonnullByDefault
 @MethodsReturnNonnullByDefault
-public class WaterBombProjectile extends AbstractArrow {
-    public WaterBombProjectile(EntityType<? extends AbstractArrow> e, Level l) {
+public class WaterBombProjectile extends FunctionalProjectile {
+    public WaterBombProjectile(EntityType<? extends FunctionalProjectile> e, Level l) {
         super(e, l);
     }
 
@@ -47,24 +47,15 @@ public class WaterBombProjectile extends AbstractArrow {
         return NetworkHooks.getEntitySpawningPacket(this);
     }
 
-    @Override
-    protected ItemStack getPickupItem() {
-        return ItemStack.EMPTY;
-    }
 
     public ItemStack getItem() {
         return getRegisteredItem(WATER_BOMB).getDefaultInstance();
     }
 
     @Override
-    protected SoundEvent getDefaultHitGroundSoundEvent() {
-        return CANDLE_EXTINGUISH;
-    }
-
-    @Override
     protected void onHitEntity(EntityHitResult r) {
         final var entity = r.getEntity();
-        if (entity instanceof Player p && p.isCreative()) {
+        if (entity instanceof final Player p && p.isCreative()) {
             drop();
             return;
         }
@@ -118,12 +109,12 @@ public class WaterBombProjectile extends AbstractArrow {
         bomb.setNoGravity(true);
         bomb.setDeltaMovement(new Vec3(0, -.3, 0));
         bomb.setSilent(true);
-        bomb.setCritArrow(false);
         world.addFreshEntity(bomb);
     }
 
     @Override
     public void onRemovedFromWorld() {
+        level.playSound(null, this, CANDLE_EXTINGUISH, BLOCKS, 1F, 1F);
         for (int i = 0; i < 10; i++) {
             level.addAlwaysVisibleParticle(CAMPFIRE_COSY_SMOKE, getX() + random.nextDouble(-.3, .6), getY(), getZ() + random.nextDouble(-.3, .6), 0, 0, 0);
         }

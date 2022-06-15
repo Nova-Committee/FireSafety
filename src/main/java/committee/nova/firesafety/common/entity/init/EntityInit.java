@@ -1,8 +1,8 @@
 package committee.nova.firesafety.common.entity.init;
 
 import committee.nova.firesafety.FireSafety;
-import committee.nova.firesafety.common.entity.impl.projectile.WaterBombProjectile;
-import committee.nova.firesafety.common.entity.impl.projectile.WaterSprayProjectile;
+import committee.nova.firesafety.common.entity.projectile.impl.WaterBombProjectile;
+import committee.nova.firesafety.common.entity.projectile.impl.WaterSprayProjectile;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MobCategory;
 import net.minecraft.world.level.Level;

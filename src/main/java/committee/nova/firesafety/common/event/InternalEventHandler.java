@@ -21,7 +21,7 @@ public class InternalEventHandler {
         final var player = e.getPlayer();
         final var inv = player.getInventory().items;
         for (final var stack : inv) {
-            if (!(stack.getItem() instanceof ITagResettable i)) continue;
+            if (!(stack.getItem() instanceof final ITagResettable i)) continue;
             i.resetTagOnDimensionChange(stack);
         }
     }
@@ -38,7 +38,7 @@ public class InternalEventHandler {
     public static void onRightClick(PlayerInteractEvent.RightClickItem e) {
         if (e.getSide().isClient() || e.isCanceled()) return;
         final var item = e.getItemStack().getItem();
-        if (!(item instanceof IAdvancementTriggerable i)) return;
+        if (!(item instanceof final IAdvancementTriggerable i)) return;
         tryAwardAdvancement((ServerPlayer) e.getPlayer(), i.getAdvancement());
     }
 }

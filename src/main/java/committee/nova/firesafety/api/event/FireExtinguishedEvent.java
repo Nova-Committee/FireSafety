@@ -1,7 +1,7 @@
 package committee.nova.firesafety.api.event;
 
 import committee.nova.firesafety.common.block.blockEntity.impl.ExtinguisherBlockEntity;
-import committee.nova.firesafety.common.entity.impl.projectile.WaterSprayProjectile;
+import committee.nova.firesafety.common.entity.projectile.impl.WaterSprayProjectile;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.Level;
@@ -90,10 +90,10 @@ public class FireExtinguishedEvent extends Event {
 
     @Nullable
     public Entity getExtinguisher() {
-        if (extinguisherEntity instanceof WaterSprayProjectile w) return w.getOwner();
+        if (extinguisherEntity instanceof final WaterSprayProjectile w) return w.getOwner();
         final var server = level.getServer();
         if (server == null) return null;
         final var blockEntity = level.getBlockEntity(extinguisherPos);
-        return (blockEntity instanceof ExtinguisherBlockEntity e) ? e.getOwner() : null;
+        return (blockEntity instanceof final ExtinguisherBlockEntity e) ? e.getOwner() : null;
     }
 }

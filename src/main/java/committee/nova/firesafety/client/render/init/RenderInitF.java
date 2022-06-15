@@ -12,7 +12,7 @@ public class RenderInitF {
     public static void onRenderPlayerPose(RenderPlayerEvent event) {
         if (!event.isCancelable() || event.isCanceled()) return;
         final var player = event.getPlayer();
-        if (!(player.getMainHandItem().getItem() instanceof IArmPoseChangeable c)) return;
+        if (!(player.getMainHandItem().getItem() instanceof final IArmPoseChangeable c)) return;
         event.getRenderer().getModel().rightArmPose = player.isUsingItem() ? c.getUsingPose() : player.isSprinting() ? c.getSprintingPose() : c.getIdlePose();
     }
 }

@@ -29,7 +29,7 @@ public class FireAlarmBlock extends AbstractCeilingDeviceBlock implements Entity
     public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level world, BlockState state, BlockEntityType<T> type) {
         if (world.isClientSide()) return null;
         return (l, p, s, t) -> {
-            if (t instanceof FireAlarmBlockEntity alarm) alarm.tickServer();
+            if (t instanceof final FireAlarmBlockEntity alarm) alarm.tickServer();
         };
     }
 }

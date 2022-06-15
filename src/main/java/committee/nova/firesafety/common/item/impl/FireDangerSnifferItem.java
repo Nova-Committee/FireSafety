@@ -60,7 +60,7 @@ public class FireDangerSnifferItem extends FireSafetyItem implements Wearable, I
     @Override
     public void inventoryTick(ItemStack stack, Level world, Entity entity, int slot, boolean selected) {
         if (world.isClientSide) return;
-        if (!(entity instanceof Player player)) return;
+        if (!(entity instanceof final Player player)) return;
         final var tag = stack.getOrCreateTag();
         if (selected) displayClientMessage(player, new TranslatableComponent("info.firesafety.fds",
                 new TranslatableComponent("info.firesafety.fds." + tag.getInt(FDS_MODE)).getString()));

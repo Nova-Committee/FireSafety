@@ -87,7 +87,7 @@ public class EventHandler {
     @SubscribeEvent
     public static void onFireExtinguished(FireExtinguishedEvent event) {
         final var extinguisher = event.getExtinguisher();
-        if (!(extinguisher instanceof ServerPlayer p)) return;
+        if (!(extinguisher instanceof final ServerPlayer p)) return;
         final var handheld = event.getExtinguisherType() == FireExtinguishedEvent.ExtinguisherType.HANDHELD;
         tryAwardAdvancement(p, new ResourceLocation(FireSafety.MODID, handheld ? "a_hero_in_harm_s_way" : "to_nip_it_in_the_spark"));
     }

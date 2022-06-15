@@ -111,6 +111,6 @@ public abstract class AbstractCeilingDeviceBlock extends Block implements ISpeci
 
     public static void setOwner(Level level, BlockPos pos, @Nullable Entity owner) {
         final var blockEntity = level.getBlockEntity(pos);
-        if (blockEntity instanceof RecordableDeviceBlockEntity r) r.setOwner(owner);
+        if (blockEntity instanceof final RecordableDeviceBlockEntity r) r.setOwner(owner);
     }
 }

@@ -96,7 +96,7 @@ public abstract class RecordableDeviceBlockEntity extends BlockEntity {
     @Nullable
     public Entity getOwner() {
         if (cachedOwner != null && !cachedOwner.isRemoved()) return cachedOwner;
-        if (this.ownerUUID != null && this.level instanceof ServerLevel serverLevel) {
+        if (this.ownerUUID != null && this.level instanceof final ServerLevel serverLevel) {
             this.cachedOwner = serverLevel.getEntity(this.ownerUUID);
         }
         return this.cachedOwner;

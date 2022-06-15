@@ -30,7 +30,7 @@ import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.List;
 import java.util.Optional;
 
-import static committee.nova.firesafety.common.entity.impl.projectile.WaterSprayProjectile.spray;
+import static committee.nova.firesafety.common.entity.projectile.impl.WaterSprayProjectile.spray;
 import static committee.nova.firesafety.common.tools.misc.FluidUtil.tryFill;
 import static committee.nova.firesafety.common.tools.misc.PlayerHandler.displayClientMessage;
 import static committee.nova.firesafety.common.tools.misc.PlayerHandler.getActionByMode;
@@ -77,7 +77,7 @@ public class HandheldExtinguisherItem extends FireSafetyItem implements IArmPose
     @Override
     public void onUsingTick(ItemStack stack, LivingEntity entity, int count) {
         final var level = entity.level;
-        if (level.isClientSide || !(entity instanceof Player player)) return;
+        if (level.isClientSide || !(entity instanceof final Player player)) return;
         final var cap = getFluid(stack);
         if (cap.isEmpty()) return;
         final var fluid = cap.get();
@@ -91,7 +91,7 @@ public class HandheldExtinguisherItem extends FireSafetyItem implements IArmPose
 
     @Override
     public void inventoryTick(ItemStack stack, Level level, Entity entity, int slot, boolean isSelected) {
-        if (level.isClientSide || !(entity instanceof Player player)) return;
+        if (level.isClientSide || !(entity instanceof final Player player)) return;
         if (player.getOffhandItem() == stack)
             displayClientMessage(player, new TranslatableComponent("msg.firesafety.main_hand", stack.getItem().getName(stack).getString()));
         final var tag = stack.getOrCreateTag();

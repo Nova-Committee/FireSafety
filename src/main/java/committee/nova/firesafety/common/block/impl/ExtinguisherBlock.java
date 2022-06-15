@@ -88,7 +88,7 @@ public class ExtinguisherBlock extends AbstractCeilingDeviceBlock implements Ent
     public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level world, BlockState state, BlockEntityType<T> type) {
         if (world.isClientSide()) return null;
         return (l, p, s, t) -> {
-            if (t instanceof ExtinguisherBlockEntity extinguisher) extinguisher.tickServer();
+            if (t instanceof final ExtinguisherBlockEntity extinguisher) extinguisher.tickServer();
         };
     }
 
@@ -110,7 +110,7 @@ public class ExtinguisherBlock extends AbstractCeilingDeviceBlock implements Ent
 
     private void reportWaterAmount(Player player, Level world, BlockPos pos) {
         final var b = world.getBlockEntity(pos);
-        if (!(b instanceof ExtinguisherBlockEntity e)) return;
+        if (!(b instanceof final ExtinguisherBlockEntity e)) return;
         notifyServerPlayer(player, new TranslatableComponent("msg.firesafety.device.current_water_amount", e.getWaterStorage()));
     }
 }

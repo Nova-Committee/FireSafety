@@ -15,7 +15,7 @@ import net.minecraft.world.level.Level;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 
-import static committee.nova.firesafety.common.entity.impl.projectile.WaterBombProjectile.bombard;
+import static committee.nova.firesafety.common.entity.projectile.impl.WaterBombProjectile.bombard;
 import static committee.nova.firesafety.common.tools.format.DataFormatUtil.vec3ToLong;
 import static committee.nova.firesafety.common.tools.math.RayTraceUtil.*;
 import static committee.nova.firesafety.common.tools.misc.PlayerHandler.notifyServerPlayer;
@@ -97,7 +97,7 @@ public class FireFightingAirStrikeControllerItem extends FireSafetyItem implemen
     @Override
     public void inventoryTick(ItemStack stack, Level level, Entity entity, int slot, boolean isSelected) {
         if (level.isClientSide) return;
-        if (!(entity instanceof Player player)) return;
+        if (!(entity instanceof final Player player)) return;
         if (isSelected) displayInformation(stack, player);
         final var tag = stack.getOrCreateTag();
         tag.putBoolean(USING, isSelected);
