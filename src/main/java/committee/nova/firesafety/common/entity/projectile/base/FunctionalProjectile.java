@@ -107,10 +107,10 @@ public class FunctionalProjectile extends Projectile {
             if (entityhitresult != null) {
                 hitresult = entityhitresult;
             }
-            if (hitresult != null && hitresult.getType() == HitResult.Type.ENTITY && hitresult instanceof EntityHitResult e) {
+            if (hitresult != null && hitresult.getType() == HitResult.Type.ENTITY && hitresult instanceof final EntityHitResult e) {
                 final var entity = e.getEntity();
                 final var entity1 = this.getOwner();
-                if (entity instanceof Player p1 && entity1 instanceof Player p2 && !(p2).canHarmPlayer(p1)) {
+                if (entity instanceof final Player p1 && entity1 instanceof final Player p2 && !(p2).canHarmPlayer(p1)) {
                     hitresult = null;
                     entityhitresult = null;
                 }
