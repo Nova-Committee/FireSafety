@@ -187,21 +187,6 @@ public class FunctionalProjectile extends Projectile {
     }
 
     @Override
-    public void addAdditionalSaveData(CompoundTag tag) {
-        super.addAdditionalSaveData(tag);
-        if (this.lastState != null) tag.put("inBlockState", NbtUtils.writeBlockState(this.lastState));
-        tag.putBoolean("inGround", this.inGround);
-    }
-
-    public void readAdditionalSaveData(CompoundTag tag) {
-        super.readAdditionalSaveData(tag);
-        if (tag.contains("inBlockState", 10)) {
-            this.lastState = NbtUtils.readBlockState(tag.getCompound("inBlockState"));
-        }
-        this.inGround = tag.getBoolean("inGround");
-    }
-
-    @Override
     public boolean isAttackable() {
         return false;
     }
@@ -214,5 +199,20 @@ public class FunctionalProjectile extends Projectile {
     @Override
     protected float getEyeHeight(Pose pose, EntityDimensions dims) {
         return 0.13F;
+    }
+
+    @Override
+    public void addAdditionalSaveData(CompoundTag tag) {
+        super.addAdditionalSaveData(tag);
+        if (this.lastState != null) tag.put("inBlockState", NbtUtils.writeBlockState(this.lastState));
+        tag.putBoolean("inGround", this.inGround);
+    }
+
+    public void readAdditionalSaveData(CompoundTag tag) {
+        super.readAdditionalSaveData(tag);
+        if (tag.contains("inBlockState", 10)) {
+            this.lastState = NbtUtils.readBlockState(tag.getCompound("inBlockState"));
+        }
+        this.inGround = tag.getBoolean("inGround");
     }
 }
