@@ -48,7 +48,7 @@ public class FireFightingAirStrikeControllerItem extends FireSafetyItem implemen
         final var tag = stack.getOrCreateTag();
         final var confirm = tag.getBoolean(FFASC_CONFIRM);
         if (confirm) {
-            if (player.isCrouching()) {
+            if (player.isShiftKeyDown()) {
                 playSoundForThisPlayer(player, getSound(1), 1F, 1F);
                 notifyServerPlayer(player, new TranslatableComponent("msg.firesafety.ffasc.cancelled"));
                 tag.putBoolean(FFASC_CONFIRM, false);
@@ -67,7 +67,7 @@ public class FireFightingAirStrikeControllerItem extends FireSafetyItem implemen
             tag.putBoolean(FFASC_CONFIRM, false);
             return consume(stack);
         }
-        if (player.isCrouching()) {
+        if (player.isShiftKeyDown()) {
             //todo(mode)
             return consume(stack);
         }

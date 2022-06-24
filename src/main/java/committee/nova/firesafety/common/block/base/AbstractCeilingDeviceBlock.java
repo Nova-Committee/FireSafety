@@ -54,7 +54,7 @@ public abstract class AbstractCeilingDeviceBlock extends Block implements ISpeci
     public static void tryHandleListener(Player player, Level world, BlockPos pos) {
         final var e = world.getBlockEntity(pos);
         if (!(e instanceof final RecordableDeviceBlockEntity r)) return;
-        if (player.isCrouching()) {
+        if (player.isShiftKeyDown()) {
             if (player.hasPermissions(2)) notifyServerPlayer(player, new TextComponent(r.toString()));
             return;
         }
