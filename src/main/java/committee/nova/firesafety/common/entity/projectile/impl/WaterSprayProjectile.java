@@ -60,13 +60,12 @@ public class WaterSprayProjectile extends FunctionalProjectile implements ItemSu
         if (tickCount % 2 == 0)
             level.addParticle(CAMPFIRE_COSY_SMOKE, getX(), getY(), getZ(), getDeltaMovement().x * .01, -.01, getDeltaMovement().z * .01);
         final var pos = blockPosition();
-        if (level.getBlockState(pos).is(FIRE)) {
-            level.setBlockAndUpdate(pos, AIR.defaultBlockState());
-            final var r = level.random;
-            level.playSound(null, pos, FIRE_EXTINGUISH, BLOCKS, .7F, 1.6F + (r.nextFloat() - r.nextFloat()) * 0.4F);
-            final var event = new FireExtinguishedEvent(FireExtinguishedEvent.ExtinguisherType.HANDHELD, level, this, pos, (short) 32766);
-            MinecraftForge.EVENT_BUS.post(event);
-        }
+        if (!level.getBlockState(pos).is(FIRE)) return;
+        level.setBlockAndUpdate(pos, AIR.defaultBlockState());
+        final var r = level.random;
+        level.playSound(null, pos, FIRE_EXTINGUISH, BLOCKS, .7F, 1.6F + (r.nextFloat() - r.nextFloat()) * 0.4F);
+        final var event = new FireExtinguishedEvent(FireExtinguishedEvent.ExtinguisherType.HANDHELD, level, this, pos, (short) 32766);
+        MinecraftForge.EVENT_BUS.post(event);
     }
 
     @Override

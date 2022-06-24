@@ -75,7 +75,7 @@ public class FireDangerSnifferItem extends FireSafetyItem implements Wearable, I
     @Override
     public void onArmorTick(ItemStack stack, Level level, Player player) {
         final var tag = stack.getOrCreateTag();
-        if (player.isCrouching() || tag.getInt(FDS_PROGRESS) > 0 || player.getCooldowns().isOnCooldown(stack.getItem()))
+        if (player.isShiftKeyDown() || tag.getInt(FDS_PROGRESS) > 0 || player.getCooldowns().isOnCooldown(stack.getItem()))
             return;
         activate(player, stack);
     }
@@ -86,7 +86,7 @@ public class FireDangerSnifferItem extends FireSafetyItem implements Wearable, I
         final var stack = player.getMainHandItem();
         if (level.isClientSide) return consume(stack);
         final var tag = stack.getOrCreateTag();
-        if (player.isCrouching()) {
+        if (player.isShiftKeyDown()) {
             tag.putInt(FDS_MODE, (tag.getInt(FDS_MODE) + 1) % 7);
             playSoundForThisPlayer(player, getSound(1), 1F, 1F);
             return consume(stack);

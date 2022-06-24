@@ -64,7 +64,7 @@ public class FunctionalProjectile extends Projectile {
         if (isRemoved()) return;
         super.tick();
         final var flag = this.isNoPhysics();
-        var vec3A = this.getDeltaMovement();
+        final var vec3A = this.getDeltaMovement();
         if (this.xRotO == 0.0F && this.yRotO == 0.0F) {
             double d0 = vec3A.horizontalDistance();
             this.setYRot((float) (Mth.atan2(vec3A.x, vec3A.z) * (180F / Math.PI)));
@@ -81,10 +81,9 @@ public class FunctionalProjectile extends Projectile {
                 final var vec3B = this.position();
                 final var aabbs = shape.toAabbs();
                 for (final var aabb : aabbs) {
-                    if (aabb.move(pos).contains(vec3B)) {
-                        this.inGround = true;
-                        break;
-                    }
+                    if (!aabb.move(pos).contains(vec3B)) continue;
+                    this.inGround = true;
+                    break;
                 }
             }
         }
@@ -119,22 +118,23 @@ public class FunctionalProjectile extends Projectile {
             if (entityhitresult == null) break;
             hitresult = null;
         }
-        vec3A = this.getDeltaMovement();
-        final var d5 = vec3A.x;
-        final var d6 = vec3A.y;
-        final var d1 = vec3A.z;
+
+        final var vec3E = this.getDeltaMovement();
+        final var d5 = vec3E.x;
+        final var d6 = vec3E.y;
+        final var d1 = vec3E.z;
         final var d7 = this.getX() + d5;
         final var d2 = this.getY() + d6;
         final var d3 = this.getZ() + d1;
-        final var d4 = vec3A.horizontalDistance();
+        final var d4 = vec3E.horizontalDistance();
         this.setYRot(flag ? (float) (Mth.atan2(-d5, -d1) * (180F / Math.PI)) : (float) (Mth.atan2(d5, d1) * (180F / Math.PI)));
         this.setXRot((float) (Mth.atan2(d6, d4) * (180F / Math.PI)));
         this.setXRot(lerpRotation(this.xRotO, this.getXRot()));
         this.setYRot(lerpRotation(this.yRotO, this.getYRot()));
-        this.setDeltaMovement(vec3A.scale(0.99F));
+        this.setDeltaMovement(vec3E.scale(0.99F));
         if (!this.isNoGravity() && !flag) {
-            final var vec3E = this.getDeltaMovement();
-            this.setDeltaMovement(vec3E.x, vec3E.y - (double) 0.05F, vec3E.z);
+            final var vec3F = this.getDeltaMovement();
+            this.setDeltaMovement(vec3F.x, vec3F.y - (double) 0.05F, vec3F.z);
         }
         this.setPos(d7, d2, d3);
         this.checkInsideBlocks();
@@ -146,7 +146,7 @@ public class FunctionalProjectile extends Projectile {
         super.onHitBlock(hit);
         final var vec3 = hit.getLocation().subtract(this.getX(), this.getY(), this.getZ());
         this.setDeltaMovement(vec3);
-        var vec31 = vec3.normalize().scale(0.05F);
+        final var vec31 = vec3.normalize().scale(0.05F);
         this.setPosRaw(this.getX() - vec31.x, this.getY() - vec31.y, this.getZ() - vec31.z);
         this.inGround = true;
     }
@@ -207,9 +207,7 @@ public class FunctionalProjectile extends Projectile {
 
     public void readAdditionalSaveData(CompoundTag tag) {
         super.readAdditionalSaveData(tag);
-        if (tag.contains("inBlockState", 10)) {
-            this.lastState = NbtUtils.readBlockState(tag.getCompound("inBlockState"));
-        }
+        if (tag.contains("inBlockState", 10)) this.lastState = NbtUtils.readBlockState(tag.getCompound("inBlockState"));
         this.inGround = tag.getBoolean("inGround");
     }
 }

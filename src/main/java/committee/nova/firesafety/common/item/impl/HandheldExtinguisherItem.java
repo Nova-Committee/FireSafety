@@ -55,7 +55,7 @@ public class HandheldExtinguisherItem extends FireSafetyItem implements IArmPose
     public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand hand) {
         final var stack = player.getItemInHand(hand);
         if (hand == InteractionHand.OFF_HAND) return pass(stack);
-        if (!player.isCrouching()) {
+        if (!player.isShiftKeyDown()) {
             player.startUsingItem(hand);
             return consume(stack);
         }

@@ -91,9 +91,6 @@ public class FireExtinguishedEvent extends Event {
     @Nullable
     public Entity getExtinguisher() {
         if (extinguisherEntity instanceof final WaterSprayProjectile w) return w.getOwner();
-        final var server = level.getServer();
-        if (server == null) return null;
-        final var blockEntity = level.getBlockEntity(extinguisherPos);
-        return (blockEntity instanceof final ExtinguisherBlockEntity e) ? e.getOwner() : null;
+        return (level.getBlockEntity(extinguisherPos) instanceof final ExtinguisherBlockEntity e) ? e.getOwner() : null;
     }
 }
