@@ -1,0 +1,11 @@
+{
+  "parent": "firesafety:item/handheld_extinguisher/handheld_extinguisher_idle",
+  "overrides": [
+    {
+      "predicate": {
+        "using": 1
+      },
+      "model": "firesafety:item/handheld_extinguisher/handheld_extinguisher_using"
+    }
+  ]
+}

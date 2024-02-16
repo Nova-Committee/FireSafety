@@ -1,0 +1,14 @@
+{
+  "parent": "firesafety:item/fds/fds",
+  "textures": {
+    "1": "firesafety:item/fds/fds_radar_off"
+  },
+  "overrides": [
+    {
+      "predicate": {
+        "on": 1
+      },
+      "model": "firesafety:item/fds/fds_on"
+    }
+  ]
+}
